@@ -28,38 +28,19 @@ h1 {
 
 h2 {
   margin: 6px 0 18px;
-  font-size: 14px;
-  color: #555;
+  font-size: 16px;
+  color: #444;
 }
 
 .meta {
-  font-size: 13px;
+  font-size: 14px;
   color: #333;
   margin-bottom: 14px;
-}
-
-.section-title {
-  font-weight: 600;
-  margin-top: 12px;
-  margin-bottom: 8px;
 }
 
 ul {
   padding-left: 18px;
   margin: 6px 0;
-}
-
-a.btn {
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 8px;
-  text-decoration: none;
-  border: 1px solid #e1e4ea;
-  background: #fff;
-}
-
-a.btn + a.btn {
-  margin-left: 8px;
 }
 
 footer {
@@ -73,3 +54,4 @@ footer {
     padding: 18px;
   }
 }
+
