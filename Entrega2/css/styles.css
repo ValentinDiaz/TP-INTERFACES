@@ -12,12 +12,30 @@ body {
   background-size: contain;
 }
 /*Comienzo nav*/
+/* ========================================
+   NAVBAR PRINCIPAL
+======================================== */
 .navbar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: #000000;
   padding: 10px;
   height: 60px;
+  position: relative;
+}
+
+/* ========================================
+   MENÚ HAMBURGUESA
+======================================== */
+.open-menu {
+  display: block;
+  border: 0;
+  font-size: 30px;
+  background: none;
+  cursor: pointer;
+  color: #9747ff;
+  padding: 5px;
 }
 
 .burger-menu {
@@ -25,17 +43,20 @@ body {
   visibility: hidden;
   display: flex;
   flex-direction: column;
-  align-items: end;
-  position: absolute;
+  align-items: flex-end;
+  position: fixed;
   z-index: 100;
   background-color: #9747ff;
   left: 0;
   top: 0;
   padding: 2rem;
-  height: 100%;
+  height: 100vh;
+  width: 250px;
+  max-width: 80vw;
   gap: 1rem;
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
   transition: opacity 0.3s ease, visibility 0s 0.3s;
+  overflow-y: auto;
 }
 
 .burger-menu.visible {
@@ -44,62 +65,84 @@ body {
   transition: opacity 0.3s ease, visibility 0s 0s;
 }
 
-.open-menu,
 .close-menu {
   display: block;
   border: 0;
   font-size: 30px;
   background: none;
   cursor: pointer;
-}
-
-.open-menu {
-  color: #9747ff;
-}
-
-.close-menu {
   color: #e05555;
-}
-
-.menu-usuario {
-  display: none;
+  padding: 5px;
+  transition: color 0.2s ease;
 }
 
 .close-menu:hover {
   color: #ff6e6e;
 }
 
+/* ========================================
+   NAVEGACIÓN
+======================================== */
 .nav-list {
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: flex-end;
   list-style-type: none;
   gap: 1rem;
-  top: 0;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 .nav-list li a {
   text-decoration: none;
   color: #1abc9c;
-  font-family: "Bungee";
+  font-family: "Bungee", cursive;
   font-size: 18px;
-  transition: ease 0.3s;
+  transition: color 0.3s ease;
 }
 
 .nav-list li a:hover {
   color: #2ee6b6;
-  transition: ease-in 0.1s;
 }
 
-.search-container {
-  margin: auto;
+.menu-usuario {
+  display: none;
+}
+
+/* ========================================
+   LOGO
+======================================== */
+.logo {
   display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
   justify-content: center;
+}
+
+.logo img {
+  width: 80px;
+  height: 40px;
+}
+
+.logo span {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff6e6e;
+}
+
+/* ========================================
+   BÚSQUEDA
+======================================== */
+.search-container {
+  display: flex;
   align-items: center;
   background-color: #7b7b7b;
   border-radius: 20px;
   padding: 5px 10px;
-  max-width: fit-content;
+  width: 100px;
+  margin: 0 auto;
 }
 
 .search-container input {
@@ -109,6 +152,7 @@ body {
   color: #ffffff;
   padding: 5px;
   font-size: 12px;
+  width: 100%;
 }
 
 .search-container input::placeholder {
@@ -119,40 +163,115 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  color: #b0b0b0;
+  padding: 0;
 }
 
 .search-icon {
   font-size: 20px;
   padding-right: 5px;
   color: #e1dede;
-  transition: ease-in 0.1s;
+  transition: all 0.2s ease;
 }
 
 .search-icon:hover {
   color: #ffffff;
-  scale: 1.1;
+  transform: scale(1.1);
 }
 
-.logo {
+/* ========================================
+   ICONOS DE NAVEGACIÓN (Usuario/Carrito)
+======================================== */
+.nav-icons {
   display: flex;
   align-items: center;
-  color: #ff6e6e;
-  text-align: right;
-  margin-left: 2rem;
+  gap: 10px;
 }
 
-.logo img {
-  width: 80px;
+.div-user {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  width: 40px;
   height: 40px;
-  margin-right: 5px;
+  background-color: #5d3fd3;
+  transition: background-color 0.2s ease;
 }
 
-.logo span {
-  font-size: 14px;
-  font-weight: bold;
-  color: #ff6e6e;
+.div-user:hover {
+  background-color: #7251e0;
 }
+
+.open-user {
+  color: #1abc9c;
+  font-size: 24px;
+  transition: color 0.2s ease;
+}
+
+.open-user:hover {
+  color: #2ee6b6;
+}
+
+.div-carrito {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #5d3fd3;
+  color: white;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.div-carrito:hover {
+  background-color: #7251e0;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #e05555;
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 3px 6px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+ .menu-usuario {
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    background: #5d3fd3;
+    border-radius: 0 0 10px 10px;
+    position: absolute;
+    z-index: 100;
+    font-family: "bungee";
+    color: #1abc9c;
+    top: 60px;
+    right: 2rem;
+    padding: 2rem;
+    gap: 1rem;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+  }
+
+  .menu-usuario.visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0s 0s;
+  }
 
 /*Fin nav*/
 
@@ -1032,41 +1151,8 @@ textarea {
   .nav-list li a {
     font-size: 25px;
   }
-  .menu-usuario {
-    opacity: 0;
-    visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-    background: #5d3fd3;
-    border-radius: 0 0 10px 10px;
-    position: absolute;
-    z-index: 100;
-    font-family: "bungee";
-    color: #1abc9c;
-    top: 60px;
-    right: 2rem;
-    padding: 2rem;
-    gap: 1rem;
-    transition: opacity 0.3s ease, visibility 0s 0.3s;
-  }
 
-  .menu-usuario.visible {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.3s ease, visibility 0s 0s;
-  }
-  .div-user {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    border-radius: 20px;
-    right: 3rem;
-    width: 40px;
-    height: 40px;
-    background-color: #5d3fd3;
-  }
+
 
   .nav-icons {
     display: flex;
@@ -1075,40 +1161,27 @@ textarea {
     position: relative;
   }
 
-  .div-carrito {
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
+  .search-container {
+    width: 300px;
     height: 40px;
-    border-radius: 20px;
-    background-color: #5d3fd3;
-    color: white;
-    position: relative; /* ojo, ya no absolute */
+    margin: 10px auto;
+    padding: 10px 20px;
   }
 
-  .cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: red;
-    color: white;
-    font-size: 12px;
-    border-radius: 50%;
-    padding: 2px 6px;
+  .search-container input {
+    font-size: 16px;
+    padding: 8px;
   }
 
-  .open-user {
-    margin: auto;
-    color: #1abc9c;
-    font-size: 30px;
-    transition: ease 0.3s;
+  .search-icon {
+    font-size: 24px;
+    padding-right: 8px;
   }
-  .open-user:hover {
-    color: #2ee6b6;
-    transition: ease-in 0.2s;
-  }
+
+
+
+  
+
   .carruseles {
     margin-top: 4rem;
   }
@@ -1154,7 +1227,7 @@ textarea {
     height: 350px;
     margin: -30px 0 10px -40px; /* mueve arriba e izquierda */
     position: relative;
-    top: -45px;  /* ajusta más arriba si es necesario */
+    top: -45px; /* ajusta más arriba si es necesario */
     right: -150px;
   }
 
@@ -1163,10 +1236,6 @@ textarea {
     height: 450px;
     object-fit: contain;
   }
-
-
-
-  
 
   .footer-brand p {
     color: #888;
