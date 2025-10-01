@@ -1154,8 +1154,8 @@ textarea {
     height: 350px;
     margin: -30px 0 10px -40px; /* mueve arriba e izquierda */
     position: relative;
-    left: -20px; /* ajusta más a la izquierda si es necesario */
-    top: -90px;  /* ajusta más arriba si es necesario */
+    top: -45px;  /* ajusta más arriba si es necesario */
+    right: -150px;
   }
 
   .brand-icon img {
@@ -1163,6 +1163,10 @@ textarea {
     height: 450px;
     object-fit: contain;
   }
+
+
+
+  
 
   .footer-brand p {
     color: #888;
