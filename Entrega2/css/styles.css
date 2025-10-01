@@ -275,7 +275,6 @@ body {
 
 /*Carruseles*/
 
-
 .carrusel-grande {
   width: 100vw;
   min-height: 400px;
@@ -978,6 +977,15 @@ textarea {
     width: 40px;
     height: 40px;
     background-color: #5d3fd3;
+  }
+
+  .nav-icons {
+    display: flex;
+
+  }
+  .div-carrito {
+    margin-left: 20px;
+    background-color: wheat;
   }
   .open-user {
     margin: auto;

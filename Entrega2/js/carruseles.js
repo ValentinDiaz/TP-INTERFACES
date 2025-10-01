@@ -42,11 +42,11 @@ document.querySelectorAll(".carousel").forEach((carousel) => {
 
 let currentSlide = 0;
 let games = [];
-let autoplayInterval;
 
 // Cargar juegos desde la API
 async function loadGames() {
   try {
+    //obtengo los juegos
     const response = await fetch("https://vj.interfaces.jima.com.ar/api/v2");
     games = await response.json();
 
@@ -55,9 +55,10 @@ async function loadGames() {
     // Limitar a los primeros 10 juegos para el carrusel
     games = games.slice(0, 10);
 
+    //se genera el carrusel grande con los juegos obtenidos 
     renderCarruselGrande();
+    //se crean los indicadores
     createIndicators();
-    // startAutoplay();
   } catch (error) {
     console.error("Error al obtener los juegos:", error);
     document.getElementById("carruselGrande").innerHTML =
