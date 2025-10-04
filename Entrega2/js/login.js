@@ -28,3 +28,5 @@ document.getElementById('loginBtn').addEventListener('click', function(e) {
         window.location.href = 'index.html';
     }, 5000);
 });
+
+

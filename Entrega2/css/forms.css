@@ -214,4 +214,97 @@ a:hover {
   font-family: Arial, sans-serif;
 }
 
+/* Animación de shake (sacudida) para campos inválidos */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+/* Clase para aplicar la animación de error */
+.textbox.error {
+  animation: shake 0.5s;
+}
+
+.textbox.error input {
+  border: 2px solid #ff4444;
+  background-color: rgba(255, 68, 68, 0.1);
+}
+
+/* Clase para campos válidos */
+.textbox.success input {
+  border: 2px solid #4CAF50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Mensaje de error */
+.error-message {
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+  animation: fadeIn 0.3s;
+}
+
+.textbox.error .error-message {
+  display: block;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para el botón cuando está deshabilitado */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+.textbox label {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.textbox.error label {
+  color: #ff4444;
+}
+
+.textbox.success label {
+  color: #4CAF50;
+}
+
+/* Animación de pulso para errores graves */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1000); }
+  100% { transform: scale(1); }
+}
+
+.textbox.error input:focus {
+  animation: pulse 0.3s;
+}
+
+/* Estilos base para inputs */
+.textbox input {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.textbox input:focus {
+  outline: none;
+  border-color: #5d3fd3;
+}
 

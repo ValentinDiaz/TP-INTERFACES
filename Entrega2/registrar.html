@@ -1,45 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="css/forms.css">
-</head>
-<body>
+    <link rel="stylesheet" href="css/forms.css" />
+  </head>
+  <body>
     <div class="login-container">
-        <div class="login-box">
-            <img src="assets/images/imageform.png" alt="GameTime Logo" class="image-box">
-            <h2>Entra a GameTime</h2>
-            <p>Con tu usuario y contraseña</p>
-            <form>
-                <div class="textbox">
-                    <input type="text" placeholder="Nombre" name="nombre" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" placeholder="Apellido" name="apellido" required>
-                </div>
-                <div class="textbox">
-                    <input type="text" placeholder="Edad" name="Edad" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" placeholder="Email" name="Email" required>
-                </div>
-                <div class="textbox">
-                    <input type="text" placeholder="Nickname" name="Nickname" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" placeholder="Contraseña" name="contraseña" required>
-                </div>
-                <div class="textbox">
-                    <input type="password" placeholder="Confirmar Contraseña" name="Confirmar contraseña" required>
-                </div>
-                <img src="assets/images/captcha.png" class="captcha">
-                <input type="button" value="Registrarse" class="btn">
-                <p>Ya tienes cuenta?<a href="login.html"> Iniciar Sesion</a></p>
-            </form>
-            
-        </div>
+      <div class="login-box">
+        <img
+          src="assets/images/imageform.png"
+          alt="GameTime Logo"
+          class="image-box"
+        />
+        <h2>Entra a GameTime</h2>
+        <p>Con tu usuario y contraseña</p>
+        <form>
+          <div class="textbox">
+            <label for="nombre">Nombre</label>
+            <input type="text" placeholder="Nombre" name="nombre" id="nombre" required />
+          </div>
+          <div class="textbox">
+            <label for="apellido">Apellido</label>
+            <input
+              type="text"
+              placeholder="Apellido"
+              name="apellido"
+              id="apellido"
+              required
+            />
+          </div>
+          <div class="textbox">
+            <label for="edad">Edad</label>
+            <input type="text" placeholder="Edad" name="Edad" id="edad" required />
+          </div>
+          <div class="textbox">
+            <label for="email">Email</label>
+            <input type="email" placeholder="Email" name="Email" id="email" required />
+          </div>
+          <div class="textbox">
+            <label for="nickname">Nickname</label>
+            <input
+              type="text"
+              placeholder="Nickname"
+              name="Nickname"
+              id="nickname"
+              required
+            />
+          </div>
+          <div class="textbox">
+            <label for="contraseña">Contraseña</label>
+            <input
+              type="password"
+              placeholder="Contraseña"
+              name="contraseña"
+              id="contraseña"
+              required
+            />
+          </div>
+          <div class="textbox">
+            <label for="confirmar">Confirmar Contraseña</label>
+            <input
+              type="password"
+              placeholder="Confirmar Contraseña"
+              name="Confirmar contraseña"
+              id="confirmar"
+              required
+            />
+          </div>
+          <img src="assets/images/captcha.png" class="captcha" />
+          <input
+            type="button"
+            value="Registrarse"
+            class="btn"
+            id="btnRegistro"
+          />
+          <p>Ya tienes cuenta?<a href="login.html"> Iniciar Sesion</a></p>
+        </form>
+      </div>
     </div>
-</body>
+    <script src="js/registro.js"></script>
+  </body>
 </html>
