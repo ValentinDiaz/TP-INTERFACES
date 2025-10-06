@@ -1,11 +1,42 @@
 body {
-  background-color: #2e2e2e;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-size: cover;
+  background-position: center;
   height: 100vh;
 }
+body::before {
+  content: "";
+  background-image: url("/Entrega2/assets/images/fonndo.png");
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(10px); /* 👈 Ajusta el nivel de difuminado */
+  z-index: -2;
+}
 
+/* Capa oscura opcional para mejorar la legibilidad */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* 👈 Ajusta la opacidad (0.5 = 50% oscuro) */
+  z-index: -1;
+}
 
 .login-container {
   background-color: #333;
@@ -63,14 +94,62 @@ p {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #8e44ad;
+  background: linear-gradient(to bottom, #9b59b6, #8e44ad);
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  box-shadow: 0 4px 0 #732d91, 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .btn:hover {
-  background-color: #732d91;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 0 #732d91, 0 12px 25px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(142, 68, 173, 0.6);
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 0 #732d91, 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn.clicked {
+  animation: press3D 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes press3D {
+  0% {
+    transform: translateY(-5px) scale(1);
+    box-shadow: 0 6px 0 #732d91, 0 12px 25px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    transform: translateY(2px) scale(0.95);
+    box-shadow: 0 1px 0 #732d91, 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: translateY(-5px) scale(1);
+    box-shadow: 0 6px 0 #732d91, 0 12px 25px rgba(0, 0, 0, 0.4);
+  }
 }
 
 .social-buttons {
@@ -141,7 +220,7 @@ a:hover {
   height: 18px;
   background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
   border-radius: 50%;
-  animation: bouncing 0.8s ease-in-out infinite; 
+  animation: bouncing 0.8s ease-in-out infinite;
   box-shadow: 0 4px 12px rgba(142, 68, 173, 0.4);
   position: relative;
 }
@@ -205,7 +284,6 @@ a:hover {
   border-radius: 8px;
   transition: width 1.5s cubic-bezier(0.4, 1.6, 0.6, 1);
 }
-  
 
 * {
   margin: 0;
@@ -216,9 +294,23 @@ a:hover {
 
 /* Animación de shake (sacudida) para campos inválidos */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-  20%, 40%, 60%, 80% { transform: translateX(10px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
 }
 
 /* Clase para aplicar la animación de error */
@@ -233,7 +325,7 @@ a:hover {
 
 /* Clase para campos válidos */
 .textbox.success input {
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   background-color: rgba(76, 175, 80, 0.1);
 }
 
@@ -268,7 +360,6 @@ a:hover {
   cursor: not-allowed;
 }
 
-
 .textbox label {
   display: block;
   color: #ffffff;
@@ -283,14 +374,20 @@ a:hover {
 }
 
 .textbox.success label {
-  color: #4CAF50;
+  color: #4caf50;
 }
 
 /* Animación de pulso para errores graves */
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1000); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1000);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .textbox.error input:focus {
@@ -307,4 +404,3 @@ a:hover {
   outline: none;
   border-color: #5d3fd3;
 }
-
