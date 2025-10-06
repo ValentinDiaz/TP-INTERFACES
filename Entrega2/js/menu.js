@@ -33,28 +33,37 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Agregar productos
+  // Agregar productos
   document.querySelectorAll(".addCart").forEach((icon) => {
     icon.addEventListener("click", () => {
       const card = icon.closest(".game-card");
       const nombre = card.querySelector(".card-title").textContent;
-        const img = card.querySelector(".game-image").src;
-
+      const img = card.querySelector(".game-image").src;
 
       // Tomar el precio que aparece en la card
       const precioText = card.querySelector(".price-tag span").textContent;
       const precio = parseInt(precioText.replace("$", "")) || 0;
 
+      // Agregar animación de rebote al ícono
+      icon.classList.add("animate-add");
+
       // Agregar al carrito
       cart.push({ nombre, precio, img });
       renderCart();
 
-      // Mostrar icono de check temporal
-      icon.classList.add("hidden");
-      card.querySelector(".addedCart").classList.remove("hidden");
+      const checkIcon = card.querySelector(".addedCart");
+
+      // Mostrar check PRIMERO, luego ocultar el carrito
       setTimeout(() => {
-        icon.classList.remove("hidden");
-        card.querySelector(".addedCart").classList.add("hidden");
-      }, 1000);
+        // Hacer visible el check (sin hidden)
+        checkIcon.classList.remove("hidden");
+        checkIcon.classList.add("show-check", "pulse");
+
+        // Ocultar el ícono del carrito
+        icon.classList.add("hidden");
+        icon.classList.remove("animate-add");
+
+      }, 10 ); // Delay mínimo para que sea más fluido
     });
   });
 
@@ -70,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
       div.className = "cart-item";
 
       // Tomar la imagen de la card
-      const imgSrc = item.img || "assets/images/default.png"; // fallback si no tiene imagen
+      const imgSrc = item.img || "assets/images/default.png";
       div.innerHTML = `
       <img src="${imgSrc}" alt="${item.nombre}" class="cart-item-image">
       <span>${item.nombre}</span>
