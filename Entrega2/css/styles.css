@@ -312,7 +312,6 @@ body {
 .game-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   border-radius: 15px;
   transition: filter 0.5s ease-in;
 }
@@ -413,130 +412,262 @@ body {
 
 /*Carruseles*/
 
-.carrusel-grande {
-  width: 100vw;
-  min-height: 220px; /* más chico en mobile */
-  border-radius: 0;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-  background: #000;
-}
-
-.carrusel-grande-inner {
-  display: flex;
-  transition: transform 0.5s ease-in-out;
-  height: 100%;
-}
-
-.carrusel-grande-item {
-  min-width: 100%;
+.carrusel-grande-container {
   position: relative;
-  height: 220px; /* acorde a móvil */
-  display: flex;
-  align-items: stretch;
+  margin-bottom: 20px;
 }
 
-.carrusel-grande-item img {
+.carrusel-grande {
+  position: relative;
+  height: 250px;
+  overflow: visible;
+  
+}
+
+/* Viewport del coverflow */
+.coverflow-viewport {
   width: 100%;
   height: 100%;
-  display: block;
-  border-radius: 8px;
-  object-fit: cover; /* mejor en mobile */
+  position: relative;
+  perspective: 800px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Texto overlay */
-.game-overlay {
+.coverflow-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+/* Items del coverflow - MOBILE */
+.coverflow-item {
+  position: absolute;
+  width: 300px;
+  height: 200px;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.coverflow-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #1a1a1a;
+}
+
+.coverflow-item:hover .coverflow-card {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.coverflow-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* Overlay de información - MOBILE */
+.coverflow-item .game-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 12px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.98) 0%,
+    rgba(0, 0, 0, 0.85) 70%,
+    transparent 100%
+  );
+  padding: 15px 12px 12px;
+  transform: translateY(70%);
+  transition: transform 0.4s ease;
+  pointer-events: none;
 }
 
-.game-title {
-  color: white;
-  font-size: 18px;
+.coverflow-item.active .game-overlay {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.game-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.coverflow-item .game-title {
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 4px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  line-height: 1.2;
 }
 
-.game-rating {
+.coverflow-item .game-rating {
+  font-size: 11px;
   color: #ffd700;
-  font-size: 12px;
-  margin-bottom: 4px;
+  pointer-events: none;
 }
 
-.game-description {
-  color: #e0e0e0;
-  font-size: 12px;
-  margin-bottom: 10px;
+.coverflow-item .game-description {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.3;
+  pointer-events: none;
+  margin: 2px 0 6px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* Botón */
-.play-btn {
-  background: linear-gradient(135deg, #ff6b6b, #ff5252);
+.coverflow-item .play-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   padding: 8px 20px;
   border-radius: 20px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
-  font-size: 12px;
-  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+  pointer-events: auto;
 }
 
-/* Indicadores */
-.carrusel-grande-indicators {
+.coverflow-item .play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.6);
+}
+
+/* Botones de navegación - MOBILE */
+.coverflow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 32px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 10px;
+  line-height: 1;
+}
+
+.coverflow-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.coverflow-btn-prev {
+  left: 10px;
+}
+
+.coverflow-btn-next {
+  right: 10px;
+}
+
+/* Indicadores - MOBILE */
+.carrusel-grande-indicators {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+  
 }
 
 .indicator {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #555;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.indicator:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
 }
 
 .indicator.active {
-  background: #8a2be2;
-  width: 20px;
-  border-radius: 6px;
+  background: white;
+  width: 24px;
+  border-radius: 4px;
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
-/* Flechas en mobile más pequeñas */
-.carrusel-grande-btn {
+/* Loading */
+.loading {
   position: absolute;
-  top: 20%; /* 👈 subimos un poco */
-  transform: translateY(-50%);
-  background: rgba(138, 43, 226, 0.8);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
   color: white;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
+  text-align: center;
 }
 
-.carrusel-grande-btn.prev {
-  left: 10px;
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: #ff6b6b;
+  text-align: center;
+  padding: 15px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 8px;
 }
-.carrusel-grande-btn.next {
-  right: 10px;
+
+/* Animaciones */
+@keyframes indicatorPulse {
+  /* 0 a 100 mantiene el tamaño de los indicadores en 1 osea el original, pero al 50% aumenta un 1.3 */
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+@keyframes btnClick {
+    /* 0 a 100 mantiene el tamaño de los botones en 1 osea el original, pero al 50% se achican un poco dando la impresion de que se preciona     */
+
+  0%,
+  100% {
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    transform: translateY(-50%) scale(0.9);
+  }
 }
 
 .carruseles {
@@ -1410,157 +1541,84 @@ textarea:focus {
   }
   /*footer*/
 
+  /* Container principal */
+ 
+
   .carrusel-grande {
-    width: 100vw;
-    min-height: 400px;
-    border-radius: 0;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    background: #000;
+    height: 450px;
+    margin-bottom: 10px;
   }
 
-  .carrusel-grande-inner {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    height: 100%;
+  .coverflow-viewport {
+    perspective: 1200px;
   }
 
-  .carrusel-grande-item {
-    min-width: 100%;
-    position: relative;
-    height: 400px;
-    display: flex;
-    align-items: stretch;
+  .coverflow-item {
+    width: 600px;
+    height: 350px;
   }
 
-  .carrusel-grande-item img {
-    width: 100%;
-    height: 100%;
-    display: block;
-    border-radius: 12px;
+  .coverflow-card {
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   }
 
-  .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-    color: white;
-    font-size: 20px;
+  .coverflow-item .game-overlay {
+    padding: 25px 25px 20px;
+    transform: translateY(60%);
   }
 
-  .game-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 20px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  .game-content {
+    gap: 8px;
   }
 
-  .game-title {
-    color: white;
-    font-size: 28px;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    margin-bottom: 8px;
+  .coverflow-item .game-title {
+    font-size: 26px;
   }
 
-  .game-rating {
-    color: #ffd700;
-    font-size: 16px;
-    margin-bottom: 8px;
-  }
-
-  .game-description {
-    color: #e0e0e0;
+  .coverflow-item .game-rating {
     font-size: 14px;
-    margin-bottom: 15px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
   }
 
-  .play-btn {
-    background: linear-gradient(135deg, #ff6b6b, #ff5252);
-    color: white;
-    border: none;
-    padding: 12px 30px;
+  .coverflow-item .game-description {
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 4px 0 8px 0;
+    -webkit-line-clamp: 3;
+  }
+
+  .coverflow-item .play-btn {
+    padding: 12px 32px;
     border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 14px;
-    box-shadow: 0 4px 15px rgba(255, 82, 82, 0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
+    font-size: 16px;
   }
 
-  .play-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 82, 82, 0.6);
+  .coverflow-btn {
+    font-size: 48px;
+    width: 60px;
+    height: 60px;
   }
 
-  .carrusel-grande-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(138, 43, 226, 0.9);
-    color: white;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    z-index: 10;
-  }
-
-  .carrusel-grande-btn:hover {
-    background: rgba(138, 43, 226, 1);
-    transform: translateY(-50%) scale(1.1);
-  }
-
-  .carrusel-grande-btn.prev {
+  .coverflow-btn-prev {
     left: 20px;
   }
 
-  .carrusel-grande-btn.next {
+  .coverflow-btn-next {
     right: 20px;
   }
 
   .carrusel-grande-indicators {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 20px;
+    bottom: 5px;
+    gap: 12px;
   }
 
   .indicator {
     width: 12px;
     height: 12px;
-    border-radius: 50%;
-    background: #555;
-    cursor: pointer;
-    transition: all 0.3s;
   }
 
   .indicator.active {
-    background: #8a2be2;
-    width: 30px;
+    width: 32px;
     border-radius: 6px;
-  }
-
-  .error-message {
-    color: #ff6b6b;
-    text-align: center;
-    padding: 40px;
-    font-size: 18px;
   }
 }
