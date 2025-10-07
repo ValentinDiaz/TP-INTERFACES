@@ -2,11 +2,10 @@
 const loginForm = document.querySelector("form");
 const loginBtn = document.getElementById("loginBtn");
 
-// Funciones para mostrar errores o éxitos
+// Función para mostrar errores
 function mostrarError(input, mensaje) {
   const textbox = input.parentElement;
   textbox.classList.add("error");
-  textbox.classList.remove("success");
 
   let errorMsg = textbox.querySelector(".error-message");
   if (!errorMsg) {
@@ -17,10 +16,10 @@ function mostrarError(input, mensaje) {
   errorMsg.textContent = mensaje;
 }
 
-function mostrarExito(input) {
+// Función para limpiar errores
+function limpiarError(input) {
   const textbox = input.parentElement;
   textbox.classList.remove("error");
-  textbox.classList.add("success");
 
   const errorMsg = textbox.querySelector(".error-message");
   if (errorMsg) {
@@ -41,8 +40,6 @@ loginBtn.addEventListener("click", function (e) {
     if (valor === "") {
       mostrarError(input, "Este campo es obligatorio");
       formularioValido = false;
-    } else {
-      mostrarExito(input);
     }
   });
 
@@ -55,29 +52,36 @@ loginBtn.addEventListener("click", function (e) {
     return;
   }
 
-  // ✅ AQUÍ ESTABA EL PROBLEMA: Faltaba la acción después de validar
-  
-  // Opción 1: Enviar el formulario (si tienes un backend)
-  // loginForm.submit();
-  
-  // Opción 2: Redirigir a otra página (simulando login exitoso)
-  console.log("✅ Login exitoso!");
+  // Cambiar a "Ingresando..."
   loginBtn.value = "Ingresando...";
   loginBtn.disabled = true;
-  
-  // Simular delay de servidor y redirigir
-  setTimeout(() => {
-    window.location.href = "index.html"; 
-  }, 1000);
-  
 
+  // Simular delay y transformar en pulgar
+  setTimeout(() => {
+    // Ocultar el input y crear el pulgar
+    loginBtn.style.display = "none";
+
+    const thumbsUpDiv = document.createElement("div");
+    thumbsUpDiv.className = "thumbs-up";
+    thumbsUpDiv.innerHTML = `
+      <svg width="50" height="50" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 11H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3"/>
+      </svg>
+    `;
+    loginBtn.parentElement.appendChild(thumbsUpDiv);
+
+    // Redirigir después de mostrar el pulgar
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 1000);
+  }, 1000);
 });
 
 // Limpiar errores al escribir
 loginForm.querySelectorAll("input[required]").forEach((input) => {
-  input.addEventListener("input", function() {
+  input.addEventListener("input", function () {
     if (this.value.trim() !== "") {
-      mostrarExito(this);
+      limpiarError(this);
     }
   });
 });

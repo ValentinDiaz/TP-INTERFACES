@@ -201,8 +201,6 @@ a:hover {
   z-index: 2;
 }
 
-
-
 * {
   margin: 0;
   padding: 0;
@@ -321,4 +319,50 @@ a:hover {
 .textbox input:focus {
   outline: none;
   border-color: #5d3fd3;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes thumbPop {
+  0% {
+    transform: scale(0.5) rotate(-20deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Transformación en pulgar */
+.thumbs-up {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: thumbPop 0.6s ease-out;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+  margin: 0 auto;
+  cursor: default;
+}
+
+.thumbs-up svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
