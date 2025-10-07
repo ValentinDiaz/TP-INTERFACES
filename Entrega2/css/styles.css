@@ -204,8 +204,6 @@ body {
   background: rgba(255, 255, 255, 0.05);
 }
 
-
-
 .nav-list a i {
   font-size: 1rem;
   width: 18px;
@@ -1054,10 +1052,10 @@ body {
 .cont-pegSolitaire {
   width: 880px;
   height: 620px;
-   position: relative;
+  position: relative;
   display: flex;
   justify-content: center;
-  align-items: center
+  align-items: center;
 }
 
 .juego-image {
@@ -1067,8 +1065,8 @@ body {
   border-radius: 10px;
   object-fit: cover;
 }
-.juego-image-overlay{
-   position: absolute;
+.juego-image-overlay {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -1089,28 +1087,57 @@ body {
 
 /*boton con el que clickeo y me abre la seccion de compartir*/
 .open-compartir-btn {
-  background-color: #9747ff; /* Color primario del botón */
-  color: white;
+  background-color: #c4b5fd;
+  color: rgb(24, 23, 23);
   border: none;
   font-family: "Roboto", "Condensed ExtraBold", sans-serif;
   font-weight: 800;
   font-size: 14px;
   border-radius: 20px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   width: 140px;
   height: 39px;
   margin-top: 1rem;
   margin-bottom: 2rem;
   z-index: 30;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(196, 181, 253, 0.3);
 }
 
 .open-compartir-btn:hover {
-  background-color: #e684ff;
+  background-color: #a78bfa;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.5);
+}
+
+.open-compartir-btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px rgba(196, 181, 253, 0.4);
+}
+
+.open-compartir-btn .btn-text {
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.open-compartir-btn .btn-icon {
+  position: absolute;
+  opacity: 0;
+  font-size: 1.2rem;
+  transition: opacity 0.2s ease 0.1s;
+}
+
+.open-compartir-btn:hover .btn-text {
+  opacity: 0;
+}
+
+.open-compartir-btn:hover .btn-icon {
+  opacity: 1;
 }
 
 /*boton cerrar  compaetir*/
