@@ -1054,13 +1054,30 @@ body {
 .cont-pegSolitaire {
   width: 880px;
   height: 620px;
+   position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center
 }
+
 .juego-image {
   height: 100%;
   width: 100%;
   filter: blur(5px);
+  border-radius: 10px;
+  object-fit: cover;
 }
-
+.juego-image-overlay{
+   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  max-width: 600px;
+  z-index: 10;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
 .cont-all {
   /*Agregué este div que contiene todos los elementos de la pagina para que esten centrados*/
   display: flex;
