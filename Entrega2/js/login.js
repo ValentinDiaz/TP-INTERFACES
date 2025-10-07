@@ -1,32 +1,83 @@
-document.getElementById('loginBtn').addEventListener('click', function(e) {
-    var container = document.querySelector('.login-container');
-    var body = document.body;
-    var spinner = document.getElementById('spinner');
-    var progressBarContainer = document.getElementById('progressBarContainer');
-    var progressBar = document.getElementById('progressBar');
-    var progressPercent = document.getElementById('progressPercent');
+// Seleccionar el formulario y el botón
+const loginForm = document.querySelector("form");
+const loginBtn = document.getElementById("loginBtn");
 
-    container.classList.add('login-animating');
-    body.classList.add('body-animating');
-    spinner.classList.add('show');
-    progressBarContainer.style.display = 'block';
+// Funciones para mostrar errores o éxitos
+function mostrarError(input, mensaje) {
+  const textbox = input.parentElement;
+  textbox.classList.add("error");
+  textbox.classList.remove("success");
 
-    let percent = 0;
-    progressBar.style.width = '0%';
-    progressPercent.textContent = '0%';
-    let interval = setInterval(function() {
-        if (percent < 100) {
-            percent += 2;
-            progressBar.style.width = percent + '%';
-            progressPercent.textContent = percent + '%';
-        } else {
-            clearInterval(interval);
-        }
-    }, 50); // ~5s total
+  let errorMsg = textbox.querySelector(".error-message");
+  if (!errorMsg) {
+    errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    textbox.appendChild(errorMsg);
+  }
+  errorMsg.textContent = mensaje;
+}
 
-    setTimeout(function() {
-        window.location.href = 'index.html';
-    }, 5000);
+function mostrarExito(input) {
+  const textbox = input.parentElement;
+  textbox.classList.remove("error");
+  textbox.classList.add("success");
+
+  const errorMsg = textbox.querySelector(".error-message");
+  if (errorMsg) {
+    errorMsg.remove();
+  }
+}
+
+// Evento click del botón
+loginBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  let formularioValido = true;
+  const inputs = loginForm.querySelectorAll("input[required]");
+
+  // Validar cada campo
+  inputs.forEach((input) => {
+    const valor = input.value.trim();
+    if (valor === "") {
+      mostrarError(input, "Este campo es obligatorio");
+      formularioValido = false;
+    } else {
+      mostrarExito(input);
+    }
+  });
+
+  // Si hay error, animación shake
+  if (!formularioValido) {
+    loginBtn.style.animation = "shake 0.5s";
+    setTimeout(() => {
+      loginBtn.style.animation = "";
+    }, 500);
+    return;
+  }
+
+  // ✅ AQUÍ ESTABA EL PROBLEMA: Faltaba la acción después de validar
+  
+  // Opción 1: Enviar el formulario (si tienes un backend)
+  // loginForm.submit();
+  
+  // Opción 2: Redirigir a otra página (simulando login exitoso)
+  console.log("✅ Login exitoso!");
+  loginBtn.value = "Ingresando...";
+  loginBtn.disabled = true;
+  
+  // Simular delay de servidor y redirigir
+  setTimeout(() => {
+    window.location.href = "index.html"; 
+  }, 1000);
+  
+
 });
 
-
+// Limpiar errores al escribir
+loginForm.querySelectorAll("input[required]").forEach((input) => {
+  input.addEventListener("input", function() {
+    if (this.value.trim() !== "") {
+      mostrarExito(this);
+    }
+  });
+});
