@@ -1,9 +1,7 @@
 // Seleccionar el formulario y el botón
 const form = document.querySelector("form");
-// En lugar de:
-
-// Usar:
 const btnRegistro = document.getElementById("btnRegistro");
+
 // Función para mostrar error
 function mostrarError(input, mensaje) {
   const textbox = input.parentElement;
@@ -112,8 +110,25 @@ btnRegistro.addEventListener("click", function (e) {
   });
 
   if (formularioValido) {
-    // Redirige a index.html después del mensaje
-    window.location.href = "index.html";
+    // Simular delay y transformar en pulgar
+    setTimeout(() => {
+      // Ocultar el botón y crear el pulgar
+      btnRegistro.style.display = "none";
+
+      const thumbsUpDiv = document.createElement("div");
+      thumbsUpDiv.className = "thumbs-up";
+      thumbsUpDiv.innerHTML = `
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 11H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3"/>
+        </svg>
+      `;
+      btnRegistro.parentElement.appendChild(thumbsUpDiv);
+
+      // Redirigir después de mostrar el pulgar
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+    }, 1000);
   } else {
     // Animación adicional para el botón
     btnRegistro.style.animation = "shake 0.5s";
