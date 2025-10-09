@@ -1,0 +1,139 @@
+// Seleccionar el formulario y el botón
+const form = document.querySelector("form");
+const btnRegistro = document.getElementById("btnRegistro");
+
+// Función para mostrar error
+function mostrarError(input, mensaje) {
+  const textbox = input.parentElement;
+  textbox.classList.add("error");
+  textbox.classList.remove("success");
+
+  // Crear o actualizar mensaje de error
+  let errorMsg = textbox.querySelector(".error-message");
+  if (!errorMsg) {
+    errorMsg = document.createElement("span");
+    errorMsg.className = "error-message";
+    textbox.appendChild(errorMsg);
+  }
+  errorMsg.textContent = mensaje;
+}
+
+// Función para mostrar éxito
+function mostrarExito(input) {
+  const textbox = input.parentElement;
+  textbox.classList.remove("error");
+  textbox.classList.add("success");
+
+  const errorMsg = textbox.querySelector(".error-message");
+  if (errorMsg) {
+    errorMsg.remove();
+  }
+}
+
+// Validar email
+function validarEmail(email) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+}
+
+// Validar edad (debe ser número y mayor a 0)
+function validarEdad(edad) {
+  return !isNaN(edad) && edad > 0 && edad < 120;
+}
+
+// Validar contraseñas coinciden
+function validarContraseñas(password, confirmPassword) {
+  return password === confirmPassword && password.length >= 6;
+}
+
+// Evento de validación en tiempo real
+form.querySelectorAll("input").forEach((input) => {
+  input.addEventListener("blur", function () {
+    const nombre = this.name;
+    const valor = this.value.trim();
+
+    if (valor === "") {
+      mostrarError(this, "Este campo es obligatorio");
+      return;
+    }
+
+    // Validaciones específicas
+    if (nombre === "Email" && !validarEmail(valor)) {
+      mostrarError(this, "Email inválido");
+    } else if (nombre === "Edad" && !validarEdad(valor)) {
+      mostrarError(this, "Edad inválida");
+    } else if (nombre === "contraseña" && valor.length < 6) {
+      mostrarError(this, "La contraseña debe tener al menos 6 caracteres");
+    } else if (nombre === "Confirmar contraseña") {
+      const password = form.querySelector('input[name="contraseña"]').value;
+      if (valor !== password) {
+        mostrarError(this, "Las contraseñas no coinciden");
+      } else {
+        mostrarExito(this);
+      }
+    } else {
+      mostrarExito(this);
+    }
+  });
+});
+
+// Validación al enviar el formulario
+btnRegistro.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  let formularioValido = true;
+  const inputs = form.querySelectorAll("input[required]");
+
+  inputs.forEach((input) => {
+    const valor = input.value.trim();
+    const nombre = input.name;
+
+    if (valor === "") {
+      mostrarError(input, "Este campo es obligatorio");
+      formularioValido = false;
+    } else if (nombre === "Email" && !validarEmail(valor)) {
+      mostrarError(input, "Email inválido");
+      formularioValido = false;
+    } else if (nombre === "Edad" && !validarEdad(valor)) {
+      mostrarError(input, "Edad inválida");
+      formularioValido = false;
+    } else if (nombre === "contraseña" && valor.length < 6) {
+      mostrarError(input, "La contraseña debe tener al menos 6 caracteres");
+      formularioValido = false;
+    } else if (nombre === "Confirmar contraseña") {
+      const password = form.querySelector('input[name="contraseña"]').value;
+      if (valor !== password) {
+        mostrarError(input, "Las contraseñas no coinciden");
+        formularioValido = false;
+      }
+    }
+  });
+
+  if (formularioValido) {
+    // Simular delay y transformar en pulgar
+    setTimeout(() => {
+      // Ocultar el botón y crear el pulgar
+      btnRegistro.style.display = "none";
+
+      const thumbsUpDiv = document.createElement("div");
+      thumbsUpDiv.className = "thumbs-up";
+      thumbsUpDiv.innerHTML = `
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 11H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h3"/>
+        </svg>
+      `;
+      btnRegistro.parentElement.appendChild(thumbsUpDiv);
+
+      // Redirigir después de mostrar el pulgar
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1000);
+    }, 1000);
+  } else {
+    // Animación adicional para el botón
+    btnRegistro.style.animation = "shake 0.5s";
+    setTimeout(() => {
+      btnRegistro.style.animation = "";
+    }, 500);
+  }
+});
