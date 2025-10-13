@@ -7,7 +7,7 @@ const playButton = {
   radius: 60,
 };
 
-let gameState = "menu"; // menu, cargando, seleccion, jugando
+let gameState = "menu"; // menu, cargando, seleccion-dificultad, jugando
 let imagenSeleccionada = null;
 let spinnerAngle = 0;
 let imagenesListas = 0;
@@ -48,32 +48,32 @@ function drawUi() {
     playGame();
   } else if (gameState === "cargando") {
     drawSpinner();
-  } else if (gameState === "seleccion") {
-    mostrarSeleccionImagenes();
-  }
+  } else if (gameState === "seleccion-dificultad") {
+    seleccionarNivelDeDificultad();
+  } 
 }
 
 function drawSpinner() {
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
   const radius = 40;
-  
+
   // Texto "Cargando..."
   ctx.fillStyle = "white";
   ctx.font = "24px sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("Cargando imágenes...", centerX, centerY - 80);
-  
+
   // Porcentaje de carga
   const porcentaje = Math.round((imagenesListas / imagenes.length) * 100);
   ctx.font = "18px sans-serif";
   ctx.fillText(`${porcentaje}%`, centerX, centerY + 80);
-  
+
   // Círculo del spinner
   ctx.save();
   ctx.translate(centerX, centerY);
   ctx.rotate(spinnerAngle);
-  
+
   // Arco del spinner
   ctx.beginPath();
   ctx.arc(0, 0, radius, 0, Math.PI * 1.5);
@@ -81,9 +81,9 @@ function drawSpinner() {
   ctx.lineWidth = 6;
   ctx.lineCap = "round";
   ctx.stroke();
-  
+
   ctx.restore();
-  
+
   // Incrementar ángulo para animación
   spinnerAngle += 0.1;
 }
@@ -138,7 +138,83 @@ function mostrarSeleccionImagenes() {
   });
 }
 
+function seleccionarNivelDeDificultad() {
+  // Limpiar canvas
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Título
+}
+
+function seleccionarNivelDeDificultad() {
+  // Limpiar canvas
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Título
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 48px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("BLOCKA", canvas.width / 2, 100);
+
+  // Subtítulo
+  ctx.font = "24px Arial";
+  ctx.fillStyle = "#cccccc";
+  ctx.fillText("Selecciona la dificultad", canvas.width / 2, 160);
+
+  // Opciones de dificultad
+  const opciones = [
+    { nivel: "Fácil", cuadros: 4, descripcion: "2x2" },
+    { nivel: "Medio", cuadros: 9, descripcion: "3x3" },
+    { nivel: "Difícil", cuadros: 16, descripcion: "4x4" },
+  ];
+
+  const espacioY = 80;
+  const inicioY = 220;
+
+  opciones.forEach((opcion, index) => {
+    const y = inicioY + index * espacioY;
+    const rectX = canvas.width / 2 - 200;
+    const rectY = y - 35;
+    const rectWidth = 400;
+    const rectHeight = 60;
+
+    // Botón
+    ctx.fillStyle = "#2a2a2a";
+    ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
+    ctx.strokeStyle = "#4a4a4a";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+
+    // Texto del nivel
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 28px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText(opcion.nivel, rectX + 20, y);
+
+    // Descripción
+    ctx.fillStyle = "#888888";
+    ctx.font = "20px Arial";
+    ctx.textAlign = "right";
+    ctx.fillText(opcion.descripcion, rectX + rectWidth - 20, y);
+  });
+
+  // Instrucción
+  ctx.fillStyle = "#666666";
+  ctx.font = "18px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Haz clic en una opción para comenzar",
+    canvas.width / 2,
+    canvas.height - 40
+  );
+}
+
 function playGame() {
+
+
+  mostrarSeleccionImagenes();
+
   // Limpiar canvas
   ctx.fillStyle = "#1e1e1e";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -177,7 +253,7 @@ canvas.addEventListener("click", (e) => {
 
   // Click en el botón Play del menú
   if (gameState === "menu") {
-    gameState = "seleccion";
+    gameState = "seleccion-dificultad";
     drawUi();
   }
 });
