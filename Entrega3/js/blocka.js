@@ -11,6 +11,7 @@ let gameState = "menu"; // menu, cargando, seleccion-dificultad, jugando
 let imagenSeleccionada = null;
 let spinnerAngle = 0;
 let imagenesListas = 0;
+let dificultadSeleccionada = null;
 
 const imagenes = [
   { src: "assets/images/dino1.jpg", loaded: false },
@@ -43,14 +44,18 @@ function drawUi() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   if (gameState === "menu") {
-    drawPlayButton(playButton.x, playButton.y, playButton.radius);
-  } else if (gameState === "jugar") {
-    playGame();
-  } else if (gameState === "cargando") {
-    drawSpinner();
+    drawMenu();
   } else if (gameState === "seleccion-dificultad") {
     seleccionarNivelDeDificultad();
-  } 
+  } else if (gameState === "seleccion-imagen") {
+    mostrarSeleccionImagenes();
+  } else if (gameState === "jugando") {
+    playGame();
+  }
+}
+
+function drawMenu() {
+  drawPlayButton(playButton.x, playButton.y, playButton.radius);
 }
 
 function drawSpinner() {
@@ -89,6 +94,10 @@ function drawSpinner() {
 }
 
 function mostrarSeleccionImagenes() {
+  // Limpiar canvas
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   // Título
   ctx.fillStyle = "white";
   ctx.font = "30px sans-serif";
@@ -144,14 +153,6 @@ function seleccionarNivelDeDificultad() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Título
-}
-
-function seleccionarNivelDeDificultad() {
-  // Limpiar canvas
-  ctx.fillStyle = "#1e1e1e";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Título
   ctx.fillStyle = "#ffffff";
   ctx.font = "bold 48px Arial";
   ctx.textAlign = "center";
@@ -178,6 +179,12 @@ function seleccionarNivelDeDificultad() {
     const rectY = y - 35;
     const rectWidth = 400;
     const rectHeight = 60;
+
+    // Guardar coordenadas para detección de clicks
+    opcion.x = rectX;
+    opcion.y = rectY;
+    opcion.width = rectWidth;
+    opcion.height = rectHeight;
 
     // Botón
     ctx.fillStyle = "#2a2a2a";
@@ -208,23 +215,20 @@ function seleccionarNivelDeDificultad() {
     canvas.width / 2,
     canvas.height - 40
   );
+
+  // Guardar opciones globalmente para el click handler
+  canvas.opciones = opciones;
 }
 
 function playGame() {
-
-
-  mostrarSeleccionImagenes();
-
-  // Limpiar canvas
+  // Aquí va la lógica del juego una vez seleccionada imagen y dificultad
   ctx.fillStyle = "#1e1e1e";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Texto centrado
+  
   ctx.fillStyle = "white";
   ctx.font = "30px sans-serif";
   ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("Juego Iniciado", canvas.width / 2, canvas.height / 2);
+  ctx.fillText("¡Jugando!", canvas.width / 2, canvas.height / 2);
 }
 
 function drawPlayButton(x, y, radius) {
@@ -245,17 +249,53 @@ function drawPlayButton(x, y, radius) {
   ctx.fill();
 }
 
+// Manejador único de clicks que delega según el estado
 canvas.addEventListener("click", (e) => {
-  // Si estamos en el menú, cualquier click arranca el juego
   const rect = canvas.getBoundingClientRect();
   const mouseX = e.clientX - rect.left;
   const mouseY = e.clientY - rect.top;
 
-  // Click en el botón Play del menú
   if (gameState === "menu") {
+    handleMenuClick(mouseX, mouseY);
+  } else if (gameState === "seleccion-dificultad") {
+    handleDificultadClick(mouseX, mouseY);
+  } else if (gameState === "seleccion-imagen") {
+    handleImagenClick(mouseX, mouseY);
+  }
+});
+
+function handleMenuClick(mouseX, mouseY) {
+  // Verificar si el click está dentro del botón de play
+  const dx = mouseX - playButton.x;
+  const dy = mouseY - playButton.y;
+  const distancia = Math.sqrt(dx * dx + dy * dy);
+
+  if (distancia <= playButton.radius) {
     gameState = "seleccion-dificultad";
     drawUi();
   }
-});
+}
+
+function handleDificultadClick(mouseX, mouseY) {
+  const opciones = canvas.opciones;
+  
+  if (!opciones) return;
+
+  opciones.forEach((opcion) => {
+    if (
+      mouseX >= opcion.x &&
+      mouseX <= opcion.x + opcion.width &&
+      mouseY >= opcion.y &&
+      mouseY <= opcion.y + opcion.height
+    ) {
+      dificultadSeleccionada = opcion;
+      console.log(`Dificultad seleccionada: ${opcion.nivel} (${opcion.cuadros} cuadros)`);
+      gameState = "seleccion-imagen";
+      drawUi();
+    }
+  });
+}
+
+
 
 drawUi();
