@@ -995,7 +995,6 @@ body {
 }
 /*Fin carruseles*/
 
-/* 4 en linea*/
 
 /*contenedor de la info sobre la visualizacion del juego*/
 .cont-texto-pegSolitaire {
@@ -1048,7 +1047,7 @@ body {
   height: 620px;
   background-color: #484848;
 }
-/*Donde se va a visualizar el 4 en linea*/
+/*Donde se va a visualizar */
 .cont-pegSolitaire {
   width: 880px;
   height: 620px;
