@@ -7,11 +7,18 @@ const playButton = {
   radius: 60,
 };
 
-let gameState = "menu"; // menu, cargando, seleccion-dificultad, jugando
+let gameState = "menu"; // menu, cargando, seleccion-dificultad, seleccion-imagen, jugando
 let imagenSeleccionada = null;
 let spinnerAngle = 0;
 let imagenesListas = 0;
 let dificultadSeleccionada = null;
+
+// Opciones de dificultad globales
+const opcionesDificultad = [
+  { nivel: "Fácil", cuadros: 4, descripcion: "2x2" },
+  { nivel: "Medio", cuadros: 9, descripcion: "3x3" },
+  { nivel: "Difícil", cuadros: 16, descripcion: "4x4" },
+];
 
 const imagenes = [
   { src: "assets/images/dino1.jpg", loaded: false },
@@ -26,17 +33,21 @@ const imagenes = [
 imagenes.forEach((img, index) => {
   const image = new Image();
   image.src = img.src;
+
   image.onload = () => {
     img.loaded = true;
     img.element = image;
     imagenesListas++;
+  };
 
-    // Cuando todas las imágenes estén cargadas, cambiar a selección
-    if (imagenesListas === imagenes.length && gameState === "cargando") {
-      gameState = "seleccion";
-    }
+  image.onerror = () => {
+    console.error(`❌ Error cargando: ${img.src}`);
   };
 });
+
+// Ajustar el tamaño del canvas al contenedor
+
+// Redimensionar al cargar y cuando cambie el tamaño de la ventana
 
 function drawUi() {
   // Fondo
@@ -55,7 +66,21 @@ function drawUi() {
 }
 
 function drawMenu() {
+  // Actualizar posición del botón
+  playButton.x = canvas.width / 2;
+  playButton.y = canvas.height / 2;
+
   drawPlayButton(playButton.x, playButton.y, playButton.radius);
+
+  // Texto instructivo
+  ctx.fillStyle = "white";
+  ctx.font = "24px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Toca en cualquier lugar para comenzar",
+    canvas.width / 2,
+    canvas.height - 50
+  );
 }
 
 function drawSpinner() {
@@ -100,7 +125,7 @@ function mostrarSeleccionImagenes() {
 
   // Título
   ctx.fillStyle = "white";
-  ctx.font = "30px sans-serif";
+  ctx.font = "30px Arial";
   ctx.textAlign = "center";
   ctx.fillText("Selecciona una imagen", canvas.width / 2, 50);
 
@@ -130,12 +155,12 @@ function mostrarSeleccionImagenes() {
     ctx.fillRect(x, y, imgWidth, imgHeight);
 
     // Dibujar imagen si está cargada
-    if (img.loaded) {
+    if (img.loaded && img.element) {
       ctx.drawImage(img.element, x, y, imgWidth, imgHeight);
     } else {
       // Mostrar "Cargando..." si no está lista
       ctx.fillStyle = "white";
-      ctx.font = "14px sans-serif";
+      ctx.font = "14px Arial";
       ctx.textAlign = "center";
       ctx.fillText("Cargando...", x + imgWidth / 2, y + imgHeight / 2);
     }
@@ -145,6 +170,16 @@ function mostrarSeleccionImagenes() {
     ctx.lineWidth = 2;
     ctx.strokeRect(x, y, imgWidth, imgHeight);
   });
+
+  // Instrucción
+  ctx.fillStyle = "#666666";
+  ctx.font = "18px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Presiona ESC para volver",
+    canvas.width / 2,
+    canvas.height - 40
+  );
 }
 
 function seleccionarNivelDeDificultad() {
@@ -163,43 +198,40 @@ function seleccionarNivelDeDificultad() {
   ctx.fillStyle = "#cccccc";
   ctx.fillText("Selecciona la dificultad", canvas.width / 2, 160);
 
-  // Opciones de dificultad
-  const opciones = [
-    { nivel: "Fácil", cuadros: 4, descripcion: "2x2" },
-    { nivel: "Medio", cuadros: 9, descripcion: "3x3" },
-    { nivel: "Difícil", cuadros: 16, descripcion: "4x4" },
-  ];
-
   const espacioY = 80;
   const inicioY = 220;
 
-  opciones.forEach((opcion, index) => {
+  opcionesDificultad.forEach((opcion, index) => {
     const y = inicioY + index * espacioY;
     const rectX = canvas.width / 2 - 200;
     const rectY = y - 35;
     const rectWidth = 400;
     const rectHeight = 60;
 
-    // Guardar coordenadas para detección de clicks
+    // Guardar coordenadas para clicks
     opcion.x = rectX;
     opcion.y = rectY;
     opcion.width = rectWidth;
     opcion.height = rectHeight;
 
-    // Botón
+    // Botón normal
     ctx.fillStyle = "#2a2a2a";
     ctx.fillRect(rectX, rectY, rectWidth, rectHeight);
     ctx.strokeStyle = "#4a4a4a";
     ctx.lineWidth = 2;
     ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
 
-    // Texto del nivel
+    // Borde de debug
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(opcion.x, opcion.y, opcion.width, opcion.height);
+
+    // Texto
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 28px Arial";
     ctx.textAlign = "left";
     ctx.fillText(opcion.nivel, rectX + 20, y);
 
-    // Descripción
     ctx.fillStyle = "#888888";
     ctx.font = "20px Arial";
     ctx.textAlign = "right";
@@ -215,20 +247,31 @@ function seleccionarNivelDeDificultad() {
     canvas.width / 2,
     canvas.height - 40
   );
-
-  // Guardar opciones globalmente para el click handler
-  canvas.opciones = opciones;
 }
 
 function playGame() {
   // Aquí va la lógica del juego una vez seleccionada imagen y dificultad
   ctx.fillStyle = "#1e1e1e";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
+
   ctx.fillStyle = "white";
-  ctx.font = "30px sans-serif";
+  ctx.font = "30px Arial";
   ctx.textAlign = "center";
   ctx.fillText("¡Jugando!", canvas.width / 2, canvas.height / 2);
+
+  if (dificultadSeleccionada && imagenSeleccionada) {
+    ctx.font = "20px Arial";
+    ctx.fillText(
+      `Dificultad: ${dificultadSeleccionada.nivel} (${dificultadSeleccionada.descripcion})`,
+      canvas.width / 2,
+      canvas.height / 2 + 40
+    );
+    ctx.fillText(
+      `Imagen: ${imagenSeleccionada.src}`,
+      canvas.width / 2,
+      canvas.height / 2 + 70
+    );
+  }
 }
 
 function drawPlayButton(x, y, radius) {
@@ -251,51 +294,100 @@ function drawPlayButton(x, y, radius) {
 
 // Manejador único de clicks que delega según el estado
 canvas.addEventListener("click", (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+  e.preventDefault();
+  e.stopPropagation();
 
-  if (gameState === "menu") {
-    handleMenuClick(mouseX, mouseY);
-  } else if (gameState === "seleccion-dificultad") {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+
+  const mouseX = (e.clientX - rect.left) * scaleX;
+  const mouseY = (e.clientY - rect.top) * scaleY;
+
+  console.log(
+    `Click en (${mouseX.toFixed(0)}, ${mouseY.toFixed(
+      0
+    )}) - Estado: ${gameState}`
+  );
+
+  if (gameState === "menu") handleMenuClick(mouseX, mouseY);
+  else if (gameState === "seleccion-dificultad")
     handleDificultadClick(mouseX, mouseY);
-  } else if (gameState === "seleccion-imagen") {
-    handleImagenClick(mouseX, mouseY);
-  }
+  else if (gameState === "seleccion-imagen") handleImagenClick(mouseX, mouseY);
 });
 
 function handleMenuClick(mouseX, mouseY) {
-  // Verificar si el click está dentro del botón de play
-  const dx = mouseX - playButton.x;
-  const dy = mouseY - playButton.y;
-  const distancia = Math.sqrt(dx * dx + dy * dy);
-
-  if (distancia <= playButton.radius) {
-    gameState = "seleccion-dificultad";
-    drawUi();
-  }
+  console.log("✅ Avanzando a selección de dificultad");
+  gameState = "seleccion-dificultad";
+  drawUi();
 }
 
 function handleDificultadClick(mouseX, mouseY) {
-  const opciones = canvas.opciones;
-  
-  if (!opciones) return;
+  let encontrado = false;
 
-  opciones.forEach((opcion) => {
-    if (
-      mouseX >= opcion.x &&
-      mouseX <= opcion.x + opcion.width &&
-      mouseY >= opcion.y &&
-      mouseY <= opcion.y + opcion.height
-    ) {
-      dificultadSeleccionada = opcion;
-      console.log(`Dificultad seleccionada: ${opcion.nivel} (${opcion.cuadros} cuadros)`);
-      gameState = "seleccion-imagen";
-      drawUi();
-    }
+  console.log(`Click en (${mouseX.toFixed(0)}, ${mouseY.toFixed(0)})`);
+
+  console.log("Botones de dificultad:");
+  opcionesDificultad.forEach((opcion) => {
+    console.log(
+      `  ${opcion.nivel}: x=${opcion.x}-${opcion.x + opcion.width}, y=${
+        opcion.y
+      }-${opcion.y + opcion.height}`
+    );
   });
+
+  for (const opcion of opcionesDificultad) {
+    const dentroX = mouseX >= opcion.x && mouseX <= opcion.x + opcion.width;
+    const dentroY = mouseY >= opcion.y && mouseY <= opcion.y + opcion.height;
+
+    if (dentroX && dentroY) {
+      dificultadSeleccionada = opcion;
+      encontrado = true;
+      console.log(
+        `✅ Seleccionado: ${opcion.nivel} (${opcion.cuadros} cuadros)`
+      );
+      break; // salir del bucle al encontrar la opción
+    }
+  }
+
+  if (encontrado) {
+    console.log("✅ Avanzando a selección de imagen");
+    gameState = "seleccion-imagen";
+    drawUi();
+  } else {
+    console.log("❌ Click fuera de las opciones");
+  }
 }
 
+function handleImagenClick(mouseX, mouseY) {
+  let encontrado = false;
 
+  imagenes.forEach((img, index) => {
+    if (img.loaded && img.element) {
+      const dentroX = mouseX >= img.x && mouseX <= img.x + img.width;
+      const dentroY = mouseY >= img.y && mouseY <= img.y + img.height;
+
+      if (dentroX && dentroY) {
+        imagenSeleccionada = img;
+        encontrado = true;
+        console.log(`✅ Imagen ${index + 1} seleccionada: ${img.src}`);
+        gameState = "jugando";
+        drawUi();
+      }
+    }
+  });
+
+  if (!encontrado) {
+    console.log("❌ Click fuera de las imágenes");
+  }
+}
+
+function getMousePos(canvas, evt) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: evt.clientX - rect.left,
+    y: evt.clientY - rect.top,
+  };
+}
 
 drawUi();

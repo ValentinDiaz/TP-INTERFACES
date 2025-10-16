@@ -911,6 +911,12 @@ body {
   }
 }
 
+canvas {
+  display: block;
+  border: 1px solid black; /* Temporal para debug */
+  cursor: pointer;
+}
+
 .carruseles {
   display: flex;
   flex-direction: column;
@@ -1041,7 +1047,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
 }
 .publicidad {
   width: 235px;
@@ -1057,6 +1062,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 
 .juego-image {
   height: 100%;
@@ -1077,11 +1083,13 @@ body {
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 .cont-all {
-  /*Agregué este div que contiene todos los elementos de la pagina para que esten centrados*/
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
+  padding: 30px 20px 20px 20px; /* Más padding arriba */
+  gap: 20px;
+  min-height: 100vh;
 }
 /*Contenido debajo de la visualizacion del juego*/
 
@@ -1161,10 +1169,18 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  pointer-events: none; /* <- importante */
 }
 
+/* Cuando el div está visible, solo sus elementos internos reciben clicks */
 .cont-compartir.visible {
   z-index: 32;
+  pointer-events: auto; /* permite interacción con botones internos */
+}
+
+/* Los botones dentro del div siguen siendo clickeables */
+.cont-compartir.visible * {
+  pointer-events: auto;
 }
 
 .info-compartir {
