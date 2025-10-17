@@ -308,12 +308,18 @@ function handleGameClick(mouseX, mouseY, tipoClick) {
     drawUi();
 
     // Verificar si ganó
-    // if (verificarVictoria()) {
-    //   detenerTemporizador();
-    //   mostrarPantallaVictoria();
-    // }
+    if (verificarVictoria()) {
+      console.log("🏆 ¡Victoria! Todas las piezas en posición correcta.");
+      // mostrarPantallaVictoria();
+    }
   }
 }
+
+
+ function verificarVictoria() {
+    return piezas.every((pieza) => pieza.rotacionActual === pieza.rotacionCorrecta);
+ }  
+
 
 function drawMenu() {
   // Actualizar posición del botón
