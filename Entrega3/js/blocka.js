@@ -62,7 +62,7 @@ function drawUi() {
   } else if (gameState === "seleccion-imagen") {
     mostrarSeleccionImagenes();
   } else if (gameState === "jugando") {
-    playGame();
+    mostarGame();
   }
 }
 
@@ -180,7 +180,7 @@ function mostrarImagenGrandeYComenzar() {
 
   if (imagenSeleccionada.loaded && imagenSeleccionada.element) {
     // Sombra
-    
+
     ctx.shadowColor = "rgba(0, 255, 0, 0.5)";
     ctx.shadowBlur = 20;
 
@@ -263,6 +263,56 @@ function mostrarImagenGrandeYComenzar() {
     gameState = "jugando";
     drawUi();
   }, 2000); // 2 segundos para ver la imagen
+}
+
+function handleGameClick(mouseX, mouseY, tipoClick) {
+   // No permitir clicks si ya ganó
+
+  // Buscar qué pieza se clickeó
+  let piezaClicada = null;
+
+  for (const pieza of piezas) {
+    if (
+      mouseX >= pieza.x &&
+      mouseX <= pieza.x + pieza.ancho &&
+      mouseY >= pieza.y &&
+      mouseY <= pieza.y + pieza.alto
+    ) {
+      piezaClicada = pieza;
+      break;
+    }
+  }
+
+  if (piezaClicada) {
+    // Rotar la pieza según el tipo de click
+    if (tipoClick === "izquierdo") {
+      // Girar a la izquierda (antihorario) -90°
+      piezaClicada.rotacionActual -= 90;
+      console.log(`↺ Pieza ${piezaClicada.id} girada a la izquierda`);
+    } else if (tipoClick === "derecho") {
+      // Girar a la derecha (horario) +90°
+      piezaClicada.rotacionActual += 90;
+      console.log(`↻ Pieza ${piezaClicada.id} girada a la derecha`);
+    }
+
+    // Mantener la rotación entre 0 y 360
+    if (piezaClicada.rotacionActual >= 360) {
+      piezaClicada.rotacionActual -= 360;
+    } else if (piezaClicada.rotacionActual < 0) {
+      piezaClicada.rotacionActual += 360;
+    }
+
+    console.log(`  → Rotación actual: ${piezaClicada.rotacionActual}°`);
+
+    // Redibujar
+    drawUi();
+
+    // Verificar si ganó
+    // if (verificarVictoria()) {
+    //   detenerTemporizador();
+    //   mostrarPantallaVictoria();
+    // }
+  }
 }
 
 function drawMenu() {
@@ -501,7 +551,7 @@ function seleccionarNivelDeDificultad() {
   );
 }
 
-function playGame() {
+function mostarGame() {
   // Limpiar canvas
   ctx.fillStyle = "#1e1e1e";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -594,14 +644,13 @@ function inicializarPiezas() {
   );
 }
 
-
 function dibujarPiezas() {
   piezas.forEach((pieza) => {
     // Guardar el estado actual del contexto
     ctx.save();
 
     //FILTRO DE PRUEBA
-    ctx.filter= "grayscale(1)";
+    ctx.filter = "grayscale(1)";
 
     // Mover el origen al centro de la pieza para rotarla
     ctx.translate(pieza.x + pieza.ancho / 2, pieza.y + pieza.alto / 2);
@@ -631,10 +680,8 @@ function dibujarPiezas() {
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2;
     ctx.strokeRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
-
   });
 }
-
 
 function drawPlayButton(x, y, radius) {
   // Círculo verde
@@ -677,8 +724,25 @@ canvas.addEventListener("click", (e) => {
     handleDificultadClick(mouseX, mouseY);
   else if (gameState === "seleccion-imagen") handleImagenClick(mouseX, mouseY);
   else if (gameState === "jugando") {
-    playGame(); // Aquí iría la lógica del juego
+    handleGameClick(mouseX, mouseY, "izquierdo"); // Aquí iría la lógica del juego
   }
+
+  // Event listener para click derecho
+  canvas.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (gameState === "jugando") {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+
+      const mouseX = (e.clientX - rect.left) * scaleX;
+      const mouseY = (e.clientY - rect.top) * scaleY;
+
+      handleGameClick(mouseX, mouseY, "derecho"); // Click derecho
+    }
+  });
 });
 
 function handleMenuClick(mouseX, mouseY) {
