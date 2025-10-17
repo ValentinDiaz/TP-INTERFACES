@@ -180,6 +180,7 @@ function mostrarImagenGrandeYComenzar() {
 
   if (imagenSeleccionada.loaded && imagenSeleccionada.element) {
     // Sombra
+    
     ctx.shadowColor = "rgba(0, 255, 0, 0.5)";
     ctx.shadowBlur = 20;
 
@@ -598,6 +599,9 @@ function dibujarPiezas() {
   piezas.forEach((pieza) => {
     // Guardar el estado actual del contexto
     ctx.save();
+
+    //FILTRO DE PRUEBA
+    ctx.filter= "grayscale(1)";
 
     // Mover el origen al centro de la pieza para rotarla
     ctx.translate(pieza.x + pieza.ancho / 2, pieza.y + pieza.alto / 2);
