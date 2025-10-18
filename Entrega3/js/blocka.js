@@ -6,6 +6,7 @@ const playButton = {
   y: canvas.height / 2,
   radius: 60,
 };
+let botonAyuda = null;
 
 // Variables globales
 
@@ -22,6 +23,7 @@ let juegoCompletado = false;
 let records = {}; // Récords por nivel
 let nivelActual = 1; // Contador de niveles
 let filtrosActivos = true;
+let cantidadAyudas = 1;
 
 // Opciones de dificultad globales
 const opcionesDificultad = [
@@ -354,9 +356,6 @@ function mostrarSeleccionImagenes() {
   ctx.font = "bold 32px Arial";
   ctx.textAlign = "center";
   ctx.fillText("COMENZAR", canvas.width / 2, btnY + 40);
-
- 
-
 }
 
 function mostarGame() {
@@ -374,46 +373,70 @@ function mostarGame() {
     inicializarPiezas();
   }
 
-  let colorTemporizador = "#00ff00"; // Verde por defecto
-
-  if (tiempoLimite) {
-    const porcentajeRestante = (tiempoTranscurrido / tiempoLimite) * 100;
-
-    if (porcentajeRestante <= 20) {
-      colorTemporizador = "#ff0000"; // Rojo crítico
-    } else if (porcentajeRestante <= 50) {
-      colorTemporizador = "#ff9900"; // Naranja advertencia
-    } else {
-      colorTemporizador = "#00ff00"; // Verde normal
-    }
-  }
-
-  ctx.fillStyle = colorTemporizador;
-  ctx.font = "bold 36px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(formatearTiempo(tiempoTranscurrido), canvas.width / 2, 80);
-
-  // Título del juego
+  // ====== CABECERA ======
+  // Título
   ctx.fillStyle = "white";
   ctx.font = "bold 28px Arial";
   ctx.textAlign = "center";
   ctx.fillText(
     `BLOCKA - ${dificultadSeleccionada.nivel}`,
     canvas.width / 2,
-    40
+    45
   );
 
+  // Temporizador
+  let colorTemporizador = "#00ff00"; // Verde por defecto
+  if (tiempoLimite) {
+    const porcentajeRestante = (tiempoTranscurrido / tiempoLimite) * 100;
+
+    if (porcentajeRestante <= 20) colorTemporizador = "#ff0000"; // Rojo crítico
+    else if (porcentajeRestante <= 50) colorTemporizador = "#ff9900"; // Naranja advertencia
+  }
+
+  ctx.fillStyle = colorTemporizador;
+  ctx.font = "bold 34px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(formatearTiempo(tiempoTranscurrido), canvas.width / 2, 85);
+
+  // ====== JUEGO ======
   // Dibujar todas las piezas
   dibujarPiezas();
 
-  // Información adicional
-  ctx.fillStyle = "#888888";
+  // ====== PIE DE PANTALLA ======
+  // Instrucciones
+  ctx.fillStyle = "#888";
   ctx.font = "18px Arial";
+  ctx.textAlign = "center";
   ctx.fillText(
     `Click izquierdo: girar ← | Click derecho: girar →`,
     canvas.width / 2,
-    canvas.height - 20
+    canvas.height - 25
   );
+
+  // 🎯 Botón de AYUDA
+  const anchoBoton = 120;
+  const altoBoton = 40;
+  const xBoton = 20;
+  const yBoton = canvas.height - altoBoton - 70; // un poco más arriba de las instrucciones
+
+  // Fondo del botón
+  ctx.fillStyle = "#007bff";
+  ctx.fillRect(xBoton, yBoton, anchoBoton, altoBoton);
+
+  // Borde
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(xBoton, yBoton, anchoBoton, altoBoton);
+
+  // Texto del botón
+  ctx.fillStyle = "white";
+  ctx.font = "bold 20px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("AYUDA", xBoton + anchoBoton / 2, yBoton + altoBoton / 2);
+
+  // Guardar coordenadas globales
+  botonAyuda = { x: xBoton, y: yBoton, ancho: anchoBoton, alto: altoBoton };
 }
 
 function mostrarImagenGrandeYComenzar() {
@@ -800,11 +823,27 @@ function handleImagenClick(mouseX, mouseY) {
 }
 
 function handleGameClick(mouseX, mouseY, tipoClick) {
-  // No permitir clicks si ya ganó
+  // 🚫 No permitir clics si ya ganó
+  if (gameState === "victoria") return;
 
-  // Buscar qué pieza se clickeó
+  // 🎯 Primero: comprobar si se clickeó el botón de ayuda
+
+  if (cantidadAyudas > 0) {
+    if (
+      botonAyuda &&
+      mouseX >= botonAyuda.x &&
+      mouseX <= botonAyuda.x + botonAyuda.ancho &&
+      mouseY >= botonAyuda.y &&
+      mouseY <= botonAyuda.y + botonAyuda.alto
+    ) {
+      obtenerAyuda();
+      cantidadAyudas--;
+      return;
+    }
+  }
+
+  // 🔍 Buscar qué pieza se clickeó
   let piezaClicada = null;
-
   for (const pieza of piezas) {
     if (
       mouseX >= pieza.x &&
@@ -817,35 +856,31 @@ function handleGameClick(mouseX, mouseY, tipoClick) {
     }
   }
 
+  // 🧩 Si clickeó una pieza, girarla
   if (piezaClicada) {
-    // Rotar la pieza según el tipo de click
     if (tipoClick === "izquierdo") {
-      // Girar a la izquierda (antihorario) -90°
       piezaClicada.rotacionActual -= 90;
       console.log(`↺ Pieza ${piezaClicada.id} girada a la izquierda`);
     } else if (tipoClick === "derecho") {
-      // Girar a la derecha (horario) +90°
       piezaClicada.rotacionActual += 90;
       console.log(`↻ Pieza ${piezaClicada.id} girada a la derecha`);
     }
 
-    // Mantener la rotación entre 0 y 360
-    if (piezaClicada.rotacionActual >= 360) {
-      piezaClicada.rotacionActual -= 360;
-    } else if (piezaClicada.rotacionActual < 0) {
+    // Mantener rotación en [0, 360)
+    if (piezaClicada.rotacionActual >= 360) piezaClicada.rotacionActual -= 360;
+    else if (piezaClicada.rotacionActual < 0)
       piezaClicada.rotacionActual += 360;
-    }
 
     console.log(`  → Rotación actual: ${piezaClicada.rotacionActual}°`);
 
-    // Redibujar
+    // Redibujar el juego
     drawUi();
 
     // Verificar si ganó
     if (verificarVictoria()) {
       console.log("🏆 ¡Victoria! Todas las piezas en posición correcta.");
-      detenerTemporizador(); // ⬅️ AGREGAR ESTA LÍNEA
-      filtrosActivos = false; // Quitar filtros al ganar
+      detenerTemporizador();
+      filtrosActivos = false;
       gameState = "victoria";
       drawUi();
     }
@@ -1167,6 +1202,7 @@ function reiniciarJuego() {
   juegoCompletado = false;
   filtrosActivos = true;
   nivelActual = 1; // Resetear nivel
+  cantidadAyudas = 1;
   if (intervaloTemporizador) {
     clearInterval(intervaloTemporizador);
     intervaloTemporizador = null;
@@ -1190,6 +1226,7 @@ function siguienteNivel() {
   tiempoTranscurrido = 0;
   juegoCompletado = false;
   filtrosActivos = true;
+  cantidadAyudas = 1;
   if (intervaloTemporizador) {
     clearInterval(intervaloTemporizador);
     intervaloTemporizador = null;
@@ -1203,6 +1240,45 @@ function siguienteNivel() {
 
   // Mostrar imagen grande y comenzar
   mostrarImagenGrandeYComenzar();
+}
+
+function obtenerAyuda() {
+  console.log("💡 Proporcionando ayuda al jugador");
+
+  // Buscar piezas que no estén en la posición ni rotación correcta
+  const piezasIncorrectas = piezas.filter(
+    (p) => p.rotacionActual !== p.rotacionCorrecta // rotación incorrecta
+  );
+
+  // Si todas están correctas, no hay nada que ayudar
+  if (piezasIncorrectas.length === 0) {
+    console.log("🎉 Todas las piezas están correctamente colocadas");
+    return;
+  }
+
+  // Elegir una pieza incorrecta al azar
+  const piezaAyuda =
+    piezasIncorrectas[Math.floor(Math.random() * piezasIncorrectas.length)];
+
+  // Corregir su rotación (ponerla bien)
+  piezaAyuda.rotacionActual = piezaAyuda.rotacionCorrecta;
+
+  // Dibujar resaltado para mostrar al jugador cuál fue ayudada
+  resaltarPieza(piezaAyuda);
+
+  // Redibujar todo el rompecabezas
+  dibujarPiezas();
+}
+
+function resaltarPieza(pieza) {
+
+  // Redibujar todas las piezas primero
+
+  // Pintar la pieza de amarillo semitransparente
+  ctx.fillStyle = "rgba(255, 255, 0, 0.5)"; // amarillo semitransparente
+  ctx.fillRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
+
+ 
 }
 
 // Manejador único de clicks que delega según el estado
