@@ -373,17 +373,6 @@ function mostarGame() {
     inicializarPiezas();
   }
 
-  // ====== CABECERA ======
-  // Título
-  ctx.fillStyle = "white";
-  ctx.font = "bold 28px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText(
-    `BLOCKA - ${dificultadSeleccionada.nivel}`,
-    canvas.width / 2,
-    45
-  );
-
   // Temporizador
   let colorTemporizador = "#00ff00"; // Verde por defecto
   if (tiempoLimite) {
@@ -392,11 +381,12 @@ function mostarGame() {
     if (porcentajeRestante <= 20) colorTemporizador = "#ff0000"; // Rojo crítico
     else if (porcentajeRestante <= 50) colorTemporizador = "#ff9900"; // Naranja advertencia
   }
-
   ctx.fillStyle = colorTemporizador;
   ctx.font = "bold 34px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(formatearTiempo(tiempoTranscurrido), canvas.width / 2, 85);
+
+  // Ajuste: temporizador más arriba
+  ctx.fillText(formatearTiempo(tiempoTranscurrido), canvas.width / 2, 50);
 
   // ====== JUEGO ======
   // Dibujar todas las piezas
@@ -1271,14 +1261,11 @@ function obtenerAyuda() {
 }
 
 function resaltarPieza(pieza) {
-
   // Redibujar todas las piezas primero
 
   // Pintar la pieza de amarillo semitransparente
   ctx.fillStyle = "rgba(255, 255, 0, 0.5)"; // amarillo semitransparente
   ctx.fillRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
-
- 
 }
 
 // Manejador único de clicks que delega según el estado
