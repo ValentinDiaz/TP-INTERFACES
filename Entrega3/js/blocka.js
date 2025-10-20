@@ -8,6 +8,14 @@ const playButton = {
 };
 let botonAyuda = null;
 
+const helpButton = {
+  x: 0,
+  y: 0,
+  radius: 60,
+};
+
+let mostrarInstrucciones = false;
+
 // Variables globales
 
 let gameState = "menu"; // menu, cargando, seleccion-dificultad, seleccion-imagen, jugando
@@ -24,6 +32,8 @@ let records = {}; // Récords por nivel
 let nivelActual = 1; // Contador de niveles
 let filtrosActivos = true;
 let cantidadAyudas = 1;
+let piezaResaltada = null;
+let tiempoResaltado = 0;
 
 // Opciones de dificultad globales
 const opcionesDificultad = [
@@ -81,21 +91,164 @@ function drawUi() {
 }
 
 function drawMenu() {
-  // Actualizar posición del botón
-  playButton.x = canvas.width / 2;
+  // Limpiar canvas
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (mostrarInstrucciones) {
+    // Si se están mostrando instrucciones, dibujar la pantalla de instrucciones
+    mostrarPantallaInstrucciones();
+    return;
+  }
+
+  // Posicionar botones
+  playButton.x = canvas.width / 2 - 80; // Mover un poco a la izquierda
   playButton.y = canvas.height / 2;
 
+  helpButton.x = canvas.width / 2 + 80; // Botón de ayuda a la derecha
+  helpButton.y = canvas.height / 2;
+
+  // Dibujar botón de PLAY
   drawPlayButton(playButton.x, playButton.y, playButton.radius);
+
+  // Dibujar botón de INSTRUCCIONES
+  drawHelpButton(helpButton.x, helpButton.y, helpButton.radius);
+
+  // Título del juego
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 64px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("BLOCKA", canvas.width / 2, 100);
 
   // Texto instructivo
   ctx.fillStyle = "white";
   ctx.font = "24px Arial";
   ctx.textAlign = "center";
   ctx.fillText(
-    "Toca en cualquier lugar para comenzar",
+    "Toca PLAY para comenzar o ? para ver instrucciones",
     canvas.width / 2,
     canvas.height - 50
   );
+}
+
+function drawHelpButton(x, y, radius) {
+  // Círculo azul
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = "#3498db";
+  ctx.fill();
+  ctx.closePath();
+
+  // Borde
+  ctx.strokeStyle = "#2980b9";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Símbolo de interrogación (?)
+  ctx.fillStyle = "white";
+  ctx.font = "bold 48px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("?", x, y);
+}
+
+function mostrarPantallaInstrucciones() {
+  // Fondo
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Título
+  ctx.fillStyle = "#3498db";
+  ctx.font = "bold 48px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("CÓMO JUGAR", canvas.width / 2, 80);
+
+  // Contenido de instrucciones
+  const instrucciones = [
+    "Completa el rompecabezas rotando todas las piezas",
+    "hasta formar la imagen original.",
+    "",
+    "CONTROLES",
+    "",
+    "• Click izquierdo: Girar pieza hacia la izquierda (↺)",
+    "• Click derecho: Girar pieza hacia la derecha (↻)",
+    "",
+    "MODOS DE JUEGO",
+    "",
+
+    "• Fácil (2x2): Sin límite de tiempo",
+    "• Medio (3x3): 40 segundos",
+    "• Difícil (4x4): 30 segundos",
+    "",
+    "AYUDA",
+    "",
+
+    "Tienes 1 ayuda por nivel que corrige",
+    "una pieza automáticamente.",
+    "Usar ayuda resta 5 segundos en Medio/Difícil.",
+    "",
+    "",
+
+    "¡Buena suerte!",
+  ];
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "20px Arial";
+  ctx.textAlign = "left";
+
+  let y = 140;
+  instrucciones.forEach((linea) => {
+    // Títulos en negrita y centrados
+    if (
+      linea.includes("🎯") ||
+      linea.includes("🖱️") ||
+      linea.includes("⏱️") ||
+      linea.includes("💡") ||
+      linea.includes("🏆")
+    ) {
+      ctx.font = "bold 24px Arial";
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#3498db";
+      ctx.fillText(linea, canvas.width / 2, y);
+      ctx.font = "20px Arial";
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#ffffff";
+    } else if (linea === "") {
+      // Línea vacía (espacio)
+      y += 10;
+      return;
+    } else {
+      // Contenido normal
+      const margenIzq = 100;
+      ctx.fillText(linea, margenIzq, y);
+    }
+    y += 30;
+  });
+
+  // Botón VOLVER
+  const btnWidth = 200;
+  const btnHeight = 60;
+  const btnX = canvas.width / 2 - btnWidth / 2;
+  const btnY = canvas.height - 100;
+
+  // Guardar coordenadas del botón
+  window.botonVolverInstrucciones = {
+    x: btnX,
+    y: btnY,
+    width: btnWidth,
+    height: btnHeight,
+  };
+
+  ctx.fillStyle = "#27ae60";
+  ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
+  ctx.strokeStyle = "#2ecc71";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(btnX, btnY, btnWidth, btnHeight);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 28px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("VOLVER", canvas.width / 2, btnY + 38);
 }
 
 function seleccionarNivelDeDificultad() {
@@ -750,9 +903,49 @@ canvas.addEventListener("click", (e) => {
 });
 
 function handleMenuClick(mouseX, mouseY) {
-  console.log("✅ Avanzando a selección de dificultad");
-  gameState = "seleccion-dificultad";
-  drawUi();
+  // Si estamos mostrando instrucciones
+  if (mostrarInstrucciones) {
+    // Verificar click en botón VOLVER
+    if (window.botonVolverInstrucciones) {
+      const btn = window.botonVolverInstrucciones;
+      if (
+        mouseX >= btn.x &&
+        mouseX <= btn.x + btn.width &&
+        mouseY >= btn.y &&
+        mouseY <= btn.y + btn.height
+      ) {
+        console.log("🔙 Volviendo al menú principal");
+        mostrarInstrucciones = false;
+        drawUi();
+        return;
+      }
+    }
+    return; // No hacer nada más si está en instrucciones
+  }
+
+  // Verificar click en botón PLAY
+  const distanciaPlay = Math.sqrt(
+    Math.pow(mouseX - playButton.x, 2) + Math.pow(mouseY - playButton.y, 2)
+  );
+
+  if (distanciaPlay <= playButton.radius) {
+    console.log("✅ Avanzando a selección de dificultad");
+    gameState = "seleccion-dificultad";
+    drawUi();
+    return;
+  }
+
+  // Verificar click en botón INSTRUCCIONES
+  const distanciaHelp = Math.sqrt(
+    Math.pow(mouseX - helpButton.x, 2) + Math.pow(mouseY - helpButton.y, 2)
+  );
+
+  if (distanciaHelp <= helpButton.radius) {
+    console.log("📖 Mostrando instrucciones");
+    mostrarInstrucciones = true;
+    drawUi();
+    return;
+  }
 }
 
 function handleDificultadClick(mouseX, mouseY) {
@@ -828,6 +1021,38 @@ function handleGameClick(mouseX, mouseY, tipoClick) {
     ) {
       obtenerAyuda();
       cantidadAyudas--;
+
+      const penalizacion = 5000; // 5 segundos
+
+      // Solo aplicar penalización si hay límite de tiempo
+      if (tiempoLimite !== null) {
+        console.log(
+          `⏱️ Tiempo restante ANTES de ayuda: ${formatearTiempo(
+            tiempoLimite - (Date.now() - tiempoInicio)
+          )}`
+        );
+
+        // 🎯 SOLUCIÓN: Adelantar el tiempo de inicio
+        // Esto hace que la "diferencia" sea mayor, reduciendo tiempoTranscurrido
+        tiempoInicio -= penalizacion;
+
+        // Verificar que no se pase del límite
+        const nuevaDiferencia = Date.now() - tiempoInicio;
+        if (nuevaDiferencia >= tiempoLimite) {
+          // Si la penalización hace que se acabe el tiempo, dejar 1 segundo
+          tiempoInicio = Date.now() - (tiempoLimite - 1000);
+        }
+
+        console.log(
+          `⏱️ Tiempo restante DESPUÉS de ayuda: ${formatearTiempo(
+            tiempoLimite - (Date.now() - tiempoInicio)
+          )}`
+        );
+      } else {
+        console.log("💡 Ayuda usada (sin penalización en modo Fácil)");
+      }
+
+      drawUi(); // Redibujar para mostrar cambio inmediato
       return;
     }
   }
@@ -1130,40 +1355,52 @@ function formatearTiempo(milisegundos) {
 
 function dibujarPiezas() {
   piezas.forEach((pieza) => {
-    // Guardar el estado actual del contexto
     ctx.save();
 
-    //FILTRO DE PRUEBA
-    ctx.filter = "grayscale(1)";
+    if (filtrosActivos) {
+      ctx.filter = "grayscale(1)";
+    }
 
-    // Mover el origen al centro de la pieza para rotarla
     ctx.translate(pieza.x + pieza.ancho / 2, pieza.y + pieza.alto / 2);
-
-    // Aplicar la rotación
     ctx.rotate((pieza.rotacionActual * Math.PI) / 180);
 
-    // Dibujar la imagen centrada en el nuevo origen
     if (imagenSeleccionada.loaded && imagenSeleccionada.element) {
       ctx.drawImage(
         imagenSeleccionada.element,
         pieza.imgX,
         pieza.imgY,
         pieza.imgAncho,
-        pieza.imgAlto, // Porción de la imagen original
+        pieza.imgAlto,
         -pieza.ancho / 2,
         -pieza.alto / 2,
         pieza.ancho,
-        pieza.alto // Dónde dibujarla (centrada)
+        pieza.alto
       );
     }
 
-    // Restaurar el estado del contexto
     ctx.restore();
 
-    // Dibujar borde de la pieza (sin rotar)
+    // Borde normal
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 2;
     ctx.strokeRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
+
+    // ⬇️ RESALTADO SI ES LA PIEZA AYUDADA ⬇️
+    if (piezaResaltada === pieza) {
+      // Overlay amarillo brillante
+      ctx.fillStyle = "rgba(255, 255, 0, 0.4)";
+      ctx.fillRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
+
+      // Borde amarillo grueso
+      ctx.strokeStyle = "#ffff00";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
+
+      // Ícono de ayuda
+      ctx.fillStyle = "#ffff00";
+      ctx.font = "bold 40px Arial";
+      ctx.textAlign = "center";
+    }
   });
 }
 
@@ -1235,9 +1472,9 @@ function siguienteNivel() {
 function obtenerAyuda() {
   console.log("💡 Proporcionando ayuda al jugador");
 
-  // Buscar piezas que no estén en la posición ni rotación correcta
+  // Buscar piezas que no estén en la rotación correcta
   const piezasIncorrectas = piezas.filter(
-    (p) => p.rotacionActual !== p.rotacionCorrecta // rotación incorrecta
+    (p) => p.rotacionActual !== p.rotacionCorrecta
   );
 
   // Si todas están correctas, no hay nada que ayudar
@@ -1253,19 +1490,27 @@ function obtenerAyuda() {
   // Corregir su rotación (ponerla bien)
   piezaAyuda.rotacionActual = piezaAyuda.rotacionCorrecta;
 
-  // Dibujar resaltado para mostrar al jugador cuál fue ayudada
-  resaltarPieza(piezaAyuda);
+  console.log(`✅ Pieza ${piezaAyuda.id} corregida automáticamente`);
 
-  // Redibujar todo el rompecabezas
-  dibujarPiezas();
-}
+  // Marcar esta pieza para resaltarla
+  piezaResaltada = piezaAyuda;
+  tiempoResaltado = Date.now();
 
-function resaltarPieza(pieza) {
-  // Redibujar todas las piezas primero
+  // Redibujar
+  drawUi();
 
-  // Pintar la pieza de amarillo semitransparente
-  ctx.fillStyle = "rgba(255, 255, 0, 0.5)"; // amarillo semitransparente
-  ctx.fillRect(pieza.x, pieza.y, pieza.ancho, pieza.alto);
+  // Quitar el resaltado después de 2 segundos
+  setTimeout(() => {
+    piezaResaltada = null;
+    drawUi();
+  }, 2000);
+
+  // Verificar si con esta ayuda ya ganó
+  if (verificarVictoria()) {
+    detenerTemporizador();
+    filtrosActivos = false;
+    mostrarPantallaVictoria();
+  }
 }
 
 // Manejador único de clicks que delega según el estado
