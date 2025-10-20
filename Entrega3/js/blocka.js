@@ -34,6 +34,7 @@ let filtrosActivos = true;
 let cantidadAyudas = 1;
 let piezaResaltada = null;
 let tiempoResaltado = 0;
+let botonPlayJuego = null;
 
 // Opciones de dificultad globales
 const opcionesDificultad = [
@@ -80,6 +81,9 @@ function drawUi() {
     seleccionarNivelDeDificultad();
   } else if (gameState === "seleccion-imagen") {
     mostrarSeleccionImagenes();
+  } else if (gameState === "listo-para-jugar") {
+    // ← NUEVO
+    mostrarListoParaJugar();
   } else if (gameState === "jugando") {
     mostarGame();
   } else if (gameState === "victoria") {
@@ -521,9 +525,10 @@ function mostarGame() {
     return;
   }
 
-  // Si es la primera vez, inicializar las piezas
+  // Las piezas ya deberían estar inicializadas
   if (piezas.length === 0) {
-    inicializarPiezas();
+    console.error("❌ Las piezas no están inicializadas");
+    return;
   }
 
   // Temporizador
@@ -538,7 +543,7 @@ function mostarGame() {
   ctx.font = "bold 34px Arial";
   ctx.textAlign = "center";
 
-  // Ajuste: temporizador más arriba
+  // Temporizador
   ctx.fillText(formatearTiempo(tiempoTranscurrido), canvas.width / 2, 50);
 
   // ====== JUEGO ======
@@ -560,14 +565,14 @@ function mostarGame() {
   const anchoBoton = 120;
   const altoBoton = 40;
   const xBoton = 20;
-  const yBoton = canvas.height - altoBoton - 70; // un poco más arriba de las instrucciones
+  const yBoton = canvas.height - altoBoton - 70;
 
   // Fondo del botón
-  ctx.fillStyle = "#007bff";
+  ctx.fillStyle = cantidadAyudas > 0 ? "#007bff" : "#555555";
   ctx.fillRect(xBoton, yBoton, anchoBoton, altoBoton);
 
   // Borde
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = cantidadAyudas > 0 ? "white" : "#777777";
   ctx.lineWidth = 2;
   ctx.strokeRect(xBoton, yBoton, anchoBoton, altoBoton);
 
@@ -576,7 +581,11 @@ function mostarGame() {
   ctx.font = "bold 20px Arial";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("AYUDA", xBoton + anchoBoton / 2, yBoton + altoBoton / 2);
+  ctx.fillText(
+    cantidadAyudas > 0 ? "AYUDA" : "SIN AYUDAS",
+    xBoton + anchoBoton / 2,
+    yBoton + altoBoton / 2
+  );
 
   // Guardar coordenadas globales
   botonAyuda = { x: xBoton, y: yBoton, ancho: anchoBoton, alto: altoBoton };
@@ -599,8 +608,6 @@ function mostrarImagenGrandeYComenzar() {
   const bigImgY = canvas.height / 2 - bigImgSize / 2;
 
   if (imagenSeleccionada.loaded && imagenSeleccionada.element) {
-    // Sombra
-
     ctx.shadowColor = "rgba(0, 255, 0, 0.5)";
     ctx.shadowBlur = 20;
 
@@ -612,7 +619,6 @@ function mostrarImagenGrandeYComenzar() {
       bigImgSize
     );
 
-    // Resetear sombra
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
   }
@@ -627,12 +633,87 @@ function mostrarImagenGrandeYComenzar() {
   ctx.font = "28px Arial";
   ctx.fillText("Preparando el juego...", canvas.width / 2, canvas.height - 60);
 
-  // Después de 2 segundos, cambiar al estado de juego
+  // Después de 3 segundos, cambiar al estado "listo-para-jugar"
   setTimeout(() => {
-    iniciarTemporizador();
-    gameState = "jugando";
+    gameState = "listo-para-jugar";
     drawUi();
-  }, 3000); // 3 segundos para ver la imagen
+  }, 3000);
+}
+
+function mostrarListoParaJugar() {
+  // Limpiar canvas
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (!dificultadSeleccionada || !imagenSeleccionada) {
+    console.error("❌ Faltan datos para iniciar el juego");
+    return;
+  }
+
+  // Si es la primera vez, inicializar las piezas
+  if (piezas.length === 0) {
+    inicializarPiezas();
+  }
+
+  // Título
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 36px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("¡PREPÁRATE!", canvas.width / 2, 50);
+
+  // Dibujar todas las piezas (pero sin iniciar temporizador)
+  dibujarPiezas();
+
+  // Overlay semi-transparente
+  ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Botón de PLAY gigante en el centro
+  const playSize = 120;
+  const playX = canvas.width / 2;
+  const playY = canvas.height / 2;
+
+  // Guardar coordenadas globales
+  botonPlayJuego = {
+    x: playX,
+    y: playY,
+    radius: playSize,
+  };
+
+  // Dibujar botón de play
+  drawPlayButton(playX, playY, playSize);
+
+  // Texto instructivo
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "28px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "Haz clic en PLAY para comenzar",
+    canvas.width / 2,
+    canvas.height - 80
+  );
+
+  // Mostrar dificultad
+  ctx.fillStyle = "#00ff00";
+  ctx.font = "24px Arial";
+  ctx.fillText(
+    `Dificultad: ${dificultadSeleccionada.nivel} (${dificultadSeleccionada.descripcion})`,
+    canvas.width / 2,
+    canvas.height - 40
+  );
+
+  // Si hay límite de tiempo, mostrarlo
+  if (dificultadSeleccionada.tiempoLimite) {
+    ctx.fillStyle = "#ff9900";
+    ctx.font = "20px Arial";
+    ctx.fillText(
+      `⏱️ Tiempo límite: ${formatearTiempo(
+        dificultadSeleccionada.tiempoLimite
+      )}`,
+      canvas.width / 2,
+      canvas.height - 10
+    );
+  }
 }
 
 function mostrarPantallaVictoria() {
@@ -876,6 +957,9 @@ canvas.addEventListener("click", (e) => {
   else if (gameState === "seleccion-dificultad")
     handleDificultadClick(mouseX, mouseY);
   else if (gameState === "seleccion-imagen") handleImagenClick(mouseX, mouseY);
+  else if (gameState === "listo-para-jugar")
+    // ← NUEVO
+    handleListoParaJugarClick(mouseX, mouseY);
   else if (gameState === "jugando") {
     handleGameClick(mouseX, mouseY, "izquierdo");
   } else if (gameState === "victoria") {
@@ -901,6 +985,30 @@ canvas.addEventListener("click", (e) => {
     }
   });
 });
+
+function handleListoParaJugarClick(mouseX, mouseY) {
+  if (!botonPlayJuego) return;
+
+  // Calcular distancia al centro del botón
+  const distancia = Math.sqrt(
+    Math.pow(mouseX - botonPlayJuego.x, 2) +
+      Math.pow(mouseY - botonPlayJuego.y, 2)
+  );
+
+  // Si el click está dentro del radio del botón
+  if (distancia <= botonPlayJuego.radius) {
+    console.log("▶️ ¡Iniciando juego!");
+
+    // Iniciar el temporizador
+    iniciarTemporizador();
+
+    // Cambiar al estado de juego
+    gameState = "jugando";
+
+    // Redibujar
+    drawUi();
+  }
+}
 
 function handleMenuClick(mouseX, mouseY) {
   // Si estamos mostrando instrucciones
