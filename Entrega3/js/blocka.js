@@ -35,6 +35,13 @@ let cantidadAyudas = 1;
 let piezaResaltada = null;
 let tiempoResaltado = 0;
 let botonPlayJuego = null;
+const FILTROS_DISPONIBLES = [
+  "grayscale(1)",      // Escala de grises
+  "brightness(0.7)",   // Brillo reducido al 30%
+  "invert(1)",         // Negativo
+];
+
+let filtroActual ="";
 
 // Opciones de dificultad globales
 const opcionesDificultad = [
@@ -1343,6 +1350,7 @@ function handleVictoriaMenuClick(mouseX, mouseY) {
 function inicializarPiezas() {
   piezas = [];
 
+  elegirFiltroRandom();
   // Calcular el tamaño de la grilla según la dificultad
   const gridSize = Math.sqrt(dificultadSeleccionada.cuadros); // 2, 3 o 4
 
@@ -1461,12 +1469,21 @@ function formatearTiempo(milisegundos) {
     .padStart(2, "0")}.${centesimas.toString().padStart(2, "0")}`;
 }
 
+
+function elegirFiltroRandom(){
+  let indiceAleatorio = Math.floor(Math.random() * FILTROS_DISPONIBLES.length);
+  filtroActual=  FILTROS_DISPONIBLES[indiceAleatorio];
+}
+
+
 function dibujarPiezas() {
   piezas.forEach((pieza) => {
     ctx.save();
 
     if (filtrosActivos) {
-      ctx.filter = "grayscale(1)";
+      //ctx.filter = "grayscale(1)";
+      
+      ctx.filter = filtroActual;
     }
 
     ctx.translate(pieza.x + pieza.ancho / 2, pieza.y + pieza.alto / 2);
