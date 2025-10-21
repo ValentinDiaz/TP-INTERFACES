@@ -1261,7 +1261,6 @@ function handleDerrotaClick(mouseX, mouseY) {
 }
 
 //funciones auxiliares
-
 function reintentarNivel() {
   // Reiniciar pero mantener dificultad e imagen
   piezas = [];
@@ -1269,10 +1268,15 @@ function reintentarNivel() {
   tiempoTranscurrido = 0;
   juegoCompletado = false;
   filtrosActivos = true;
+  filtroActual = null;
+  cantidadAyudas = 1;
   if (intervaloTemporizador) {
     clearInterval(intervaloTemporizador);
     intervaloTemporizador = null;
   }
+
+  // Restaurar la imagen original (sin filtros)
+  imagenSeleccionada.element = imagenSeleccionada.original;
 
   console.log(
     `🔄 Reintentando - Dificultad: ${dificultadSeleccionada.nivel} - Imagen: ${imagenSeleccionada.src}`
@@ -1280,6 +1284,7 @@ function reintentarNivel() {
 
   mostrarImagenGrandeYComenzar();
 }
+
 
 function verificarVictoria() {
   return piezas.every(
