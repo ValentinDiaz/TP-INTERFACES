@@ -107,7 +107,66 @@ function drawUi() {
   } else if (gameState === "derrota") {
     // ⬅️ AGREGAR
     mostrarPantallaDerrota();
+  } else if (gameState === "final-dificultad") {
+    mostrarPantallaFinalDificultad();
   }
+}
+
+function mostrarPantallaFinalDificultad() {
+  // Limpiar canvas
+  ctx.fillStyle = "#1e1e1e";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Título principal
+  ctx.fillStyle = "#FFD700"; // dorado
+  ctx.font = "bold 60px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("¡FELICITACIONES!", canvas.width / 2, 80);
+
+  // Mensaje de logro
+  ctx.fillStyle = "#00ff00";
+  ctx.font = "bold 36px Arial";
+  ctx.fillText(
+    "¡Completaste todos los niveles de esta dificultad!",
+    canvas.width / 2,
+    150
+  );
+
+  // Mostrar imagen final o trofeo
+  const imgSize = 300;
+  const imgX = canvas.width / 2 - imgSize / 2;
+  const imgY = 200;
+
+  // Si querés, mostrar la última imagen sin filtros
+  if (imagenSeleccionada.loaded && imagenSeleccionada.original) {
+    ctx.drawImage(imagenSeleccionada.original, imgX, imgY, imgSize, imgSize);
+  }
+
+  // Botón volver al menú
+  const btnWidth = 300;
+  const btnHeight = 70;
+  const btnX = canvas.width / 2 - btnWidth / 2;
+  const btnY = canvas.height - 120;
+
+  window.botonMenuFinal = {
+    x: btnX,
+    y: btnY,
+    width: btnWidth,
+    height: btnHeight,
+  };
+
+  ctx.fillStyle = "#555555";
+  ctx.fillRect(btnX, btnY, btnWidth, btnHeight);
+  ctx.strokeStyle = "#888888";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(btnX, btnY, btnWidth, btnHeight);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "bold 28px Arial";
+  ctx.fillText("VOLVER AL MENÚ", canvas.width / 2, btnY + 44);
+
+  // Cambiar estado
+  gameState = "final-dificultad";
 }
 
 function drawMenu() {
@@ -963,12 +1022,6 @@ canvas.addEventListener("click", (e) => {
   const mouseX = (e.clientX - rect.left) * scaleX;
   const mouseY = (e.clientY - rect.top) * scaleY;
 
-  console.log(
-    `Click en (${mouseX.toFixed(0)}, ${mouseY.toFixed(
-      0
-    )}) - Estado: ${gameState}`
-  );
-
   if (gameState === "menu") handleMenuClick(mouseX, mouseY);
   else if (gameState === "seleccion-dificultad")
     handleDificultadClick(mouseX, mouseY);
@@ -982,6 +1035,8 @@ canvas.addEventListener("click", (e) => {
     handleVictoriaMenuClick(mouseX, mouseY);
   } else if (gameState === "derrota") {
     handleDerrotaClick(mouseX, mouseY);
+  } else if (gameState === "final-dificultad") {
+    handleFinalDificultadClick(mouseX, mouseY);
   }
 
   // Event listener para click derecho
@@ -1199,10 +1254,8 @@ function handleGameClick(mouseX, mouseY, tipoClick) {
   if (piezaClicada) {
     if (tipoClick === "izquierdo") {
       piezaClicada.rotacionActual -= 90;
-      console.log(`↺ Pieza ${piezaClicada.id} girada a la izquierda`);
     } else if (tipoClick === "derecho") {
       piezaClicada.rotacionActual += 90;
-      console.log(`↻ Pieza ${piezaClicada.id} girada a la derecha`);
     }
 
     // Mantener rotación en [0, 360)
@@ -1210,18 +1263,24 @@ function handleGameClick(mouseX, mouseY, tipoClick) {
     else if (piezaClicada.rotacionActual < 0)
       piezaClicada.rotacionActual += 360;
 
-    console.log(`  → Rotación actual: ${piezaClicada.rotacionActual}°`);
-
     // Redibujar el juego
     drawUi();
 
     // Verificar si ganó
     if (verificarVictoria()) {
-      console.log("🏆 ¡Victoria! Todas las piezas en posición correcta.");
       detenerTemporizador();
       filtrosActivos = false;
-      gameState = "victoria";
-      drawUi();
+
+      // Si es el último nivel de la dificultad
+      if (nivelActual === 6) {
+        // suponiendo que 6 es el último nivel
+        console.log("🏆 ¡Completaste todos los niveles de esta dificultad!");
+        gameState = "final-dificultad";
+        drawUi();
+      } else {
+        gameState = "victoria";
+        drawUi();
+      }
     }
   }
 }
@@ -1284,7 +1343,6 @@ function reintentarNivel() {
 
   mostrarImagenGrandeYComenzar();
 }
-
 
 function verificarVictoria() {
   return piezas.every(
@@ -1360,6 +1418,26 @@ function handleVictoriaMenuClick(mouseX, mouseY) {
     }
   }
 }
+
+
+function handleFinalDificultadClick(mouseX, mouseY) {
+  // Verificar click en botón VOLVER AL MENÚ
+  if (window.botonMenuFinal) {
+    const btn = window.botonMenuFinal;
+    if (
+      mouseX >= btn.x &&
+      mouseX <= btn.x + btn.width &&
+      mouseY >= btn.y &&
+      mouseY <= btn.y + btn.height
+    ) {
+      console.log("🏠 Volviendo al menú principal");
+      reiniciarJuego(); // reinicia variables y limpia estado
+      gameState = "menu"; // o "seleccion-dificultad" según tu flujo
+      drawUi();
+    }
+  }
+}
+
 
 function inicializarPiezas() {
   piezas = [];
@@ -1708,7 +1786,7 @@ function siguienteNivel() {
   tiempoTranscurrido = 0;
   juegoCompletado = false;
   filtrosActivos = true;
-  filtroActual=null;
+  filtroActual = null;
   cantidadAyudas = 1;
   if (intervaloTemporizador) {
     clearInterval(intervaloTemporizador);
