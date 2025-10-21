@@ -36,6 +36,7 @@ let cantidadAyudas = 1;
 let piezaResaltada = null;
 let tiempoResaltado = 0;
 let botonPlayJuego = null;
+let juegoListo = false;
 const FILTROS_DISPONIBLES = [
   "grayscale", // Escala de grises
   "brightness", // Brillo reducido al 30%
@@ -728,7 +729,49 @@ function mostrarListoParaJugar() {
   // Si es la primera vez, inicializar las piezas
   if (piezas.length === 0) {
     inicializarPiezas();
+    // La función inicializarPiezas() llamará a drawUi() cuando termine
+    return; // ⬅️ Salir aquí, esperamos a que termine
   }
+
+  // ⬇️ SI NO ESTÁ LISTO, MOSTRAR SPINNER ⬇️
+  if (!juegoListo) {
+    // Título
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 36px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Preparando...", canvas.width / 2, 50);
+
+    // Mostrar spinner de carga
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 40;
+
+    ctx.fillStyle = "white";
+    ctx.font = "24px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText("Aplicando filtros...", centerX, centerY - 80);
+
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(spinnerAngle);
+
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 1.5);
+    ctx.strokeStyle = "#27ae60";
+    ctx.lineWidth = 6;
+    ctx.lineCap = "round";
+    ctx.stroke();
+
+    ctx.restore();
+
+    spinnerAngle += 0.1;
+
+    // Seguir animando el spinner
+    requestAnimationFrame(() => drawUi());
+    return; // ⬅️ No continuar hasta que esté listo
+  }
+
+  // ⬇️ SI YA ESTÁ LISTO, MOSTRAR EL JUEGO CON BOTÓN PLAY ⬇️
 
   // Título
   ctx.fillStyle = "#ffffff";
@@ -1419,7 +1462,6 @@ function handleVictoriaMenuClick(mouseX, mouseY) {
   }
 }
 
-
 function handleFinalDificultadClick(mouseX, mouseY) {
   // Verificar click en botón VOLVER AL MENÚ
   if (window.botonMenuFinal) {
@@ -1438,9 +1480,9 @@ function handleFinalDificultadClick(mouseX, mouseY) {
   }
 }
 
-
 function inicializarPiezas() {
   piezas = [];
+  juegoListo = false; // ⬅️ Marcar como NO listo al inicio
 
   // 1. Elegir filtro aleatorio
   const filtro = elegirFiltroRandom();
@@ -1493,7 +1535,11 @@ function inicializarPiezas() {
       console.log(
         `✅ ${piezas.length} piezas inicializadas con filtro "${filtro}"`
       );
-      drawUi();
+
+      // ⬇️ MARCAR COMO LISTO DESPUÉS DE CREAR TODAS LAS PIEZAS ⬇️
+      juegoListo = true;
+
+      drawUi(); // Redibujar para mostrar el botón PLAY
     }
   );
 }
