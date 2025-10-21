@@ -20,6 +20,7 @@ let mostrarInstrucciones = false;
 
 let gameState = "menu"; // menu, cargando, seleccion-dificultad, seleccion-imagen, jugando
 let imagenSeleccionada = null;
+let imagenOriginal = null; // global
 let spinnerAngle = 0;
 let imagenesListas = 0;
 let dificultadSeleccionada = null;
@@ -36,12 +37,12 @@ let piezaResaltada = null;
 let tiempoResaltado = 0;
 let botonPlayJuego = null;
 const FILTROS_DISPONIBLES = [
-  "grayscale(1)",      // Escala de grises
-  "brightness(0.7)",   // Brillo reducido al 30%
-  "invert(1)",         // Negativo
+  "grayscale", // Escala de grises
+  "brightness", // Brillo reducido al 30%
+  "invert", // Negativo
 ];
 
-let filtroActual ="";
+let filtroActual = "";
 
 // Opciones de dificultad globales
 const opcionesDificultad = [
@@ -66,7 +67,15 @@ imagenes.forEach((img, index) => {
 
   image.onload = () => {
     img.loaded = true;
-    img.element = image;
+    img.element = image; // para usar en el juego
+
+    // Crear una nueva imagen para original
+    const original = new Image();
+    original.src = img.src; // mismo src
+    original.onload = () => {
+      img.original = original; // versión limpia ya cargada
+    };
+
     imagenesListas++;
   };
 
@@ -743,10 +752,10 @@ function mostrarPantallaVictoria() {
   const imgX = canvas.width / 2 - imgSize / 2;
   const imgY = 160;
 
-  if (imagenSeleccionada.loaded && imagenSeleccionada.element) {
+  if (imagenSeleccionada.loaded && imagenSeleccionada.original) {
     ctx.shadowColor = "rgba(0, 255, 0, 0.6)";
     ctx.shadowBlur = 30;
-    ctx.drawImage(imagenSeleccionada.element, imgX, imgY, imgSize, imgSize);
+    ctx.drawImage(imagenSeleccionada.original, imgX, imgY, imgSize, imgSize); // <-- ORIGINAL
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
   }
@@ -865,10 +874,10 @@ function mostrarPantallaDerrota() {
   const imgX = canvas.width / 2 - imgSize / 2;
   const imgY = 200;
 
-  if (imagenSeleccionada.loaded && imagenSeleccionada.element) {
-    ctx.shadowColor = "rgba(255, 0, 0, 0.4)";
-    ctx.shadowBlur = 20;
-    ctx.drawImage(imagenSeleccionada.element, imgX, imgY, imgSize, imgSize);
+  if (imagenSeleccionada.loaded && imagenSeleccionada.original) {
+    ctx.shadowColor = "rgba(0, 255, 0, 0.6)";
+    ctx.shadowBlur = 30;
+    ctx.drawImage(imagenSeleccionada.original, imgX, imgY, imgSize, imgSize);
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
   }
@@ -1350,57 +1359,168 @@ function handleVictoriaMenuClick(mouseX, mouseY) {
 function inicializarPiezas() {
   piezas = [];
 
-  elegirFiltroRandom();
-  // Calcular el tamaño de la grilla según la dificultad
-  const gridSize = Math.sqrt(dificultadSeleccionada.cuadros); // 2, 3 o 4
+  // 1. Elegir filtro aleatorio
+  const filtro = elegirFiltroRandom();
 
-  // Tamaño del área de juego (dejamos margen para el título)
-  const areaJuego = Math.min(canvas.width - 100, canvas.height - 150);
-  const tamañoPieza = areaJuego / gridSize;
+  // 2. Aplicar filtro a la imagen
+  aplicarFiltroConImageData(
+    imagenSeleccionada.element,
+    filtro,
+    (imagenFiltrada) => {
+      // ⚡ Dentro del callback ya tenemos la imagen filtrada
+      imagenSeleccionada.element = imagenFiltrada;
 
-  // Posición inicial (centrado)
-  const startX = (canvas.width - areaJuego) / 2;
-  const startY = 80; // Debajo del título
+      // 3. Calcular la grilla y tamaño de piezas
+      const gridSize = Math.sqrt(dificultadSeleccionada.cuadros);
+      const areaJuego = Math.min(canvas.width - 100, canvas.height - 150);
+      const tamañoPieza = areaJuego / gridSize;
+      const startX = (canvas.width - areaJuego) / 2;
+      const startY = 80;
 
-  // Tamaño de cada sección de la imagen original
-  const imagenWidth = imagenSeleccionada.element.width;
-  const imagenHeight = imagenSeleccionada.element.height;
-  const seccionWidth = imagenWidth / gridSize;
-  const seccionHeight = imagenHeight / gridSize;
+      const imagenWidth = imagenSeleccionada.element.width;
+      const imagenHeight = imagenSeleccionada.element.height;
+      const seccionWidth = imagenWidth / gridSize;
+      const seccionHeight = imagenHeight / gridSize;
 
-  // Crear las piezas
-  for (let fila = 0; fila < gridSize; fila++) {
-    for (let col = 0; col < gridSize; col++) {
-      // Rotación aleatoria: 0, 90, 180 o 270 grados
-      const rotacionesAleatorias = [0, 90, 180, 270];
-      const rotacionAleatoria =
-        rotacionesAleatorias[Math.floor(Math.random() * 4)];
+      // 4. Crear piezas
+      for (let fila = 0; fila < gridSize; fila++) {
+        for (let col = 0; col < gridSize; col++) {
+          const rotacionesAleatorias = [0, 90, 180, 270];
+          const rotacionAleatoria =
+            rotacionesAleatorias[Math.floor(Math.random() * 4)];
 
-      const pieza = {
-        id: fila * gridSize + col,
-        fila: fila,
-        col: col,
-        x: startX + col * tamañoPieza,
-        y: startY + fila * tamañoPieza,
-        ancho: tamañoPieza,
-        alto: tamañoPieza,
-        // Coordenadas en la imagen original
-        imgX: col * seccionWidth,
-        imgY: fila * seccionHeight,
-        imgAncho: seccionWidth,
-        imgAlto: seccionHeight,
-        // Rotación actual y correcta
-        rotacionActual: rotacionAleatoria,
-        rotacionCorrecta: 0, // La rotación correcta siempre es 0 grados
-      };
+          piezas.push({
+            id: fila * gridSize + col,
+            fila,
+            col,
+            x: startX + col * tamañoPieza,
+            y: startY + fila * tamañoPieza,
+            ancho: tamañoPieza,
+            alto: tamañoPieza,
+            imgX: col * seccionWidth,
+            imgY: fila * seccionHeight,
+            imgAncho: seccionWidth,
+            imgAlto: seccionHeight,
+            rotacionActual: rotacionAleatoria,
+            rotacionCorrecta: 0,
+          });
+        }
+      }
 
-      piezas.push(pieza);
+      console.log(
+        `✅ ${piezas.length} piezas inicializadas con filtro "${filtro}"`
+      );
+      drawUi();
     }
+  );
+}
+
+// ----------------------
+// Funciones de filtros
+// ----------------------
+function aplicarGrayscale(r, g, b) {
+  const gray = 0.3 * r + 0.59 * g + 0.11 * b;
+  return [gray, gray, gray];
+}
+
+function aplicarBrightness(r, g, b, factor = 0.5) {
+  return [r * factor, g * factor, b * factor];
+}
+
+function aplicarInvert(r, g, b) {
+  return [255 - r, 255 - g, 255 - b];
+}
+
+function aplicarSepia(r, g, b) {
+  const tr = 0.393 * r + 0.769 * g + 0.189 * b;
+  const tg = 0.349 * r + 0.686 * g + 0.168 * b;
+  const tb = 0.272 * r + 0.534 * g + 0.131 * b;
+  return [Math.min(255, tr), Math.min(255, tg), Math.min(255, tb)];
+}
+
+// ----------------------
+// Función principal
+// ----------------------
+function aplicarFiltroConImageData(imagen, filtro, callback) {
+  if (!filtro) {
+    callback(imagen);
+    return;
   }
 
-  console.log(
-    `✅ ${piezas.length} piezas inicializadas con rotaciones aleatorias`
+  // Canvas temporal
+  const tempCanvas = document.createElement("canvas");
+  const tempCtx = tempCanvas.getContext("2d");
+
+  // Esperar a que la imagen esté cargada
+  if (!imagen.complete) {
+    imagen.onload = () => aplicarFiltroConImageData(imagen, filtro, callback);
+    return;
+  }
+
+  tempCanvas.width = imagen.width;
+  tempCanvas.height = imagen.height;
+  tempCtx.drawImage(imagen, 0, 0);
+
+  const imageData = tempCtx.getImageData(
+    0,
+    0,
+    tempCanvas.width,
+    tempCanvas.height
   );
+  const data = imageData.data;
+
+  // Recorrer cada píxel y aplicar filtro
+  for (let i = 0; i < data.length; i += 4) {
+    let r = data[i];
+    let g = data[i + 1];
+    let b = data[i + 2];
+
+    switch (filtro) {
+      case "grayscale":
+        [r, g, b] = aplicarGrayscale(r, g, b);
+        break;
+      case "brightness":
+        [r, g, b] = aplicarBrightness(r, g, b, 0.5);
+        break;
+      case "invert":
+        [r, g, b] = aplicarInvert(r, g, b);
+        break;
+      case "sepia":
+        [r, g, b] = aplicarSepia(r, g, b);
+        break;
+    }
+
+    data[i] = r;
+    data[i + 1] = g;
+    data[i + 2] = b;
+  }
+
+  tempCtx.putImageData(imageData, 0, 0);
+
+  // Crear nueva imagen con el filtro aplicado
+  const nuevaImagen = new Image();
+  nuevaImagen.onload = () => callback(nuevaImagen);
+  nuevaImagen.src = tempCanvas.toDataURL();
+}
+
+function aplicarGrayscale(r, g, b) {
+  const gray = 0.3 * r + 0.59 * g + 0.11 * b;
+  return [gray, gray, gray];
+}
+
+function aplicarBrightness(r, g, b, factor = 0.5) {
+  return [r * factor, g * factor, b * factor];
+}
+
+function aplicarInvert(r, g, b) {
+  return [255 - r, 255 - g, 255 - b];
+}
+
+function aplicarSepia(r, g, b) {
+  const tr = 0.393 * r + 0.769 * g + 0.189 * b;
+  const tg = 0.349 * r + 0.686 * g + 0.168 * b;
+  const tb = 0.272 * r + 0.534 * g + 0.131 * b;
+  return [Math.min(255, tr), Math.min(255, tg), Math.min(255, tb)];
 }
 
 function iniciarTemporizador() {
@@ -1469,22 +1589,18 @@ function formatearTiempo(milisegundos) {
     .padStart(2, "0")}.${centesimas.toString().padStart(2, "0")}`;
 }
 
+function elegirFiltroRandom() {
+  // Solo aplicar filtros en niveles avanzados
 
-function elegirFiltroRandom(){
-  let indiceAleatorio = Math.floor(Math.random() * FILTROS_DISPONIBLES.length);
-  filtroActual=  FILTROS_DISPONIBLES[indiceAleatorio];
+  const indice = Math.floor(Math.random() * FILTROS_DISPONIBLES.length);
+  return FILTROS_DISPONIBLES[indice];
+
+  // Sin filtro en niveles iniciales
 }
-
 
 function dibujarPiezas() {
   piezas.forEach((pieza) => {
     ctx.save();
-
-    if (filtrosActivos) {
-      //ctx.filter = "grayscale(1)";
-      
-      ctx.filter = filtroActual;
-    }
 
     ctx.translate(pieza.x + pieza.ancho / 2, pieza.y + pieza.alto / 2);
     ctx.rotate((pieza.rotacionActual * Math.PI) / 180);
@@ -1553,6 +1669,7 @@ function reiniciarJuego() {
   tiempoTranscurrido = 0;
   juegoCompletado = false;
   filtrosActivos = true;
+  filtroActual = null;
   nivelActual = 1; // Resetear nivel
   cantidadAyudas = 1;
   if (intervaloTemporizador) {
@@ -1560,7 +1677,15 @@ function reiniciarJuego() {
     intervaloTemporizador = null;
   }
   imagenSeleccionada = null;
-  dificultadSeleccionada = null; // Resetear dificultad también
+  dificultadSeleccionada = null;
+
+  // Resetear dificultad también
+  imagenes.forEach((img) => {
+    if (img.original) {
+      img.element = img.original;
+    }
+  });
+
   console.log("🔄 Juego reiniciado - Volviendo a selección de dificultad");
 }
 
@@ -1578,6 +1703,7 @@ function siguienteNivel() {
   tiempoTranscurrido = 0;
   juegoCompletado = false;
   filtrosActivos = true;
+  filtroActual=null;
   cantidadAyudas = 1;
   if (intervaloTemporizador) {
     clearInterval(intervaloTemporizador);
