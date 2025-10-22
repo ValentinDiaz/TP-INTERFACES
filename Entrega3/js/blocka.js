@@ -53,6 +53,7 @@ const opcionesDificultad = [
   { nivel: "Sorpresa", cuadros: 16, descripcion: "4x4", tiempoLimite: 30000 },
 ];
 
+
 const imagenes = [
   { src: "assets/images/dino1.jpg", loaded: false },
   { src: "assets/images/dino2.jpg", loaded: false },
@@ -1560,7 +1561,7 @@ function inicializarPiezas() {
 // Funciones de filtros
 // ----------------------
 function aplicarGrayscale(r, g, b) {
-  const gray = 0.3 * r + 0.59 * g + 0.11 * b;
+  const gray = Math.round(0.299 * r + 0.587 * g + 0.114 * b);
   return [gray, gray, gray];
 }
 
