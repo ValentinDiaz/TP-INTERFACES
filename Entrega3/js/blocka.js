@@ -47,12 +47,65 @@ let filtroActual = "";
 
 // Opciones de dificultad globales
 const opcionesDificultad = [
-  { nivel: "Fácil", cuadros: 4, descripcion: "2x2", tiempoLimite: null }, // Sin límite
-  { nivel: "Medio", cuadros: 9, descripcion: "3x3", tiempoLimite: 40000 }, // 40 segundos
-  { nivel: "Difícil", cuadros: 16, descripcion: "4x4", tiempoLimite: 30000 },
-  { nivel: "Sorpresa", cuadros: 16, descripcion: "4x4", tiempoLimite: 30000 },
+  {
+    nivel: "Fácil",
+    cuadros: 4,
+    filas: 2,
+    columnas: 2,
+    descripcion: "2x2",
+    tiempoLimite: null,
+  },
+  {
+    nivel: "Medio+",
+    cuadros: 6,
+    filas: 2,
+    columnas: 3,
+    descripcion: "2x3",
+    tiempoLimite: 40000,
+  },
+  {
+    nivel: "Medio++",
+    cuadros: 8,
+    filas: 2,
+    columnas: 4,
+    descripcion: "2x4",
+    tiempoLimite: 40000,
+  },
+  {
+    nivel: "Medio",
+    cuadros: 9,
+    filas: 3,
+    columnas: 3,
+    descripcion: "3x3",
+    tiempoLimite: 40000,
+  },
+  {
+    nivel: "Difícil",
+    cuadros: 16,
+    filas: 4,
+    columnas: 4,
+    descripcion: "4x4",
+    tiempoLimite: 30000,
+  },
+  {
+    nivel: "Sorpresa",
+    cuadros: 16,
+    filas: 4,
+    columnas: 4,
+    descripcion: "4x4",
+    tiempoLimite: 30000,
+  },
 ];
 
+const backgroundImage = new Image();
+backgroundImage.src = "assets/images/blocka.png";
+
+let imagenCargada = false;
+
+backgroundImage.onload = function () {
+  imagenCargada = true;
+  console.log("✅ Imagen de fondo cargada");
+};
 
 const imagenes = [
   { src: "assets/images/dino1.jpg", loaded: false },
@@ -91,8 +144,10 @@ imagenes.forEach((img, index) => {
 
 function drawUi() {
   // Fondo
-  ctx.fillStyle = "#1e1e1e";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (gameState !== "menu") {
+    ctx.fillStyle = "#1e1e1e";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   if (gameState === "menu") {
     drawMenu();
@@ -173,21 +228,30 @@ function mostrarPantallaFinalDificultad() {
 }
 
 function drawMenu() {
-  // Limpiar canvas
-  ctx.fillStyle = "#1e1e1e";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // Dibujar imagen de fondo difuminada
+  if (imagenCargada) {
+    console.log("✅ Dibujando imagen difuminada");
+    ctx.filter = "blur(8px)";
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    ctx.filter = "none";
+    ctx.fillStyle = "rgba(30, 30, 30, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  } else {
+    console.log("⏳ Imagen aún no cargada, usando fallback");
+    ctx.fillStyle = "#1e1e1e";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
 
   if (mostrarInstrucciones) {
-    // Si se están mostrando instrucciones, dibujar la pantalla de instrucciones
     mostrarPantallaInstrucciones();
     return;
   }
 
   // Posicionar botones
-  playButton.x = canvas.width / 2 - 80; // Mover un poco a la izquierda
+  playButton.x = canvas.width / 2 - 80;
   playButton.y = canvas.height / 2;
 
-  helpButton.x = canvas.width / 2 + 80; // Botón de ayuda a la derecha
+  helpButton.x = canvas.width / 2 + 80;
   helpButton.y = canvas.height / 2;
 
   // Dibujar botón de PLAY
@@ -1489,45 +1553,53 @@ function inicializarPiezas() {
   const esModoSorpresa = dificultadSeleccionada.nivel === "Sorpresa";
 
   if (esModoSorpresa) {
-    // 🎲 MODO SORPRESA: Cada pieza tendrá su propio filtro aleatorio
     console.log("🎲 Modo SORPRESA activado - Filtros aleatorios por pieza");
     inicializarPiezasConFiltrosAleatorios();
   } else {
-    // ⬅️ AGREGAR ESTE ELSE
-    // 🎨 MODO NORMAL: Un solo filtro para toda la imagen
-
-    // 1. Elegir filtro aleatorio
     const filtro = elegirFiltroRandom();
 
-    // 2. Aplicar filtro a la imagen
     aplicarFiltroConImageData(
       imagenSeleccionada.element,
       filtro,
       (imagenFiltrada) => {
-        // ⚡ Dentro del callback ya tenemos la imagen filtrada
         imagenSeleccionada.element = imagenFiltrada;
 
-        // 3. Calcular la grilla y tamaño de piezas
-        const gridSize = Math.sqrt(dificultadSeleccionada.cuadros);
-        const areaJuego = Math.min(canvas.width - 100, canvas.height - 150);
-        const tamañoPieza = areaJuego / gridSize;
-        const startX = (canvas.width - areaJuego) / 2;
+        const filas = dificultadSeleccionada.filas;
+        const columnas = dificultadSeleccionada.columnas;
+
+        // 🎯 CALCULAR TAMAÑO BASADO EN EL ESPACIO DISPONIBLE
+        const maxAncho = canvas.width - 100;
+        const maxAlto = canvas.height - 200; // Dejar espacio para UI
+
+        // Calcular tamaño de pieza que quepa en el espacio
+        const tamañoPiezaAncho = maxAncho / columnas;
+        const tamañoPiezaAlto = maxAlto / filas;
+
+        // Usar el menor para que todo quepa
+        const tamañoPieza = Math.min(tamañoPiezaAncho, tamañoPiezaAlto);
+
+        // Calcular el área total que ocupará la grilla
+        const anchoTotal = columnas * tamañoPieza;
+        const altoTotal = filas * tamañoPieza;
+
+        // Centrar la grilla
+        const startX = (canvas.width - anchoTotal) / 2;
         const startY = 80;
 
         const imagenWidth = imagenSeleccionada.element.width;
         const imagenHeight = imagenSeleccionada.element.height;
-        const seccionWidth = imagenWidth / gridSize;
-        const seccionHeight = imagenHeight / gridSize;
+        const seccionWidth = imagenWidth / columnas;
+        const seccionHeight = imagenHeight / filas;
 
-        // 4. Crear piezas
-        for (let fila = 0; fila < gridSize; fila++) {
-          for (let col = 0; col < gridSize; col++) {
+        // Crear piezas
+        for (let fila = 0; fila < filas; fila++) {
+          for (let col = 0; col < columnas; col++) {
             const rotacionesAleatorias = [0, 90, 180, 270];
             const rotacionAleatoria =
               rotacionesAleatorias[Math.floor(Math.random() * 4)];
 
             piezas.push({
-              id: fila * gridSize + col,
+              id: fila * columnas + col,
               fila,
               col,
               x: startX + col * tamañoPieza,
@@ -1548,13 +1620,11 @@ function inicializarPiezas() {
           `✅ ${piezas.length} piezas inicializadas con filtro "${filtro}"`
         );
 
-        // ⬇️ MARCAR COMO LISTO DESPUÉS DE CREAR TODAS LAS PIEZAS ⬇️
         juegoListo = true;
-
-        drawUi(); // Redibujar para mostrar el botón PLAY
+        drawUi();
       }
     );
-  } // ⬅️ CERRAR EL ELSE
+  }
 }
 
 // ----------------------
@@ -1666,33 +1736,42 @@ function aplicarSepia(r, g, b) {
 }
 
 function inicializarPiezasConFiltrosAleatorios() {
-  const gridSize = Math.sqrt(dificultadSeleccionada.cuadros);
-  const areaJuego = Math.min(canvas.width - 100, canvas.height - 150);
-  const tamañoPieza = areaJuego / gridSize;
-  const startX = (canvas.width - areaJuego) / 2;
+  const filas = dificultadSeleccionada.filas;
+  const columnas = dificultadSeleccionada.columnas;
+
+  // 🎯 MISMO CÁLCULO DE TAMAÑO
+  const maxAncho = canvas.width - 100;
+  const maxAlto = canvas.height - 200;
+
+  const tamañoPiezaAncho = maxAncho / columnas;
+  const tamañoPiezaAlto = maxAlto / filas;
+  const tamañoPieza = Math.min(tamañoPiezaAncho, tamañoPiezaAlto);
+
+  const anchoTotal = columnas * tamañoPieza;
+  const altoTotal = filas * tamañoPieza;
+
+  const startX = (canvas.width - anchoTotal) / 2;
   const startY = 80;
 
   const imagenWidth = imagenSeleccionada.element.width;
   const imagenHeight = imagenSeleccionada.element.height;
-  const seccionWidth = imagenWidth / gridSize;
-  const seccionHeight = imagenHeight / gridSize;
+  const seccionWidth = imagenWidth / columnas;
+  const seccionHeight = imagenHeight / filas;
 
   let piezasCreadas = 0;
-  const totalPiezas = gridSize * gridSize;
+  const totalPiezas = filas * columnas;
 
-  for (let fila = 0; fila < gridSize; fila++) {
-    for (let col = 0; col < gridSize; col++) {
+  for (let fila = 0; fila < filas; fila++) {
+    for (let col = 0; col < columnas; col++) {
       const rotacionesAleatorias = [0, 90, 180, 270];
       const rotacionAleatoria =
         rotacionesAleatorias[Math.floor(Math.random() * 4)];
 
-      // Elegir filtro aleatorio para esta pieza
       const filtroAleatorio =
         FILTROS_DISPONIBLES[
           Math.floor(Math.random() * FILTROS_DISPONIBLES.length)
         ];
 
-      // Aplicar filtro a esta porción específica de la imagen
       aplicarFiltroAPorcionDeImagen(
         imagenSeleccionada.element,
         col * seccionWidth,
@@ -1702,26 +1781,25 @@ function inicializarPiezasConFiltrosAleatorios() {
         filtroAleatorio,
         (imagenPiezaFiltrada) => {
           piezas.push({
-            id: fila * gridSize + col,
+            id: fila * columnas + col,
             fila,
             col,
             x: startX + col * tamañoPieza,
             y: startY + fila * tamañoPieza,
             ancho: tamañoPieza,
             alto: tamañoPieza,
-            imgX: 0, // La imagen ya está cortada, empieza en 0
+            imgX: 0,
             imgY: 0,
             imgAncho: seccionWidth,
             imgAlto: seccionHeight,
             rotacionActual: rotacionAleatoria,
             rotacionCorrecta: 0,
-            imagenFiltrada: imagenPiezaFiltrada, // Guardar imagen filtrada
-            nombreFiltro: filtroAleatorio, // Para debug
+            imagenFiltrada: imagenPiezaFiltrada,
+            nombreFiltro: filtroAleatorio,
           });
 
           piezasCreadas++;
 
-          // Cuando todas las piezas estén listas
           if (piezasCreadas === totalPiezas) {
             console.log(
               `✅ ${piezas.length} piezas creadas con filtros aleatorios`
