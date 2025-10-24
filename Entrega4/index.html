@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>GameTime</title>
+  </head>
+  <body>
+    <div id="loader">
+      <div class="bouncing-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar"></div>
+        <span class="progress-percent">0%</span>
+      </div>
+    </div>
+
+    <!--Nav-->
+    <nav class="navbar">
+      <button class="open-menu" id="openBurger">
+        <i class="fa-solid fa-bars open-icon"></i>
+      </button>
+      <div class="burger-menu" id="navBurger">
+        <button class="close-menu" id="closeBurger">
+          <i class="fa-solid fa-xmark close-icon"></i>
+        </button>
+        <ul class="nav-list">
+          <li>
+            <a href="#"><i class="fa-solid fa-gun"></i> Acción</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-heart"></i> Juegos de chicas</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-futbol"></i> Deportes</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-dice"></i> Casual</a>
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-chess"></i> Estrategia</a>
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fa-solid fa-table-cells"></i> Juegos de mesa</a
+            >
+          </li>
+          <li>
+            <a href="#"><i class="fa-solid fa-users"></i> Multiplayer</a>
+          </li>
+        </ul>
+      </div>
+      <a href="index.html">
+        <div class="logo">
+          <img src="assets/images/LogoGametime.png" alt="Logo" />
+        </div>
+      </a>
+      <div class="search-container">
+        <input type="text" placeholder="¿A qué jugamos hoy?" />
+        <button>
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </button>
+      </div>
+
+      <div class="nav-icons">
+        <div class="div-carrito" id="toggleCarrito">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+        <div class="div-user" id="toggleUser">
+          <i class="fa-solid fa-user-astronaut open-user"></i>
+        </div>
+      </div>
+
+      <div class="menu-usuario" id="navUser">
+        <ul class="nav-list">
+          <li><a href="">Mi perfil</a></li>
+          <li><a href="">Mis juegos</a></li>
+          <li><a href="">Logros</a></li>
+          <li><a href="login.html">Cerrar sesion</a></li>
+        </ul>
+      </div>
+
+      <div class="lista-carrito" id="lista-carrito">
+        <h3>Carrito de compras</h3>
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart-total">
+          <span>Total:</span>
+          <span id="cartTotalAmount">$0</span>
+        </div>
+      </div>
+    </nav>
+    <!--Nav-->
+
+    <!--Carruseles-->
+
+    <div class="carrusel-grande-container">
+      <div class="carrusel-grande" id="carruselGrande">
+        <div class="loading">Cargando juegos...</div>
+      </div>
+
+      <div class="carrusel-grande-indicators" id="indicators"></div>
+    </div>
+
+    <div class="carruseles">
+      <div class="carousel">
+        <h2>Multiplayer</h2>
+        <div class="carousel-list" id="carousel-multiplayer">
+          <button
+            class="carrusel-arrow carrusel-prev"
+            id="button-prev-multiP"
+            data-button="button-prev"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-left"
+              class="svg-inline--fa fa-chevron-left fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"
+              ></path>
+            </svg>
+          </button>
+          <div class="carousel-track" id="track">
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Mariocardimg.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Super Mario Bross</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Agario.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <h2 class="card-title">Agar.io</h2>
+
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Lavaice.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Lavaboy and Watergirl</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Needforspeed.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Need for speed</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Pool.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Pool</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Truco.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Truco</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Uno.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Uno</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Preguntados.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Preguntados</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/Poker.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Poker</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carrusel-arrow carrusel-next"
+            id="button-next-multiP"
+            data-button="button-next"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-right"
+              class="svg-inline--fa fa-chevron-right fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="carousel">
+        <h2>Casual</h2>
+        <div class="carousel-list" id="carousel-multiplayer">
+          <button
+            class="carrusel-arrow carrusel-prev"
+            id="button-prev-multiP"
+            data-button="button-prev"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-left"
+              class="svg-inline--fa fa-chevron-left fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"
+              ></path>
+            </svg>
+          </button>
+          <div class="carousel-track" id="track">
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/monopoly.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$9</span>
+                </div>
+                <div class="card-title">Monopoly</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/fondoPegSolitaire.png"
+                  alt="Peg Solitaire"
+                  class="game-image"
+                />
+                <div class="card-title">Peg Solitaire</div>
+                <div class="hover-overlay">
+                  <a href="pegSolitaire.html"
+                    ><button class="play-button">
+                      <span>PLAY NOW</span>
+                    </button></a
+                  >
+                </div>
+              </div>
+            </div>
+               <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/blocka.png"
+                  alt="Blocka"
+                  class="game-image"
+                />
+                <div class="card-title">Blocka</div>
+                <div class="hover-overlay">
+                  <a href="blocka.html"
+                    ><button class="play-button">
+                      <span>PLAY NOW</span>
+                    </button></a
+                  >
+                </div>
+              </div>
+            </div>
+            
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/bubbleshooter.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$6</span>
+                </div>
+                <div class="card-title">Arkadium boobleshooter</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <h2>Agar.io</h2>
+                <img
+                  src="assets/images/Agario.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/kuyaisland.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Kuya island</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/ludorivals.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Ludo rivals</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/pinballarcade.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Pinball arcade</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/plantvszombies.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Plants vs zombies 3</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/sonic.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Sonic the hedgehog</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carrusel-arrow carrusel-next"
+            id="button-next-multiP"
+            data-button="button-next"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-right"
+              class="svg-inline--fa fa-chevron-right fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="carousel">
+        <h2>Juegos de chicas</h2>
+        <div class="carousel-list" id="carousel-multiplayer">
+          <button
+            class="carrusel-arrow carrusel-prev"
+            id="button-prev-multiP"
+            data-button="button-prev"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-left"
+              class="svg-inline--fa fa-chevron-left fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"
+              ></path>
+            </svg>
+          </button>
+          <div class="carousel-track" id="track">
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/fashionholic.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Fashion holic</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/princesabodaprimaveral.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Princesa boda primaveral</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/cakebaker.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Cake baker</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/nailsdecorator.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Nails decorator</div>
+
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/queenclothing.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Queen clothing</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/cenicienta.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Cenicienta</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/schoolteacher.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">School teacher</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/flowerdetective.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Flower detective</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/sonic.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Sonic the hedgehog</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carrusel-arrow carrusel-next"
+            id="button-next-multiP"
+            data-button="button-next"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-right"
+              class="svg-inline--fa fa-chevron-right fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="carousel">
+        <h2>Deportes</h2>
+        <div class="carousel-list" id="carousel-multiplayer">
+          <button
+            class="carrusel-arrow carrusel-prev"
+            id="button-prev-multiP"
+            data-button="button-prev"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-left"
+              class="svg-inline--fa fa-chevron-left fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M34.52 239.03L228.87 44.69c9.37-9.37 24.57-9.37 33.94 0l22.67 22.67c9.36 9.36 9.37 24.52.04 33.9L131.49 256l154.02 154.75c9.34 9.38 9.32 24.54-.04 33.9l-22.67 22.67c-9.37 9.37-24.57 9.37-33.94 0L34.52 272.97c-9.37-9.37-9.37-24.57 0-33.94z"
+              ></path>
+            </svg>
+          </button>
+          <div class="carousel-track" id="track">
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/archery.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Archery Master</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-price-section">
+                    <div class="cart-icon">
+                      <i class="fa-solid fa-cart-plus addCart"></i>
+                      <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/basketbros.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Basket bros</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/fc24.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">FC2024</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/jump.png"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Base jump</div>
+
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/boxingstars.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Boxing stars</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/3dbowling.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">3d Bowling</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/penaltyshooters.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Penalty shooters</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/fish.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="price-tag">
+                  <img src="assets/iconos/Cardtag.svg" alt="" /><span>$12</span>
+                </div>
+                <div class="card-title">Real Fishing</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>BUY NOW</span></button>
+                  <div class="cart-icon">
+                    <i class="fa-solid fa-cart-plus addCart"></i>
+                    <i class="fa-solid fa-circle-check hidden addedCart"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="slick">
+              <div class="game-card">
+                <img
+                  src="assets/images/cricket.PNG"
+                  alt="New Super Mario Bros"
+                  class="game-image"
+                />
+                <div class="card-title">Cricket Superstars</div>
+                <div class="hover-overlay">
+                  <button class="play-button"><span>PLAY NOW</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            class="carrusel-arrow carrusel-next"
+            id="button-next-multiP"
+            data-button="button-next"
+          >
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="fas"
+              data-icon="chevron-right"
+              class="svg-inline--fa fa-chevron-right fa-w-10"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 320 512"
+            >
+              <path
+                fill="currentColor"
+                d="M285.476 272.971L91.132 467.314c-9.373 9.373-24.569 9.373-33.941 0l-22.667-22.667c-9.357-9.357-9.375-24.522-.04-33.901L188.505 256 34.484 101.255c-9.335-9.379-9.317-24.544.04-33.901l22.667-22.667c9.373-9.373 24.569-9.373 33.941 0L285.475 239.03c9.373 9.372 9.373 24.568.001 33.941z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="brand-icon">
+            <img src="assets/images/logo.png" alt="Game Time Logo" />
+          </div>
+          <p>
+            La plataforma de gaming más completa. Descubre, juega y conecta con
+            millones de jugadores en todo el mundo.
+          </p>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Email">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline
+                  points="22,6 12,13 2,6"
+                  stroke="#0a0a0a"
+                  stroke-width="2"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>Soporte y comunidad</h3>
+          <ul>
+            <li><a href="#">Centro de ayuda</a></li>
+            <li><a href="#">Reembolso y devoluciones</a></li>
+            <li><a href="#">foro de comunidades</a></li>
+            <li><a href="#">eventos y torneos</a></li>
+            <li><a href="#">productos y servicios</a></li>
+            <li><a href="#">Guía de usuario</a></li>
+            <li><a href="#">Soporte técnico</a></li>
+            <li><a href="#">Blog de comunidad</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#">Preguntas Frecuentes (FAQ)</a></li>
+            <li><a href="#">Términos y condiciones</a></li>
+            <li><a href="#">Actualizaciones y parches</a></li>
+            <li><a href="#">Descargas de juegos Mapa del sitio</a></li>
+            <li><a href="#">Ayuda en línea</a></li>
+            <li><a href="#">Promociones</a></li>
+            <li><a href="#">Novedades</a></li>
+            <li><a href="#">Tutoriales</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>NewsLetters</h3>
+          <p style="color: #888; font-size: 14px; margin-bottom: 15px">
+            Suscríbete para recibir las últimas noticias y ofertas exclusivas
+          </p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="@algo.com" />
+            <button>suscribir</button>
+          </div>
+          <ul style="margin-top: 20px">
+            <li><a href="#">Quienes somos</a></li>
+            <li><a href="#">Historia de la empresa</a></li>
+            <li><a href="#">Misión y visión</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+            <li><a href="#">Legal</a></li>
+            <li><a href="#">Prensa</a></li>
+            <li><a href="#">Inversionistas</a></li>
+            <li><a href="#">Blog oficial</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2025 Game Time. Todos los derechos reservados</div>
+        <div class="footer-legal">
+          <a href="#">Política de privacidad</a>
+          <a href="#">Términos de uso</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/cartbrn.js"></script>
+    <script src="js/carruseles.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/index-spinner.js"></script>
+
+    <script
+      src="https://kit.fontawesome.com/c59d1be4df.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

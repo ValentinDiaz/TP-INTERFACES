@@ -1,0 +1,368 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
+body::before {
+  content: "";
+  background-image: url("/Entrega2/assets/images/fonndo.png");
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(10px); /* 👈 Ajusta el nivel de difuminado */
+  z-index: -2;
+}
+
+/* Capa oscura opcional para mejorar la legibilidad */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* 👈 Ajusta la opacidad (0.5 = 50% oscuro) */
+  z-index: -1;
+}
+
+.login-container {
+  background-color: #333;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  width: 300px;
+}
+
+.login-box {
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+.image-box {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+p {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #9e9e9e;
+}
+
+.textbox {
+  margin-bottom: 15px;
+}
+
+.textbox input {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: #fff;
+  font-size: 14px;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: linear-gradient(to bottom, #9b59b6, #8e44ad);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  box-shadow: 0 4px 0 #732d91, 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 0 #732d91, 0 12px 25px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(142, 68, 173, 0.6);
+}
+
+.btn:hover::before {
+  opacity: 1;
+}
+
+.btn:active {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 0 #732d91, 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn.clicked {
+  animation: press3D 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes press3D {
+  0% {
+    transform: translateY(-5px) scale(1);
+    box-shadow: 0 6px 0 #732d91, 0 12px 25px rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    transform: translateY(2px) scale(0.95);
+    box-shadow: 0 1px 0 #732d91, 0 2px 5px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: translateY(-5px) scale(1);
+    box-shadow: 0 6px 0 #732d91, 0 12px 25px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.social-buttons .btn {
+  width: 45%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.google {
+  background-color: #db4437;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.google:hover {
+  background-color: #c1351d;
+}
+
+.facebook:hover {
+  background-color: #2d4373;
+}
+
+a {
+  color: #1abc9c;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.captcha {
+  width: 200px;
+}
+
+.login-container.login-animating {
+  animation: loginFadeOut 0.6s forwards;
+  z-index: 2;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Animación de shake (sacudida) para campos inválidos */
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+/* Clase para aplicar la animación de error */
+.textbox.error {
+  animation: shake 0.5s;
+}
+
+.textbox.error input {
+  border: 2px solid #ff4444;
+  background-color: rgba(255, 68, 68, 0.1);
+}
+
+/* Clase para campos válidos */
+.textbox.success input {
+  border: 2px solid #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Mensaje de error */
+.error-message {
+  color: #ff4444;
+  font-size: 12px;
+  margin-top: 5px;
+  display: none;
+  animation: fadeIn 0.3s;
+}
+
+.textbox.error .error-message {
+  display: block;
+}
+
+/* Animación de aparición */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilo para el botón cuando está deshabilitado */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.textbox label {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+.textbox.error label {
+  color: #ff4444;
+}
+
+.textbox.success label {
+  color: #4caf50;
+}
+
+/* Animación de pulso para errores graves */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1000);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.textbox.error input:focus {
+  animation: pulse 0.3s;
+}
+
+/* Estilos base para inputs */
+.textbox input {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.textbox input:focus {
+  outline: none;
+  border-color: #5d3fd3;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-10px);
+  }
+  75% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes thumbPop {
+  0% {
+    transform: scale(0.5) rotate(-20deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Transformación en pulgar */
+.thumbs-up {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: thumbPop 0.6s ease-out;
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+  margin: 0 auto;
+  cursor: default;
+}
+
+.thumbs-up svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
