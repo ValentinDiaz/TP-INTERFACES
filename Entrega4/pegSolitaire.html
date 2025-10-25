@@ -78,8 +78,139 @@
         </div>
       </div>
 
-      <canvas id="canvas" width="1280" height="720"></canvas>
+      <div class="game">
+        <div class="game__peg-solitaire">
+          <!-- Menú de inicio -->
+          <div id="menuInicio">
+            <div class="popup-content-juego">
+              <h1 class="game__h1-game">🚀 Peg Solitaire Espacial</h1>
 
+              <p>Selecciona tu tema de fichas</p>
+              <div class="popup-img-container-canvas tema-fichas">
+                <div
+                  style="text-align: center; cursor: pointer"
+                  class="tema-option"
+                  data-tema="espacial"
+                >
+                  <div
+                    style="display: flex; gap: 10px; justify-content: center"
+                  >
+                    <div
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #00d4ff, #0066cc);
+                        border: 3px solid #fff;
+                      "
+                    ></div>
+                    <div
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        background: linear-gradient(135deg, #ff00ff, #cc00cc);
+                        border: 3px solid #fff;
+                      "
+                    ></div>
+                  </div>
+                  <p style="margin-top: 10px; font-size: 0.9em">🌌 Espacial</p>
+                </div>
+              </div>
+
+              <div class="contenedor_play">
+                <button id="btnJugar" class="button button__orange">
+                  Jugar
+                </button>
+              </div>
+              <div id="mensajeError" class="mensajeError"></div>
+            </div>
+          </div>
+
+          <!-- Canvas del juego -->
+          <canvas
+            id="canvas"
+            class="fondo__canvas hidden"
+            width="1080"
+            height="726"
+          ></canvas>
+
+          <!-- Controles e info del juego -->
+          <div id="gameUI" class="hidden">
+            <div class="game-info">
+              <div class="info-box">
+                <h3>Tiempo</h3>
+                <p id="timer">05:00</p>
+              </div>
+              <div class="info-box">
+                <h3>Piezas</h3>
+                <p id="piecesCount">32</p>
+              </div>
+              <div class="info-box">
+                <h3>Movimientos</h3>
+                <p id="movesCount">0</p>
+              </div>
+            </div>
+
+            <div class="game-controls">
+              <button class="btn-primary" onclick="resetGame()">
+                 Reiniciar
+              </button>
+              <button class="btn-secondary" onclick="volverMenu()">
+                 Menú Principal
+              </button>
+              <button class="btn-secondary" onclick="toggleInstructions()">
+                 Ayuda
+              </button>
+            </div>
+
+            <div
+              id="instructions"
+              style="
+                display: none;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #7c4dff;
+                max-width: 800px;
+                margin: 0 auto;
+              "
+            >
+              <h2
+                style="color: #7c4dff; margin-bottom: 15px; text-align: center"
+              >
+                📚 Cómo Jugar Peg Solitaire
+              </h2>
+              <ul style="line-height: 1.8; list-style-position: inside">
+                <li>
+                  <strong>Objetivo:</strong> Eliminar todas las piezas excepto
+                  una en el centro
+                </li>
+                <li>
+                  <strong>Seleccionar:</strong> Haz clic en una pieza para
+                  seleccionarla
+                </li>
+                <li>
+                  <strong>Movimientos válidos:</strong> Verás flechas animadas
+                  indicando dónde puedes mover
+                </li>
+                <li>
+                  <strong>Saltar:</strong> Arrastra la pieza sobre otra
+                  adyacente para saltarla y eliminarla
+                </li>
+                <li>
+                  <strong>Regla:</strong> Solo puedes saltar si hay un espacio
+                  vacío del otro lado
+                </li>
+                <li>
+                  <strong>Victoria:</strong> Gana dejando solo una pieza en el
+                  tablero
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
       <button class="open-compartir-btn" id="openCompartir">
         <span class="btn-text">Compartir</span>
         <i class="fa-solid fa-share-nodes btn-icon"></i>
