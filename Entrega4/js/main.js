@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   let temaSeleccionado = null;
+  let fichaSeleccionada = null;
 
   const mensajeError = document.querySelector("#mensajeError");
   const canvas = document.querySelector("#canvas");
@@ -14,31 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
-  function precargarImagenes(urls) {
+  function precargarImagen(url) {
     return new Promise((resolve, reject) => {
-      const imagenes = [];
-      let cargadas = 0;
-      const total = urls.length;
-
-      if (total === 0) {
-        resolve([]);
-        return;
-      }
-
-      urls.forEach((url, index) => {
-        const img = new Image();
-        img.onload = () => {
-          cargadas++;
-          if (cargadas === total) {
-            resolve(imagenes);
-          }
-        };
-        img.onerror = () => {
-          reject(`Error cargando imagen: ${url}`);
-        };
-        img.src = url;
-        imagenes[index] = img;
-      });
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(`Error cargando imagen: ${url}`);
+      img.src = url;
     });
   }
 
@@ -55,7 +37,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Guardar tema seleccionado
       temaSeleccionado = tema.getAttribute("data-tema");
+
+      // Resetear ficha seleccionada al cambiar de tema
+      fichaSeleccionada = null;
+      document
+        .querySelectorAll(".ficha-seleccionable")
+        .forEach((f) => f.classList.remove("selected"));
     });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("ficha-seleccionable")) {
+      // Remover selección anterior de fichas
+      document
+        .querySelectorAll(".ficha-seleccionable")
+        .forEach((f) => f.classList.remove("selected"));
+
+      // Marcar ficha seleccionada
+      e.target.classList.add("selected");
+
+      // Guardar la URL de la ficha seleccionada
+      fichaSeleccionada = e.target.getAttribute("data-ficha");
+    }
   });
 
   // Botón de jugar
@@ -63,7 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
     mensajeError.innerHTML = "";
 
     if (!temaSeleccionado) {
-      mensajeError.innerHTML = "Selecciona un tema de fichas antes de iniciar.";
+      mensajeError.innerHTML = "Selecciona un tema antes de iniciar.";
+      return;
+    }
+
+    if (!fichaSeleccionada) {
+      mensajeError.innerHTML = "Selecciona una ficha antes de iniciar.";
       return;
     }
 
@@ -72,9 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
     boton.textContent = "Cargando...";
 
     try {
-      // Precargar imágenes del tema seleccionado
-      const imagenesConfig = temasConfig[temaSeleccionado];
-      const imagenesCargadas = await precargarImagenes(imagenesConfig.imagenes);
+      // Precargar la imagen seleccionada
+      const imagenCargada = await precargarImagen(fichaSeleccionada);
 
       // Ocultar menú y mostrar canvas
       menuInicio.classList.add("hidden");
@@ -85,10 +92,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
 
-      // Crear config con imágenes cargadas
+      // Configuración de temas
+      const temasConfig = {
+        espacial: {
+          fondo: { color1: "#1a1a3e", color2: "#0a0a1e" },
+        },
+        fuego: {
+          fondo: { color1: "#3e1a1a", color2: "#1e0a0a" },
+        },
+      };
+
+      // Iniciar el juego con la imagen seleccionada
       const config = {
-        ...imagenesConfig,
-        imagenesCargadas: imagenesCargadas, // Pasar las imágenes ya cargadas
+        ...temasConfig[temaSeleccionado],
+        imagenFicha: imagenCargada, // Pasar UNA sola imagen cargada
       };
 
       const juego = new Game(
@@ -101,8 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         gameUI
       );
     } catch (error) {
-      mensajeError.innerHTML =
-        "Error cargando las imágenes. Verifica las rutas.";
+      mensajeError.innerHTML = "Error cargando la imagen. Verifica la ruta.";
       console.error(error);
     } finally {
       boton.disabled = false;

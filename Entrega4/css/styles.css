@@ -130,9 +130,9 @@ body {
 }
 
 .popup-img-container-canvas img.selected {
- transform: scale(1.1);
+  transform: scale(1.1);
   border-color: #00d4ff;
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
 }
 
 .contenedor_play {
@@ -289,11 +289,18 @@ body {
   justify-content: center;
 }
 
-.ficha.seleccionada {
-  border: 3px solid #fff;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
-  transform: scale(1.05);
-  transition: 0.2s;
+.ficha-seleccionable {
+  transition: all 0.3s ease;
+}
+
+.ficha-seleccionable:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.ficha-seleccionable.selected {
+  border: 3px solid #ffff00;
+  box-shadow: 0 0 20px #ffff00;
 }
 /* Spinner animation */
 

@@ -21,7 +21,7 @@ class Tablero {
       [0, 0, 1, 1, 1, 0, 0],
       [0, 0, 1, 1, 1, 0, 0],
       [1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 0, 1, 1, 1], // Centro vacío (fila 3, col 3)
+      [1, 1, 1, 1, 1, 1, 1], // Centro vacío (fila 3, col 3)
       [1, 1, 1, 1, 1, 1, 1],
       [0, 0, 1, 1, 1, 0, 0],
       [0, 0, 1, 1, 1, 0, 0],
@@ -37,38 +37,63 @@ class Tablero {
       this.casillas[fila] = [];
 
       for (let col = 0; col < this.columnas; col++) {
-        // Verificar si esta posición es válida según el patrón
         if (this.patron[fila][col] === 1) {
-          // Calcular posición en canvas
           const x =
             this.offsetX + col * this.tamanoCasilla + this.tamanoCasilla / 2;
           const y =
             this.offsetY + fila * this.tamanoCasilla + this.tamanoCasilla / 2;
 
-          // Crear casilla
           const casilla = new Casilla(
             this.ctx,
             x,
             y,
             this.radioCasilla,
             fila,
-            col
+            col,
+             this.config.colorCasilla
           );
 
           // Determinar si debe tener pieza (todas excepto el centro)
           const esCentro = fila === 3 && col === 3;
 
           if (!esCentro) {
-            // Crear pieza con color aleatorio del tema
+            // Usar la MISMA imagen para todas las fichas
+            const imagen = this.config.imagenFicha;
             casilla.colocarPieza(
-              new Pieza(this.ctx, x, y, this.radioCasilla - 5, color)
+              new Pieza(this.ctx, x, y, this.radioCasilla - 5, imagen)
             );
           }
 
           this.casillas[fila][col] = casilla;
         } else {
-          // Posición inválida (fuera de la cruz)
           this.casillas[fila][col] = null;
+        }
+      }
+    }
+  }
+
+
+  //fucnoin para contar las piezas restantes
+  contarPiezas() {
+    let contador = 0;
+    for (let fila = 0; fila < this.filas; fila++) {
+      for (let col = 0; col < this.columnas; col++) {
+        const casilla = this.casillas[fila][col];
+        if (casilla && casilla.tienePieza()) {
+          contador++;
+        }
+      }
+    }
+  }
+
+
+  //funcion para dibujar el tablero
+  dibujar() {
+    for (let fila = 0; fila < this.filas; fila++) {
+      for (let col = 0; col < this.columnas; col++) {
+        const casilla = this.casillas[fila][col];
+        if (casilla) {
+          casilla.dibujar();
         }
       }
     }
