@@ -118,6 +118,16 @@ const imagenes = [
 
 // Cargar imágenes
 imagenes.forEach((img, index) => {
+
+   const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 40;
+
+    // Texto "Cargando..."
+    ctx.fillStyle = "white";
+    ctx.font = "24px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Cargando juego", centerX, centerY - 80);
   const image = new Image();
   image.src = img.src;
 
@@ -131,8 +141,15 @@ imagenes.forEach((img, index) => {
     original.onload = () => {
       img.original = original; // versión limpia ya cargada
     };
+    console.log(`✅ Imagen cargada: ${img.src}`);
+   
 
     imagenesListas++;
+
+    if (imagenesListas === imagenes.length) {
+      console.log("✅ Todas las imágenes cargadas");
+      todasLasImagenesCargadas();
+    }
   };
 
   image.onerror = () => {
@@ -1574,7 +1591,6 @@ function inicializarPiezas() {
         // Calcular tamaño de pieza que quepa en el espacio
         const tamañoPiezaAncho = maxAncho / columnas;
         const tamañoPiezaAlto = maxAlto / filas;
-
         // Usar el menor para que todo quepa
         const tamañoPieza = Math.min(tamañoPiezaAncho, tamañoPiezaAlto);
 
@@ -1599,15 +1615,15 @@ function inicializarPiezas() {
               rotacionesAleatorias[Math.floor(Math.random() * 4)];
 
             piezas.push({
-              id: fila * columnas + col,
-              fila,
-              col,
-              x: startX + col * tamañoPieza,
-              y: startY + fila * tamañoPieza,
-              ancho: tamañoPieza,
-              alto: tamañoPieza,
-              imgX: col * seccionWidth,
-              imgY: fila * seccionHeight,
+              id: fila * columnas + col, //id de la piexa
+              fila, //fila de la pieza
+              col, //columna de la pieza
+              x: startX + col * tamañoPieza, //cordenada x de la pieza
+              y: startY + fila * tamañoPieza, //cordenada y de la pieza
+              ancho: tamañoPieza, //ancho de la pieza
+              alto: tamañoPieza, // alto de la pieza
+              imgX: col * seccionWidth, //recorte de la imagen original
+              imgY: fila * seccionHeight, //recorte de la imagen original
               imgAncho: seccionWidth,
               imgAlto: seccionHeight,
               rotacionActual: rotacionAleatoria,
@@ -2151,4 +2167,6 @@ function obtenerAyuda() {
 
 // Manejador único de clicks que delega según el estado
 
-drawUi();
+function todasLasImagenesCargadas() {
+  drawUi();
+}

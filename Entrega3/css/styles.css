@@ -911,11 +911,7 @@ body {
   }
 }
 
-canvas {
-  display: block;
-  border: 1px solid black; /* Temporal para debug */
-  cursor: pointer;
-}
+
 
 .carruseles {
   display: flex;
@@ -1087,10 +1083,27 @@ canvas {
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding: 30px 20px 20px 20px; /* Más padding arriba */
+  padding: 20px;
   gap: 20px;
   min-height: 100vh;
 }
+
+.cont-all {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  padding: 20px;
+  gap: 20px;
+  min-height: 100vh;
+}
+
+canvas {
+  display: block;
+  border: 1px solid black;
+  cursor: pointer; 
+}
+
 /*Contenido debajo de la visualizacion del juego*/
 
 /*boton con el que clickeo y me abre la seccion de compartir*/
