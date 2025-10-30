@@ -50,7 +50,7 @@ class Tablero {
             this.radioCasilla,
             fila,
             col,
-             this.config.colorCasilla
+            this.config.colorCasilla
           );
 
           // Determinar si debe tener pieza (todas excepto el centro)
@@ -72,7 +72,6 @@ class Tablero {
     }
   }
 
-
   //fucnoin para contar las piezas restantes
   contarPiezas() {
     let contador = 0;
@@ -86,7 +85,6 @@ class Tablero {
     }
   }
 
-
   //funcion para dibujar el tablero
   dibujar() {
     for (let fila = 0; fila < this.filas; fila++) {
@@ -97,5 +95,117 @@ class Tablero {
         }
       }
     }
+  }
+
+  obtenerCasillaEnPosicion(x, y) {
+    for (let fila = 0; fila < this.filas; fila++) {
+      for (let col = 0; col < this.columnas; col++) {
+        const casilla = this.casillas[fila][col];
+        if (casilla && casilla.contienePunto(x, y)) {
+          return casilla;
+        }
+      }
+    }
+    return null;
+  }
+
+  obtenerMovimientosValidos(casillaOrigen) {
+    const movimientos = [];
+    const fila = casillaOrigen.fila;
+    const col = casillaOrigen.col;
+
+    // Direcciones: arriba, abajo, izquierda, derecha
+    const direcciones = [
+      { df: -2, dc: 0, mf: -1, mc: 0 }, // Arriba (salta 2, medio en 1)
+      { df: 2, dc: 0, mf: 1, mc: 0 }, // Abajo
+      { df: 0, dc: -2, mf: 0, mc: -1 }, // Izquierda
+      { df: 0, dc: 2, mf: 0, mc: 1 }, // Derecha
+    ];
+
+    direcciones.forEach((dir) => {
+      const filaDestino = fila + dir.df;
+      const colDestino = col + dir.dc;
+      const filaSaltada = fila + dir.mf;
+      const colSaltada = col + dir.mc;
+
+      // Verificar límites
+      if (
+        this.esPosicionValida(filaDestino, colDestino) &&
+        this.esPosicionValida(filaSaltada, colSaltada)
+      ) {
+        const casillaDestino = this.casillas[filaDestino][colDestino];
+        const casillaSaltada = this.casillas[filaSaltada][colSaltada];
+
+        // Verificar: destino vacío y casilla saltada con pieza
+        if (
+          casillaDestino &&
+          !casillaDestino.tienePieza() &&
+          casillaSaltada &&
+          casillaSaltada.tienePieza()
+        ) {
+          movimientos.push({
+            destino: casillaDestino,
+            saltada: casillaSaltada,
+          });
+        }
+      }
+    });
+
+    return movimientos;
+  }
+
+  // Verificar si una posición es válida
+  esPosicionValida(fila, col) {
+    return (
+      fila >= 0 &&
+      fila < this.filas &&
+      col >= 0 &&
+      col < this.columnas &&
+      this.casillas[fila][col] !== null
+    );
+  }
+
+  // Ejecutar un movimiento
+  moverPieza(casillaOrigen, casillaDestino, casillaSaltada) {
+    if (!casillaOrigen.tienePieza()) return false;
+
+    // Obtener la pieza
+    const pieza = casillaOrigen.obtenerPieza();
+
+    // Actualizar posición de la pieza
+    pieza.x = casillaDestino.x;
+    pieza.y = casillaDestino.y;
+
+    // Mover pieza al destino
+    casillaDestino.colocarPieza(pieza);
+
+    // Quitar pieza del origen
+    casillaOrigen.quitarPieza();
+
+    // Quitar pieza saltada
+    casillaSaltada.quitarPieza();
+
+    return true;
+  }
+
+  // Verificar si hay movimientos disponibles en todo el tablero
+  hayMovimientosDisponibles() {
+    for (let fila = 0; fila < this.filas; fila++) {
+      for (let col = 0; col < this.columnas; col++) {
+        const casilla = this.casillas[fila][col];
+        if (casilla && casilla.tienePieza()) {
+          const movimientos = this.obtenerMovimientosValidos(casilla);
+          if (movimientos.length > 0) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  // Reiniciar el tablero
+  reiniciar() {
+    this.inicializarCasillas();
   }
 }

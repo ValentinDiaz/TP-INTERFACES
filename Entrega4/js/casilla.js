@@ -77,4 +77,29 @@ class Casilla {
       this.ctx.restore();
     }
   }
+
+
+  // Dibujar solo la casilla sin la pieza
+dibujarSolo() {
+    this.ctx.save();
+    
+    // Fondo de la casilla
+    const gradient = this.ctx.createRadialGradient(
+        this.x, this.y, this.radio * 0.3,
+        this.x, this.y, this.radio
+    );
+    gradient.addColorStop(0, 'rgba(40, 40, 60, 0.8)');
+    gradient.addColorStop(1, 'rgba(60, 60, 80, 0.9)');
+    
+    this.ctx.fillStyle = gradient;
+    this.ctx.beginPath();
+    this.ctx.arc(this.x, this.y, this.radio, 0, Math.PI * 2);
+    this.ctx.fill();
+    
+    this.ctx.strokeStyle = 'rgba(100, 100, 120, 0.6)';
+    this.ctx.lineWidth = 2;
+    this.ctx.stroke();
+    
+    this.ctx.restore();
+}
 }
