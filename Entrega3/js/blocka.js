@@ -41,6 +41,7 @@ const FILTROS_DISPONIBLES = [
   "grayscale", // Escala de grises
   "brightness", // Brillo reducido al 30%
   "invert", // Negativo
+  "blur",
 ];
 
 let filtroActual = "";
@@ -1568,10 +1569,12 @@ function inicializarPiezas() {
   juegoListo = false;
 
   const esModoSorpresa = dificultadSeleccionada.nivel === "Sorpresa";
+  const esModoFacil = dificultadSeleccionada.nivel === "Facil";
 
   if (esModoSorpresa) {
     console.log("🎲 Modo SORPRESA activado - Filtros aleatorios por pieza");
     inicializarPiezasConFiltrosAleatorios();
+
   } else {
     const filtro = elegirFiltroRandom();
 
@@ -1751,11 +1754,11 @@ function aplicarSepia(r, g, b) {
   return [Math.min(255, tr), Math.min(255, tg), Math.min(255, tb)];
 }
 
+
 function inicializarPiezasConFiltrosAleatorios() {
   const filas = dificultadSeleccionada.filas;
   const columnas = dificultadSeleccionada.columnas;
 
-  // 🎯 MISMO CÁLCULO DE TAMAÑO
   const maxAncho = canvas.width - 100;
   const maxAlto = canvas.height - 200;
 
@@ -1774,8 +1777,12 @@ function inicializarPiezasConFiltrosAleatorios() {
   const seccionWidth = imagenWidth / columnas;
   const seccionHeight = imagenHeight / filas;
 
-  let piezasCreadas = 0;
+  // Limpiar piezas anteriores
+  piezas = [];
+
   const totalPiezas = filas * columnas;
+
+  console.log('🔄 Iniciando creación de piezas con blur calculado...');
 
   for (let fila = 0; fila < filas; fila++) {
     for (let col = 0; col < columnas; col++) {
@@ -1783,51 +1790,52 @@ function inicializarPiezasConFiltrosAleatorios() {
       const rotacionAleatoria =
         rotacionesAleatorias[Math.floor(Math.random() * 4)];
 
-      const filtroAleatorio =
-        FILTROS_DISPONIBLES[
-          Math.floor(Math.random() * FILTROS_DISPONIBLES.length)
-        ];
+      // ========== INTENSIDAD DE BLUR ALEATORIA ==========
+      const intensidadesBlur = [1, 2, 3, 4, 5];
+      const intensidadAleatoria = 
+        intensidadesBlur[Math.floor(Math.random() * intensidadesBlur.length)];
+      // ==================================================
 
-      aplicarFiltroAPorcionDeImagen(
+      console.log(`  📦 Procesando pieza [${fila},${col}] con blur ${intensidadAleatoria}px`);
+
+      // ========== APLICAR BLUR CALCULADO ==========
+      const canvasConBlur = extraerYAplicarBlur(
         imagenSeleccionada.element,
         col * seccionWidth,
         fila * seccionHeight,
         seccionWidth,
         seccionHeight,
-        filtroAleatorio,
-        (imagenPiezaFiltrada) => {
-          piezas.push({
-            id: fila * columnas + col,
-            fila,
-            col,
-            x: startX + col * tamañoPieza,
-            y: startY + fila * tamañoPieza,
-            ancho: tamañoPieza,
-            alto: tamañoPieza,
-            imgX: 0,
-            imgY: 0,
-            imgAncho: seccionWidth,
-            imgAlto: seccionHeight,
-            rotacionActual: rotacionAleatoria,
-            rotacionCorrecta: 0,
-            imagenFiltrada: imagenPiezaFiltrada,
-            nombreFiltro: filtroAleatorio,
-          });
-
-          piezasCreadas++;
-
-          if (piezasCreadas === totalPiezas) {
-            console.log(
-              `✅ ${piezas.length} piezas creadas con filtros aleatorios`
-            );
-            juegoListo = true;
-            drawUi();
-          }
-        }
+        intensidadAleatoria
       );
+      // ===========================================
+ console.log(`✅ Canvas blur creado:`);
+      // Crear pieza con blur pre-calculado
+      piezas.push({
+        id: fila * columnas + col,
+        fila,
+        col,
+        x: startX + col * tamañoPieza,
+        y: startY + fila * tamañoPieza,
+        ancho: tamañoPieza,
+        alto: tamañoPieza,
+        imgX: 0,
+        imgY: 0,
+        imgAncho: seccionWidth,
+        imgAlto: seccionHeight,
+        rotacionActual: rotacionAleatoria,
+        rotacionCorrecta: 0,
+        imagenFiltrada: canvasConBlur,  // ← Canvas con blur ya calculado
+        nombreFiltro: `Blur ${intensidadAleatoria}px`,
+        intensidadBlur: intensidadAleatoria,
+      });
     }
   }
+
+  console.log(`✅ ${piezas.length} piezas creadas con blur calculado`);
+  juegoListo = true;
+  drawUi();
 }
+
 
 function aplicarFiltroAPorcionDeImagen(
   imagen,

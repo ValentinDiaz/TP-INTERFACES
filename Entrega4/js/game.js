@@ -241,38 +241,218 @@ class Game {
   }
 
   finalizarJuego() {
+    // Limpiar canvas
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    // Dibujar fondo
+     this.dibujarFondo();
+
+    // Overlay semi-transparente
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
+    this.ctx.fillRect(0, 0, this.width, this.height);
+
+  // Calcular dimensiones del panel
+    const panelWidth = Math.min(this.width * 0.8, 500);
+    const panelHeight = Math.min(this.height * 0.7, 400);
+    const panelX = (this.width - panelWidth) / 2;
+    const panelY = (this.height - panelHeight) / 2;
+
+  // Determinar título y color según resultado
+ 
     let titulo = "";
-    let mensaje = "";
+    let icono = "";
+    let gradient;
+    let glowColor; // <-- color string para shadowColor
 
     if (this.piezasRestantes === 1) {
       titulo = "¡VICTORIA PERFECTA!";
-      mensaje =
-        `¡Increíble! Completaste el juego dejando solo 1 ficha.\n\n` +
-        `Movimientos: ${this.movimientos}\n` +
-        `Tiempo: ${formatTime(this.tiempoTranscurrido)}`;
+      icono = "🏆";
+      glowColor = "#FFD700"; // dorado para glow
+      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient.addColorStop(0, glowColor);
+      gradient.addColorStop(1, "#FFA500");
     } else if (this.piezasRestantes <= 3) {
       titulo = "¡EXCELENTE!";
-      mensaje =
-        `¡Muy bien jugado! Quedaron ${this.piezasRestantes} fichas.\n\n` +
-        `Movimientos: ${this.movimientos}\n` +
-        `Tiempo: ${formatTime(this.tiempoTranscurrido)}`;
+      icono = "⭐";
+      glowColor = "#00ff88"; // verde neón para glow
+      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient.addColorStop(0, glowColor);
+      gradient.addColorStop(1, "#00cc66");
     } else if (this.piezasRestantes <= 5) {
       titulo = "¡BUEN INTENTO!";
-      mensaje =
-        `Quedaron ${this.piezasRestantes} fichas.\n\n` +
-        `Movimientos: ${this.movimientos}\n` +
-        `Tiempo: ${formatTime(this.tiempoTranscurrido)}`;
+      icono = "👍";
+      glowColor = "#4488ff"; // azul para glow
+      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient.addColorStop(0, glowColor);
+      gradient.addColorStop(1, "#2266dd");
     } else {
       titulo = "FIN DEL JUEGO";
-      mensaje =
-        `No quedan más movimientos posibles.\n` +
-        `Fichas restantes: ${this.piezasRestantes}\n\n` +
-        `Movimientos: ${this.movimientos}\n` +
-        `Tiempo: ${formatTime(this.tiempoTranscurrido)}`;
+      icono = "🎮";
+      glowColor = "#ff4444"; // rojo para glow
+      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient.addColorStop(0, glowColor);
+      gradient.addColorStop(1, "#cc2222");
     }
 
-    setTimeout(() => mostrarModal(titulo, mensaje), 300);
+   // Dibujar panel principal con sombra luminosa tipo "neón"
+    this.ctx.save();
+
+    // Fondo oscuro con leve degradado
+    const fondoGradient = this.ctx.createLinearGradient(
+      panelX, panelY,
+      panelX, panelY + panelHeight
+    );
+    fondoGradient.addColorStop(0, "#14142b");
+    fondoGradient.addColorStop(1, "#0b0b20");
+
+    // Sombra luminosa del color del resultado
+    this.ctx.shadowColor = glowColor;
+    this.ctx.shadowBlur = 60;
+    this.ctx.shadowOffsetX = 0;
+    this.ctx.shadowOffsetY = 0;
+
+    // Relleno del panel (sin borde)
+    this.ctx.fillStyle = fondoGradient;
+    this.ctx.beginPath();
+    this.ctx.roundRect(panelX, panelY, panelWidth, panelHeight, 12);
+    this.ctx.fill();
+
+    this.ctx.restore();
+
+    // Dibujar contenido
+    this.ctx.save();
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+
+    // Título
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.font = "bold 48px Arial";
+    this.ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+    this.ctx.shadowBlur = 10;
+    this.ctx.fillText(titulo, this.width / 2, panelY + 70);
+
+    // Icono
+    this.ctx.font = "80px Arial";
+    this.ctx.fillText(icono, this.width / 2, panelY + 150);
+
+    // Estadísticas
+    this.ctx.font = "24px Arial";
+    this.ctx.fillText(`Fichas restantes: ${this.piezasRestantes}`, this.width / 2, panelY + 230);
+    this.ctx.fillText(`Movimientos: ${this.movimientos}`, this.width / 2, panelY + 265);
+    this.ctx.fillText(`Tiempo: ${formatTime(this.tiempoTranscurrido)}`, this.width / 2, panelY + 300);
+
+    this.ctx.restore();
+
+    // Dibujar botones
+    this.dibujarBotonesFinJuego(panelX, panelY, panelWidth, panelHeight);
   }
+
+  dibujarBotonesFinJuego(panelX, panelY, panelWidth, panelHeight) {
+  const buttonWidth = 150;
+  const buttonHeight = 50;
+  const buttonSpacing = 20;
+  const buttonY = panelY + panelHeight - 80;
+
+  // Definir botones
+  const btnReintentar = {
+    x: this.width / 2 - buttonWidth - buttonSpacing / 2,
+    y: buttonY,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "REINTENTAR",
+    color: "#4CAF50"
+  };
+
+  const btnMenu = {
+    x: this.width / 2 + buttonSpacing / 2,
+    y: buttonY,
+    width: buttonWidth,
+    height: buttonHeight,
+    text: "MENÚ",
+    color: "#2196F3"
+  };
+
+  // Dibujar botones
+  [btnReintentar, btnMenu].forEach((btn) => {
+    this.ctx.save();
+
+    // Sombra
+    this.ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+    this.ctx.shadowBlur = 10;
+    this.ctx.shadowOffsetY = 4;
+
+    // Botón
+    this.ctx.fillStyle = btn.color;
+    this.ctx.fillRect(btn.x, btn.y, btn.width, btn.height);
+
+    // Borde
+    this.ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeRect(btn.x, btn.y, btn.width, btn.height);
+
+    // Texto
+    this.ctx.fillStyle = "#ffffff";
+    this.ctx.font = "bold 18px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.shadowBlur = 5;
+    this.ctx.fillText(btn.text, btn.x + btn.width / 2, btn.y + btn.height / 2);
+
+    this.ctx.restore();
+  });
+
+  // Configurar eventos de click
+  const clickHandler = (e) => {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Click en REINTENTAR
+    if (x >= btnReintentar.x && x <= btnReintentar.x + btnReintentar.width &&
+        y >= btnReintentar.y && y <= btnReintentar.y + btnReintentar.height) {
+      this.canvas.removeEventListener("click", clickHandler);
+      this.canvas.removeEventListener("mousemove", hoverHandler);
+      this.reiniciar();
+    }
+
+    // Click en MENÚ
+    if (x >= btnMenu.x && x <= btnMenu.x + btnMenu.width &&
+        y >= btnMenu.y && y <= btnMenu.y + btnMenu.height) {
+      this.canvas.removeEventListener("click", clickHandler);
+      this.canvas.removeEventListener("mousemove", hoverHandler);
+      this.detener();
+      if (this.menuInicio) {
+        this.menuInicio.mostrar();
+      } else {
+        location.reload();
+      }
+    }
+  };
+
+  // Efecto hover
+  const hoverHandler = (e) => {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const sobreBoton = (
+      (x >= btnReintentar.x && x <= btnReintentar.x + btnReintentar.width &&
+       y >= btnReintentar.y && y <= btnReintentar.y + btnReintentar.height) ||
+      (x >= btnMenu.x && x <= btnMenu.x + btnMenu.width &&
+       y >= btnMenu.y && y <= btnMenu.y + btnMenu.height)
+    );
+
+    this.canvas.style.cursor = sobreBoton ? "pointer" : "default";
+  };
+
+  this.canvas.addEventListener("click", clickHandler);
+  this.canvas.addEventListener("mousemove", hoverHandler);
+}
+
+
+
+
+
 
   dibujar() {
     // Limpiar canvas

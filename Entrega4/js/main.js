@@ -181,6 +181,8 @@ function formatTime(seconds) {
     .padStart(2, "0")}`;
 }
 
+
+//Esto eliminarlo, no se qué funcionalidad tiene o es ia 
 function mostrarModal(titulo, mensaje) {
   // Aquí puedes implementar tu modal personalizado
   // O usar alert por ahora
