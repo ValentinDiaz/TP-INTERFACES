@@ -93,14 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const canvasHeight = canvas.height;
 
       // Configuración de temas
-      const temasConfig = {
-        espacial: {
-          fondo: { color1: "#1a1a3e", color2: "#0a0a1e" },
-        },
-        fuego: {
-          fondo: { color1: "#3e1a1a", color2: "#1e0a0a" },
-        },
-      };
+      
 
       // Iniciar el juego con la imagen seleccionada
       const config = {
@@ -137,6 +130,7 @@ function resetGame() {
 function volverMenu() {
   if (window.juegoActual) {
     window.juegoActual.detener();
+    window.juegoActual = null; //
   }
 
   const canvas = document.querySelector("#canvas");
@@ -153,6 +147,20 @@ function volverMenu() {
   document
     .querySelectorAll(".tema-option")
     .forEach((t) => t.classList.remove("selected"));
+
+  
+  // Restaurar el texto y estado del botón JUGAR
+  const boton = document.querySelector("#btnJugar");
+  if (boton) {
+    boton.disabled = false;
+    boton.textContent = "JUGAR";
+  }
+ const mensajeError = document.querySelector("#mensajeError");
+  if (mensajeError) mensajeError.innerHTML = "";
+
+  // Limpiar el canvas visualmente
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 function toggleInstructions() {

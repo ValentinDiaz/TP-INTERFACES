@@ -14,7 +14,7 @@ class Game {
     this.movimientosValidos = [];
     this.piezasRestantes = 32;
     this.movimientos = 0;
-    this.tiempoTranscurrido = 0;
+    this.tiempoRestante = 60;
     this.timerInterval = null;
     this.juegoActivo = true;
     this.animando = false;
@@ -339,7 +339,7 @@ class Game {
     this.ctx.font = "24px Arial";
     this.ctx.fillText(`Fichas restantes: ${this.piezasRestantes}`, this.width / 2, panelY + 230);
     this.ctx.fillText(`Movimientos: ${this.movimientos}`, this.width / 2, panelY + 265);
-    this.ctx.fillText(`Tiempo: ${formatTime(this.tiempoTranscurrido)}`, this.width / 2, panelY + 300);
+    this.ctx.fillText(`Tiempo: ${formatTime(this.tiempoRestante)}`, this.width / 2, panelY + 300);
 
     this.ctx.restore();
 
@@ -519,15 +519,30 @@ class Game {
     });
   }
 
-  iniciarTimer() {
-    this.tiempoTranscurrido = 0;
-    this.timerInterval = setInterval(() => {
-      if (this.juegoActivo) {
-        this.tiempoTranscurrido++;
-        this.actualizarStats();
+
+
+
+iniciarTimer() {
+  this.tiempoRestante = 60; // 60 segundos = 1 minuto
+  this.actualizarStats();
+
+  this.timerInterval = setInterval(() => {
+    if (this.juegoActivo) {
+      this.tiempoRestante--;
+
+      this.actualizarStats();
+
+      // Si llega a 0, terminar juego automáticamente
+      if (this.tiempoRestante <= 0) {
+        this.tiempoRestante = 0;
+        this.detenerTimer();
+        this.juegoActivo = false;
+        this.finalizarJuego();
       }
-    }, 1000);
-  }
+    }
+  }, 1000)
+}
+
 
   detenerTimer() {
     if (this.timerInterval) {
@@ -540,11 +555,11 @@ class Game {
     actualizarStats(
       this.piezasRestantes,
       this.movimientos,
-      this.tiempoTranscurrido
+      this.tiempoRestante
     );
   }
 
-  reiniciar() {
+  reiniciar(){
     // Detener timer anterior
     this.detenerTimer();
 
@@ -552,7 +567,7 @@ class Game {
     this.fichaSeleccionada = null;
     this.movimientosValidos = [];
     this.movimientos = 0;
-    this.tiempoTranscurrido = 0;
+    this.tiempoRestante = 60;
     this.juegoActivo = true;
     this.animando = false;
 
@@ -575,9 +590,12 @@ class Game {
     this.detenerTimer();
 
     // Limpiar eventos
-    this.canvas.replaceWith(this.canvas.cloneNode(true));
+    this.canvas.replaceWith(this.canvas); //.cloneNode(true));
 
+    this.fichaSeleccionada = null;
+    this.movimientosValidos = [];
     // Actualizar referencia al canvas
-    this.canvas = document.querySelector("#canvas");
+    //this.canvas = document.querySelector("#canvas");
+
   }
 }
