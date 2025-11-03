@@ -232,7 +232,8 @@ class Game {
     // Verificar si hay movimientos disponibles
     const hayMovimientos = this.tablero.hayMovimientosDisponibles();
 
-    if (!hayMovimientos) {
+    if (!hayMovimientos || this.piezasRestantes === 1 || this.tiempoRestante <= 0) {
+      console.log("No hay más movimientos disponibles.");
       this.juegoActivo = false;
       this.detenerTimer();
       this.finalizarJuego();
@@ -573,13 +574,12 @@ class Game {
   }
 
   iniciarTimer() {
-    this.tiempoRestante = 60; // 60 segundos = 1 minuto
+    this.tiempoRestante = 10;
     this.actualizarStats();
 
     this.timerInterval = setInterval(() => {
       if (this.juegoActivo) {
         this.tiempoRestante--;
-
         this.actualizarStats();
 
         // Si llega a 0, terminar juego automáticamente
@@ -587,7 +587,7 @@ class Game {
           this.tiempoRestante = 0;
           this.detenerTimer();
           this.juegoActivo = false;
-
+          this.piezasRestantes = this.tablero.contarPiezas(); // ← AGREGAR ESTA LÍNEA
           this.finalizarJuego();
         }
       }
