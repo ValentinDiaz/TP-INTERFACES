@@ -95,8 +95,6 @@ class Game {
 
   // Analogía: Es como mover tu mano con la ficha agarrada. La ficha se mueve contigo.
 
- 
-
   onMouseMove(e) {
     if (!this.arrastrando || !this.fichaArrastrada) return;
 
@@ -122,7 +120,7 @@ class Game {
   // Limpia el estado de arrastre (this.arrastrando = false)
 
   // Analogía: Es cuando sueltas la ficha. Si la soltaste en un lugar válido, el movimiento se hace. Si no, vuelve a su lugar.
-   // y ademas esta mouseLeave que es usa la misma funcion que mouseUp para que si se sale del canvas se suelte la ficha
+  // y ademas esta mouseLeave que es usa la misma funcion que mouseUp para que si se sale del canvas se suelte la ficha
   // this.canvas.addEventListener('mouseleave', (e) => this.onMouseUp(e));
   //
   // ¿Cuándo se activa?** Cuando el cursor sale del área del canvas (mientras estás arrastrando).
@@ -159,7 +157,7 @@ class Game {
   //      → NO: regreso pieza a su lugar
   //    - arrastrando = false
   //    - Limpio selección
-  // ```    
+  // ```
   onMouseUp(e) {
     if (!this.arrastrando || !this.fichaArrastrada) return;
 
@@ -230,6 +228,7 @@ class Game {
   }
 
   verificarFinJuego() {
+    this.piezasRestantes = this.tablero.contarPiezas();
     // Verificar si hay movimientos disponibles
     const hayMovimientos = this.tablero.hayMovimientosDisponibles();
 
@@ -245,20 +244,20 @@ class Game {
     this.ctx.clearRect(0, 0, this.width, this.height);
 
     // Dibujar fondo
-     this.dibujarFondo();
+    this.dibujarFondo();
 
     // Overlay semi-transparente
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     this.ctx.fillRect(0, 0, this.width, this.height);
 
-  // Calcular dimensiones del panel
+    // Calcular dimensiones del panel
     const panelWidth = Math.min(this.width * 0.8, 500);
     const panelHeight = Math.min(this.height * 0.7, 400);
     const panelX = (this.width - panelWidth) / 2;
     const panelY = (this.height - panelHeight) / 2;
 
-  // Determinar título y color según resultado
- 
+    // Determinar título y color según resultado
+
     let titulo = "";
     let icono = "";
     let gradient;
@@ -268,39 +267,61 @@ class Game {
       titulo = "¡VICTORIA PERFECTA!";
       icono = "🏆";
       glowColor = "#FFD700"; // dorado para glow
-      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient = this.ctx.createLinearGradient(
+        panelX,
+        panelY,
+        panelX,
+        panelY + panelHeight
+      );
       gradient.addColorStop(0, glowColor);
       gradient.addColorStop(1, "#FFA500");
     } else if (this.piezasRestantes <= 3) {
       titulo = "¡EXCELENTE!";
       icono = "⭐";
       glowColor = "#00ff88"; // verde neón para glow
-      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient = this.ctx.createLinearGradient(
+        panelX,
+        panelY,
+        panelX,
+        panelY + panelHeight
+      );
       gradient.addColorStop(0, glowColor);
       gradient.addColorStop(1, "#00cc66");
     } else if (this.piezasRestantes <= 5) {
       titulo = "¡BUEN INTENTO!";
       icono = "👍";
       glowColor = "#4488ff"; // azul para glow
-      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient = this.ctx.createLinearGradient(
+        panelX,
+        panelY,
+        panelX,
+        panelY + panelHeight
+      );
       gradient.addColorStop(0, glowColor);
       gradient.addColorStop(1, "#2266dd");
     } else {
       titulo = "FIN DEL JUEGO";
       icono = "🎮";
       glowColor = "#ff4444"; // rojo para glow
-      gradient = this.ctx.createLinearGradient(panelX, panelY, panelX, panelY + panelHeight);
+      gradient = this.ctx.createLinearGradient(
+        panelX,
+        panelY,
+        panelX,
+        panelY + panelHeight
+      );
       gradient.addColorStop(0, glowColor);
       gradient.addColorStop(1, "#cc2222");
     }
 
-   // Dibujar panel principal con sombra luminosa tipo "neón"
+    // Dibujar panel principal con sombra luminosa tipo "neón"
     this.ctx.save();
 
     // Fondo oscuro con leve degradado
     const fondoGradient = this.ctx.createLinearGradient(
-      panelX, panelY,
-      panelX, panelY + panelHeight
+      panelX,
+      panelY,
+      panelX,
+      panelY + panelHeight
     );
     fondoGradient.addColorStop(0, "#14142b");
     fondoGradient.addColorStop(1, "#0b0b20");
@@ -337,9 +358,21 @@ class Game {
 
     // Estadísticas
     this.ctx.font = "24px Arial";
-    this.ctx.fillText(`Fichas restantes: ${this.piezasRestantes}`, this.width / 2, panelY + 230);
-    this.ctx.fillText(`Movimientos: ${this.movimientos}`, this.width / 2, panelY + 265);
-    this.ctx.fillText(`Tiempo: ${formatTime(this.tiempoRestante)}`, this.width / 2, panelY + 300);
+    this.ctx.fillText(
+      `Fichas restantes: ${this.piezasRestantes}`,
+      this.width / 2,
+      panelY + 230
+    );
+    this.ctx.fillText(
+      `Movimientos: ${this.movimientos}`,
+      this.width / 2,
+      panelY + 265
+    );
+    this.ctx.fillText(
+      `Tiempo: ${formatTime(this.tiempoRestante)}`,
+      this.width / 2,
+      panelY + 300
+    );
 
     this.ctx.restore();
 
@@ -348,111 +381,117 @@ class Game {
   }
 
   dibujarBotonesFinJuego(panelX, panelY, panelWidth, panelHeight) {
-  const buttonWidth = 150;
-  const buttonHeight = 50;
-  const buttonSpacing = 20;
-  const buttonY = panelY + panelHeight - 80;
+    const buttonWidth = 150;
+    const buttonHeight = 50;
+    const buttonSpacing = 20;
+    const buttonY = panelY + panelHeight - 80;
 
-  // Definir botones
-  const btnReintentar = {
-    x: this.width / 2 - buttonWidth - buttonSpacing / 2,
-    y: buttonY,
-    width: buttonWidth,
-    height: buttonHeight,
-    text: "REINTENTAR",
-    color: "#4CAF50"
-  };
+    // Definir botones
+    const btnReintentar = {
+      x: this.width / 2 - buttonWidth - buttonSpacing / 2,
+      y: buttonY,
+      width: buttonWidth,
+      height: buttonHeight,
+      text: "REINTENTAR",
+      color: "#4CAF50",
+    };
 
-  const btnMenu = {
-    x: this.width / 2 + buttonSpacing / 2,
-    y: buttonY,
-    width: buttonWidth,
-    height: buttonHeight,
-    text: "MENÚ",
-    color: "#2196F3"
-  };
+    const btnMenu = {
+      x: this.width / 2 + buttonSpacing / 2,
+      y: buttonY,
+      width: buttonWidth,
+      height: buttonHeight,
+      text: "MENÚ",
+      color: "#2196F3",
+    };
 
-  // Dibujar botones
-  [btnReintentar, btnMenu].forEach((btn) => {
-    this.ctx.save();
+    // Dibujar botones
+    [btnReintentar, btnMenu].forEach((btn) => {
+      this.ctx.save();
 
-    // Sombra
-    this.ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
-    this.ctx.shadowBlur = 10;
-    this.ctx.shadowOffsetY = 4;
+      // Sombra
+      this.ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+      this.ctx.shadowBlur = 10;
+      this.ctx.shadowOffsetY = 4;
 
-    // Botón
-    this.ctx.fillStyle = btn.color;
-    this.ctx.fillRect(btn.x, btn.y, btn.width, btn.height);
+      // Botón
+      this.ctx.fillStyle = btn.color;
+      this.ctx.fillRect(btn.x, btn.y, btn.width, btn.height);
 
-    // Borde
-    this.ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-    this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(btn.x, btn.y, btn.width, btn.height);
+      // Borde
+      this.ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+      this.ctx.lineWidth = 2;
+      this.ctx.strokeRect(btn.x, btn.y, btn.width, btn.height);
 
-    // Texto
-    this.ctx.fillStyle = "#ffffff";
-    this.ctx.font = "bold 18px Arial";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-    this.ctx.shadowBlur = 5;
-    this.ctx.fillText(btn.text, btn.x + btn.width / 2, btn.y + btn.height / 2);
+      // Texto
+      this.ctx.fillStyle = "#ffffff";
+      this.ctx.font = "bold 18px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.shadowBlur = 5;
+      this.ctx.fillText(
+        btn.text,
+        btn.x + btn.width / 2,
+        btn.y + btn.height / 2
+      );
 
-    this.ctx.restore();
-  });
+      this.ctx.restore();
+    });
 
-  // Configurar eventos de click
-  const clickHandler = (e) => {
-    const rect = this.canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    // Configurar eventos de click
+    const clickHandler = (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    // Click en REINTENTAR
-    if (x >= btnReintentar.x && x <= btnReintentar.x + btnReintentar.width &&
-        y >= btnReintentar.y && y <= btnReintentar.y + btnReintentar.height) {
-      this.canvas.removeEventListener("click", clickHandler);
-      this.canvas.removeEventListener("mousemove", hoverHandler);
-      this.reiniciar();
-    }
-
-    // Click en MENÚ
-    if (x >= btnMenu.x && x <= btnMenu.x + btnMenu.width &&
-        y >= btnMenu.y && y <= btnMenu.y + btnMenu.height) {
-      this.canvas.removeEventListener("click", clickHandler);
-      this.canvas.removeEventListener("mousemove", hoverHandler);
-      this.detener();
-      if (this.menuInicio) {
-        this.menuInicio.mostrar();
-      } else {
-        location.reload();
+      // Click en REINTENTAR
+      if (
+        x >= btnReintentar.x &&
+        x <= btnReintentar.x + btnReintentar.width &&
+        y >= btnReintentar.y &&
+        y <= btnReintentar.y + btnReintentar.height
+      ) {
+        this.canvas.removeEventListener("click", clickHandler);
+        this.canvas.removeEventListener("mousemove", hoverHandler);
+        this.reiniciar();
       }
-    }
-  };
 
-  // Efecto hover
-  const hoverHandler = (e) => {
-    const rect = this.canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+      // Click en MENÚ
+      if (
+        x >= btnMenu.x &&
+        x <= btnMenu.x + btnMenu.width &&
+        y >= btnMenu.y &&
+        y <= btnMenu.y + btnMenu.height
+      ) {
+        this.canvas.removeEventListener("click", clickHandler);
+        this.canvas.removeEventListener("mousemove", hoverHandler);
+        this.detener();
+        volverMenu();
+      }
+    };
 
-    const sobreBoton = (
-      (x >= btnReintentar.x && x <= btnReintentar.x + btnReintentar.width &&
-       y >= btnReintentar.y && y <= btnReintentar.y + btnReintentar.height) ||
-      (x >= btnMenu.x && x <= btnMenu.x + btnMenu.width &&
-       y >= btnMenu.y && y <= btnMenu.y + btnMenu.height)
-    );
+    // Efecto hover
+    const hoverHandler = (e) => {
+      const rect = this.canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
 
-    this.canvas.style.cursor = sobreBoton ? "pointer" : "default";
-  };
+      const sobreBoton =
+        (x >= btnReintentar.x &&
+          x <= btnReintentar.x + btnReintentar.width &&
+          y >= btnReintentar.y &&
+          y <= btnReintentar.y + btnReintentar.height) ||
+        (x >= btnMenu.x &&
+          x <= btnMenu.x + btnMenu.width &&
+          y >= btnMenu.y &&
+          y <= btnMenu.y + btnMenu.height);
 
-  this.canvas.addEventListener("click", clickHandler);
-  this.canvas.addEventListener("mousemove", hoverHandler);
-}
+      this.canvas.style.cursor = sobreBoton ? "pointer" : "default";
+    };
 
-
-
-
-
+    this.canvas.addEventListener("click", clickHandler);
+    this.canvas.addEventListener("mousemove", hoverHandler);
+  }
 
   dibujar() {
     // Limpiar canvas
@@ -498,51 +537,62 @@ class Game {
   }
 
   dibujarMovimientosValidos() {
+    // Usar el tiempo para crear el efecto de pulso
+    const tiempo = Date.now() / 1000; // Tiempo en segundos
+    const pulso = Math.sin(tiempo * 3) * 0.5 + 0.5; // Oscila entre 0 y 1
+
     this.movimientosValidos.forEach((movimiento) => {
       const casilla = movimiento.destino;
 
-      // Dibujar indicador de movimiento válido
       this.ctx.save();
-      this.ctx.globalAlpha = 0.5;
+
+      // Círculo interior con pulso
+      const radioInterior = casilla.radio * (0.3 + pulso * 0.3); // Varía entre 0.3 y 0.6
+      this.ctx.globalAlpha = 0.6;
       this.ctx.fillStyle = "#00ff00";
       this.ctx.beginPath();
-      this.ctx.arc(casilla.x, casilla.y, casilla.radio * 0.6, 0, Math.PI * 2);
+      this.ctx.arc(casilla.x, casilla.y, radioInterior, 0, Math.PI * 2);
       this.ctx.fill();
 
-      // Dibujar borde pulsante
+      // Anillo exterior fijo (sin pulso)
+      const radioBorde = casilla.radio + 4; // Fijo (puedes ajustar el valor)
+      this.ctx.globalAlpha = 1; // opacidad completa
       this.ctx.strokeStyle = "#00ff00";
       this.ctx.lineWidth = 3;
       this.ctx.beginPath();
-      this.ctx.arc(casilla.x, casilla.y, casilla.radio + 5, 0, Math.PI * 2);
+      this.ctx.arc(casilla.x, casilla.y, radioBorde, 0, Math.PI * 2);
       this.ctx.stroke();
+
       this.ctx.restore();
     });
+
+    // Redibujar continuamente para mantener la animación
+    if (this.juegoActivo && this.movimientosValidos.length > 0) {
+      requestAnimationFrame(() => this.dibujar());
+    }
   }
 
+  iniciarTimer() {
+    this.tiempoRestante = 60; // 60 segundos = 1 minuto
+    this.actualizarStats();
 
+    this.timerInterval = setInterval(() => {
+      if (this.juegoActivo) {
+        this.tiempoRestante--;
 
+        this.actualizarStats();
 
-iniciarTimer() {
-  this.tiempoRestante = 60; // 60 segundos = 1 minuto
-  this.actualizarStats();
+        // Si llega a 0, terminar juego automáticamente
+        if (this.tiempoRestante <= 0) {
+          this.tiempoRestante = 0;
+          this.detenerTimer();
+          this.juegoActivo = false;
 
-  this.timerInterval = setInterval(() => {
-    if (this.juegoActivo) {
-      this.tiempoRestante--;
-
-      this.actualizarStats();
-
-      // Si llega a 0, terminar juego automáticamente
-      if (this.tiempoRestante <= 0) {
-        this.tiempoRestante = 0;
-        this.detenerTimer();
-        this.juegoActivo = false;
-        this.finalizarJuego();
+          this.finalizarJuego();
+        }
       }
-    }
-  }, 1000)
-}
-
+    }, 1000);
+  }
 
   detenerTimer() {
     if (this.timerInterval) {
@@ -559,7 +609,7 @@ iniciarTimer() {
     );
   }
 
-  reiniciar(){
+  reiniciar() {
     // Detener timer anterior
     this.detenerTimer();
 
@@ -596,6 +646,5 @@ iniciarTimer() {
     this.movimientosValidos = [];
     // Actualizar referencia al canvas
     //this.canvas = document.querySelector("#canvas");
-
   }
 }

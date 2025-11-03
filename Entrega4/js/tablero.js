@@ -83,6 +83,8 @@ class Tablero {
         }
       }
     }
+
+    return contador;
   }
 
   //funcion para dibujar el tablero
