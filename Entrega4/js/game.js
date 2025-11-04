@@ -574,7 +574,7 @@ class Game {
   }
 
   iniciarTimer() {
-    this.tiempoRestante = 10;
+    this.tiempoRestante = 60;
     this.actualizarStats();
 
     this.timerInterval = setInterval(() => {
