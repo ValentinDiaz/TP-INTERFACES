@@ -41,9 +41,8 @@ body {
 }
 
 #menuInicio {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
+  width: 900px;
+  max-width: 100%;
 }
 
 .popup-content-juego {
@@ -99,7 +98,7 @@ body {
 }
 
 .popup-content-juego > p {
-  color: #00d4ff;
+  color: white;
   font-size: 1.3em;
   font-weight: bold;
   margin: 25px 0 15px 0;
@@ -109,7 +108,7 @@ body {
 .popup-img-container-canvas {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 40px;
   margin-bottom: 20px;
   flex-wrap: wrap;
 }
@@ -121,6 +120,7 @@ body {
   border-radius: 10px;
   padding: 5px;
   background: rgba(255, 255, 255, 0.1);
+  margin: 0 10px;
 }
 
 .popup-img-container-canvas img:hover {
@@ -172,6 +172,7 @@ body {
   font-size: 1.1em;
   font-weight: bold;
   min-height: 25px;
+  color: white;
 }
 
 /* Controles del juego */
@@ -209,6 +210,7 @@ body {
 .info-box p {
   font-size: 1.3em;
   font-weight: bold;
+  color: rgb(255, 255, 255);
 }
 
 .btn-primary {
