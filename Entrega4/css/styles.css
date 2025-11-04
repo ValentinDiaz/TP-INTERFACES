@@ -235,7 +235,7 @@ background: linear-gradient(135deg, #7c4dff, #5e35b1);  color: white;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #00e5ff, #00aadd);
+  background: linear-gradient(135deg, #8c5eff, #6e45c1);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
