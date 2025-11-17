@@ -1,0 +1,411 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.game__peg-solitaire {
+  position: relative;
+  max-width: 1080px;
+  width: 100%;
+}
+
+.fondo__canvas {
+  border: 3px solid #00d4ff;
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+  border-radius: 10px;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#menuInicio {
+  width: 900px;
+  max-width: 100%;
+}
+
+.popup-content-juego {
+  background: rgba(20, 20, 40, 0.95);
+  padding: 40px;
+  border-radius: 15px;
+  border: 3px solid #00d4ff;
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+}
+
+.game__h1-game {
+  color: #00d4ff;
+  text-align: center;
+  font-size: 2em;
+  margin-bottom: 25px;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.contenedor_modo_juego {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.contenedor_modo_juego button {
+  background: linear-gradient(135deg, #00d4ff, #0099cc);
+  border: none;
+  padding: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.contenedor_modo_juego button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.6);
+}
+
+.contenedor_modo_juego button.selected {
+  border: 4px solid #ffff00;
+  box-shadow: 0 0 25px rgba(255, 255, 0, 0.8);
+}
+
+.modalidad-juego {
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
+  padding: 15px 30px;
+  margin: 0;
+}
+
+.popup-content-juego > p {
+  color: white;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 25px 0 15px 0;
+  text-align: center;
+}
+
+.popup-img-container-canvas {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.popup-img-container-canvas img {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  border-radius: 10px;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0 10px;
+}
+
+.popup-img-container-canvas img:hover {
+  transform: scale(1.1);
+  border-color: #00d4ff;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+}
+
+.popup-img-container-canvas img.selected {
+  transform: scale(1.1);
+  border-color: #00d4ff;
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
+}
+
+.contenedor_play {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.button {
+  padding: 15px 50px;
+  font-size: 1.3em;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.button__orange {
+  background: linear-gradient(135deg, #ff6b35, #ff8c42);
+  color: white;
+}
+
+.button__orange:hover {
+  background: linear-gradient(135deg, #ff7c46, #ff9d53);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+.button__orange:active {
+  transform: translateY(0);
+}
+
+.mensajeError {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 1.1em;
+  font-weight: bold;
+  min-height: 25px;
+  color: white;
+}
+
+/* Controles del juego */
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+.game-info {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 0;
+  flex-wrap: wrap;
+}
+
+#gameUI {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+
+.info-box {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px 25px;
+  border-radius: 8px;
+  border: 2px solid #00d4ff;
+  box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
+  text-align: center;
+}
+
+.info-box h3 {
+  color: #00d4ff;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.info-box p {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #7c4dff, #5e35b1);
+  color: white;
+  padding: 12px 30px;
+  font-size: 1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #8c5eff, #6e45c1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #7c4dff, #5e35b1);
+  color: white;
+  padding: 12px 30px;
+  font-size: 1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #8c5eff, #6e45c1);
+  transform: translateY(-2px);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: linear-gradient(135deg, #1a1a2e, #0f0f1e);
+  padding: 40px;
+  border-radius: 15px;
+  border: 3px solid #00d4ff;
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+  text-align: center;
+  max-width: 500px;
+}
+
+.modal-content h2 {
+  color: #00d4ff;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.modal-content p {
+  font-size: 1.3em;
+  margin-bottom: 30px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.ficha-seleccionable {
+  transition: all 0.3s ease;
+}
+
+.ficha-seleccionable:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.ficha-seleccionable.selected {
+  border: 3px solid #ffff00;
+  box-shadow: 0 0 20px #ffff00;
+}
+
+.fondo__juego {
+  position: relative;
+  width: 900px;
+  height: 600px;
+  border: 3px solid #00d4ff;
+  border-radius: 12px;
+  overflow: hidden; /* 🔥 evita que los fondos se salgan */
+  margin: 0 auto;
+  background: black;
+}
+/* -------------------------------------------------------
+   CAPAS PARALLAX BASE
+------------------------------------------------------- */
+.parallax-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%; /* ⭐ dos imágenes lado a lado */
+  height: 100%;
+  background-repeat: repeat-x;
+  background-size: 50% 100%; /* ⭐ fuerza el encaje perfecto */
+  animation: scrollParallax linear infinite;
+  pointer-events: none;
+}
+
+/* Animación base */
+@keyframes scrollParallax {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  } /* ⭐ mueve una sola copia */
+}
+
+/* -------------------------------------------------------
+   CAPA 1 - CIELO (FONDO MÁS LEJANO)
+------------------------------------------------------- */
+.layer-sky {
+  background-image: url(../assets/images/sky.png);
+  animation-duration: 80s;
+  z-index: 1;
+}
+
+/* -------------------------------------------------------
+   CAPA 2 - NIEVE SUAVE LEJANA (BLANCA)
+------------------------------------------------------- */
+.layer-snow {
+  background-image: url(../assets/images/snow.png);
+  opacity: 0.25;
+  animation-duration: 60s;
+  z-index: 2;
+}
+
+/* -------------------------------------------------------
+   CAPA 3 - MONTAÑAS DE FONDO
+------------------------------------------------------- */
+.layer-bg-mts {
+  background-image: url(../assets/images/4_BG_mts.png);
+  animation-duration: 45s;
+  z-index: 3;
+}
+
+/* -------------------------------------------------------
+   CAPA 4 - CASTILLO DE HIELO
+------------------------------------------------------- */
+.layer-ice-castle {
+  background-image: url(../assets/images/3_ice_castle.png);
+  animation-duration: 35s;
+  z-index: 4;
+}
+
+/* -------------------------------------------------------
+   CAPA 5 - NIEBLA
+------------------------------------------------------- */
+.layer-fog {
+  background-image: url(../assets/images/fog.png);
+  opacity: 0.5;
+  animation-duration: 30s;
+  z-index: 5;
+}
+
+/* -------------------------------------------------------
+   CAPA 6 - MONTAÑAS INTERMEDIAS
+------------------------------------------------------- */
+.layer-mid-mts {
+  background-image: url(../assets/images/2_foreground_mts.png);
+  animation-duration: 20s;
+  z-index: 6;
+}
+
+/* -------------------------------------------------------
+   CAPA 7 - PRIMER PLANO (ROCAS / HIELO)
+------------------------------------------------------- */
+.layer-fg-mts {
+  background-image: url(../assets/images/1_foreground_mts.png);
+  animation-duration: 12s;
+  z-index: 7;
+}
+
+/* -------------------------------------------------------
+   CAPA 8 - NIEVE INTENSA (FRONTAL)
+------------------------------------------------------- */
+.layer-snow-fall {
+  background-image: url(../assets/images/snow_2.png);
+  opacity: 0.9;
+  animation-duration: 6s; /* más rápida = efecto de nieve */
+  z-index: 8;
+}

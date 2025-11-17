@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>Peg Solitaire</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <button class="open-menu" id="openBurger">
+        <i class="fa-solid fa-bars open-icon"></i>
+      </button>
+      <div class="burger-menu" id="navBurger">
+        <button class="close-menu" id="closeBurger">
+          <i class="fa-solid fa-xmark close-icon"></i>
+        </button>
+        <ul class="nav-list">
+          <li><a href="#">Accion</a></li>
+          <li><a href="#">Juegos de chicas</a></li>
+          <li><a href="#">Deportes</a></li>
+          <li><a href="#">Casual</a></li>
+          <li><a href="#">Estrategia</a></li>
+          <li><a href="#">Juegos de mesa</a></li>
+          <li><a href="#">Multiplayer</a></li>
+        </ul>
+      </div>
+      <a href="index.html">
+        <div class="logo">
+          <img src="assets/images/LogoGametime.png" alt="Logo" />
+        </div>
+      </a>
+      <div class="search-container">
+        <input type="text" placeholder="¿A qué jugamos hoy?" />
+        <button>
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        </button>
+      </div>
+
+      <div class="nav-icons">
+        <div class="div-carrito" id="toggleCarrito">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+        <div class="div-user" id="toggleUser">
+          <i class="fa-solid fa-user-astronaut open-user"></i>
+        </div>
+      </div>
+
+      <div class="menu-usuario" id="navUser">
+        <ul class="nav-list">
+          <li><a href="">Home</a></li>
+          <li><a href="">Mi perfil</a></li>
+          <li><a href="">Mis juegos</a></li>
+          <li><a href="">Logros</a></li>
+          <li><a href="login.html">Cerrar sesion</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="cont-all">
+      <div class="cont-texto-pegSolitaire">
+        <img
+          src="assets/images/Captura de pantalla 2025-09-15 140458.png"
+          alt=""
+        />
+
+        <div class="seguimiento-nav">
+          <h2>Peg Solitaire</h2>
+          <ul class="seguimiento-list">
+            <li>
+              <a href="">Juegos <span>></span> </a>
+            </li>
+            <li>
+              <a href="">Juegos de ingenio <span>></span></a>
+            </li>
+            <li><a href="">Peg Solitaire</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="game">
+        <div class="game__peg-solitaire">
+          <!-- Menú de inicio -->
+          <div id="menuInicio">
+            <div class="popup-content-juego">
+              <h1 class="game__h1-game">🚀 Peg Solitaire Espacial</h1>
+
+              <p>Selecciona tu tema de fichas</p>
+              <div class="popup-img-container-canvas tema-fichas">
+                <div class="tema-option" data-tema="espacial">
+                  <div class="fichas-preview">
+                    <img
+                      src="assets/images/ficha1.jpg"
+                      alt="Galaxia 1"
+                      class="ficha-seleccionable"
+                      data-ficha="assets/images/ficha1.jpg"
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        cursor: pointer;
+                      "
+                    />
+                    <img
+                      src="assets/images/ficha2.jpg"
+                      alt="Galaxia 2"
+                      class="ficha-seleccionable"
+                      data-ficha="assets/images/ficha2.jpg"
+                      style="
+                        width: 60px;
+                        height: 60px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        cursor: pointer;
+                      "
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="contenedor_play">
+                <button id="btnJugar" class="button button__orange">
+                  Jugar
+                </button>
+              </div>
+              <div id="mensajeError" class="mensajeError"></div>
+            </div>
+          </div>
+
+          <!-- Canvas del juego -->
+          <canvas
+            id="canvas"
+            class="fondo__canvas hidden"
+            width="900"
+            height="600"
+          ></canvas>
+
+          <!-- Controles e info del juego -->
+          <div id="gameUI" class="hidden">
+            <div class="game-info">
+              <div class="info-box">
+                <h3>Tiempo</h3>
+                <p id="timer">05:00</p>
+              </div>
+              <div class="info-box">
+                <h3>Piezas</h3>
+                <p id="piecesCount">32</p>
+              </div>
+              <div class="info-box">
+                <h3>Movimientos</h3>
+                <p id="movesCount">0</p>
+              </div>
+            </div>
+
+            <div class="game-controls">
+              <button class="btn-primary" onclick="resetGame()">
+                Reiniciar
+              </button>
+              <button class="btn-secondary" onclick="volverMenu()">
+                Menú Principal
+              </button>
+              <button class="btn-secondary" onclick="toggleInstructions()">
+                Ayuda
+              </button>
+            </div>
+
+            <div
+              id="instructions"
+              style="
+                display: none;
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 10px;
+                border: 2px solid #7c4dff;
+                max-width: 800px;
+                margin: 0 auto;
+              "
+            >
+              <h2
+                style="color: #7c4dff; margin-bottom: 15px; text-align: center"
+              >
+                📚 Cómo Jugar Peg Solitaire
+              </h2>
+              <ul style="line-height: 1.8; list-style-position: inside">
+                <li>
+                  <strong>Objetivo:</strong> Eliminar todas las piezas excepto
+                  una en el centro
+                </li>
+                <li>
+                  <strong>Seleccionar:</strong> Haz clic en una pieza para
+                  seleccionarla
+                </li>
+                <li>
+                  <strong>Movimientos válidos:</strong> Verás flechas animadas
+                  indicando dónde puedes mover
+                </li>
+                <li>
+                  <strong>Saltar:</strong> Arrastra la pieza sobre otra
+                  adyacente para saltarla y eliminarla
+                </li>
+                <li>
+                  <strong>Regla:</strong> Solo puedes saltar si hay un espacio
+                  vacío del otro lado
+                </li>
+                <li>
+                  <strong>Victoria:</strong> Gana dejando solo una pieza en el
+                  tablero
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="open-compartir-btn" id="openCompartir">
+        <span class="btn-text">Compartir</span>
+        <i class="fa-solid fa-share-nodes btn-icon"></i>
+      </button>
+      <div class="cont-compartir" id="Cont-Compartir">
+        <div class="info-compartir" id="info-compartir">
+          <button
+            class="close-compartir-btn"
+            id="closeCompartir"
+            aria-label="Cerrar compartir"
+          >
+            <span class="close-x">X</span>
+          </button>
+          <h2 class="compartirtext">Compartir</h2>
+          <hr class="linea-blanca" />
+          <div class="cont-iconos-compartir">
+            <div class="cont-iconosYtitulo">
+              <img src="assets/iconos/Facebook.svg" alt="" />
+              <p>Facebook</p>
+            </div>
+            <div class="cont-iconosYtitulo">
+              <img src="assets/iconos/WSP.svg" alt="" />
+              <p>WhatsApp</p>
+            </div>
+            <div class="cont-iconosYtitulo">
+              <img src="assets/iconos/twitterIcon.svg" alt="" />
+              <p>X</p>
+            </div>
+            <div class="cont-iconosYtitulo">
+              <img src="assets/iconos/reddit-icon.svg" alt="" />
+              <p>Reddit</p>
+            </div>
+            <div class="cont-iconosYtitulo">
+              <img src="assets/iconos/emailIcono.svg" alt="" />
+              <p>Email</p>
+            </div>
+          </div>
+
+          <div class="cont-link">
+            <input
+              type="text"
+              value="https://gametime.com/juegos/juegosingenio/PegSolitaire"
+              readonly
+            />
+            <button class="copy-btn">Copiar</button>
+          </div>
+          <hr class="linea-blanca mt" />
+        </div>
+      </div>
+      <div class="como-jugar">
+        <div class="titulo-como-jugar">
+          <img src="assets/iconos/comoJugar.svg" alt="" />
+          <h3>¿Como jugar al Peg Solitaire?</h3>
+        </div>
+        <p>
+          El objetivo del juego es dejar una sola ficha en el tablero. Comienza
+          con el espacio central vacío. Para mover, elige una ficha y hazla
+          saltar sobre otra (en línea recta, ya sea horizontal o vertical) hacia
+          un espacio vacío. La ficha sobre la que saltaste se retira del
+          tablero. Cuidado! Puedes saltar hacia arriba, abajo, izquierda o
+          derecha, pero nunca en diagonal. La partida termina cuando no queden
+          más movimientos posibles.
+        </p>
+      </div>
+      <div class="cont-gameplays">
+        <div class="titulo-gameplays">
+          <img src="assets/iconos/gameplaysIcon.svg" alt="" />
+          <h3>Gameplays</h3>
+        </div>
+        <div class="gameplays-img">
+          <img
+            src="assets/images/gameplay1111 (1).png"
+            class="gameplay-image"
+            alt=""
+          />
+          <img src="assets/images/gameplay1111 (2).png" class="gameplay-image" alt="" />
+          <img
+            src="assets/images/gameplay1111 (1).png"
+            class="gameplay-image"
+            alt=""
+          />
+          <img
+            src="assets/images/gameplay1111 (2).png"
+            class="gameplay-image"
+            alt=""
+          />
+        </div>
+      </div>
+
+      <div class="comment-section">
+        <h3 style="border-bottom: 2px solid #ffffff">Comentarios</h3>
+        <div class="comment-box">
+          <div class="user-info">
+            <span class="user-icon"
+              ><i class="fa-solid fa-circle-user"></i
+            ></span>
+            <span class="username">Tú</span>
+          </div>
+          <hr class="linea-blanca" />
+          <textarea placeholder="¿Qué opinas sobre este juego?"></textarea>
+          <hr class="linea-blanca" />
+          <div class="rating-post">
+            <button class="post-button">PUBLICAR</button>
+          </div>
+        </div>
+
+        <h3><i class="fa-regular fa-clock"></i>&nbsp;&nbsp;Recientes</h3>
+
+        <div class="comment">
+          <div class="user-info">
+            <span class="user-icon"
+              ><i class="fa-solid fa-circle-user"></i
+            ></span>
+            <span class="username">Usuario111</span>
+          </div>
+          <hr class="linea-blanca" />
+          <p>Terrible juego!!!</p>
+
+          <div class="comment-actions">
+            <button class="like-btn" title="Me gusta">
+              <i class="fa-solid fa-thumbs-up"></i>
+            </button>
+            <button class="dislike-btn" title="No me gusta">
+              <i class="fa-solid fa-thumbs-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="user-info">
+            <span class="user-icon"
+              ><i class="fa-solid fa-circle-user"></i
+            ></span>
+            <span class="username">Usuario222</span>
+          </div>
+          <hr class="linea-blanca" />
+          <p>No me gusto.</p>
+          <div class="comment-actions">
+            <button class="like-btn" title="Me gusta">
+              <i class="fa-solid fa-thumbs-up"></i>
+            </button>
+            <button class="dislike-btn" title="No me gusta">
+              <i class="fa-solid fa-thumbs-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="comment">
+          <div class="user-info">
+            <span class="user-icon"
+              ><i class="fa-solid fa-circle-user"></i
+            ></span>
+            <span class="username">Usuario333</span>
+          </div>
+          <hr class="linea-blanca" />
+          <p>
+            Se nota que lo hicieron con mucho amor, que le pusieron mucha
+            dedicación.
+          </p>
+
+          <div class="comment-actions">
+            <button class="like-btn" title="Me gusta">
+              <i class="fa-solid fa-thumbs-up"></i>
+            </button>
+            <button class="dislike-btn" title="No me gusta">
+              <i class="fa-solid fa-thumbs-down"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <div class="brand-icon">
+            <img src="assets/images/logo.png" alt="Game Time Logo" />
+          </div>
+          <p>
+            La plataforma de gaming más completa. Descubre, juega y conecta con
+            millones de jugadores en todo el mundo.
+          </p>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Twitter">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Email">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                />
+                <polyline
+                  points="22,6 12,13 2,6"
+                  stroke="#0a0a0a"
+                  stroke-width="2"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Facebook">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>Soporte y comunidad</h3>
+          <ul>
+            <li><a href="#">Centro de ayuda</a></li>
+            <li><a href="#">Reembolso y devoluciones</a></li>
+            <li><a href="#">foro de comunidades</a></li>
+            <li><a href="#">eventos y torneos</a></li>
+            <li><a href="#">productos y servicios</a></li>
+            <li><a href="#">Guía de usuario</a></li>
+            <li><a href="#">Soporte técnico</a></li>
+            <li><a href="#">Blog de comunidad</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>Enlaces Rápidos</h3>
+          <ul>
+            <li><a href="#">Preguntas Frecuentes (FAQ)</a></li>
+            <li><a href="#">Términos y condiciones</a></li>
+            <li><a href="#">Actualizaciones y parches</a></li>
+            <li><a href="#">Descargas de juegos Mapa del sitio</a></li>
+            <li><a href="#">Ayuda en línea</a></li>
+            <li><a href="#">Promociones</a></li>
+            <li><a href="#">Novedades</a></li>
+            <li><a href="#">Tutoriales</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>NewsLetters</h3>
+          <p style="color: #888; font-size: 14px; margin-bottom: 15px">
+            Suscríbete para recibir las últimas noticias y ofertas exclusivas
+          </p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="@algo.com" />
+            <button>suscribir</button>
+          </div>
+          <ul style="margin-top: 20px">
+            <li><a href="#">Quienes somos</a></li>
+            <li><a href="#">Historia de la empresa</a></li>
+            <li><a href="#">Misión y visión</a></li>
+            <li><a href="#">Contacto</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+            <li><a href="#">Legal</a></li>
+            <li><a href="#">Prensa</a></li>
+            <li><a href="#">Inversionistas</a></li>
+            <li><a href="#">Blog oficial</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2025 Game Time. Todos los derechos reservados</div>
+        <div class="footer-legal">
+          <a href="#">Política de privacidad</a>
+          <a href="#">Términos de uso</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/menu.js"></script>
+    <script src="js/compartir.js"></script>
+    <script
+      src="https://kit.fontawesome.com/c59d1be4df.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/peg/main.js"></script>
+    <script src="js/peg/casilla.js"></script>
+    <script src="js/peg/pieza.js"></script>
+    <script src="js/peg/tablero.js"></script>
+    <script src="js/peg/main.js"></script>
+  </body>
+</html>
