@@ -1,7 +1,7 @@
 class Pipe {
   constructor(game) {
     this.game = game;
-    this.width = 80;
+    this.width = 80 + Math.random() * 40; // Ancho variable entre 80-120px
     this.gap = game.config.pipeGap;
     this.x = game.gameArea.offsetWidth;
     this.scored = false;
@@ -13,35 +13,43 @@ class Pipe {
     this.createElement();
   }
   
-  createElement() {
-    this.topElement = document.createElement('div');
-    this.topElement.style.position = 'absolute';
-    this.topElement.style.width = `${this.width}px`;
-    this.topElement.style.height = `${this.topHeight}px`;
-    this.topElement.style.left = `${this.x}px`;
-    this.topElement.style.top = '0';
-    this.topElement.style.background = 'linear-gradient(to bottom, #00d4ff, #0099cc)';
-    this.topElement.style.border = '3px solid #00d4ff';
-    this.topElement.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.5)';
-    this.topElement.style.borderRadius = '0 0 10px 10px';
-    this.topElement.style.zIndex = '10';
-    
-    this.bottomElement = document.createElement('div');
-    const bottomHeight = this.game.gameArea.offsetHeight - this.topHeight - this.gap;
-    this.bottomElement.style.position = 'absolute';
-    this.bottomElement.style.width = `${this.width}px`;
-    this.bottomElement.style.height = `${bottomHeight}px`;
-    this.bottomElement.style.left = `${this.x}px`;
-    this.bottomElement.style.bottom = '0';
-    this.bottomElement.style.background = 'linear-gradient(to top, #00d4ff, #0099cc)';
-    this.bottomElement.style.border = '3px solid #00d4ff';
-    this.bottomElement.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.5)';
-    this.bottomElement.style.borderRadius = '10px 10px 0 0';
-    this.bottomElement.style.zIndex = '10';
-    
-    this.game.gameElements.appendChild(this.topElement);
-    this.game.gameElements.appendChild(this.bottomElement);
-  }
+createElement() {
+  // ---------- TUBERÍA SUPERIOR ----------
+  this.topElement = document.createElement('div');
+  this.topElement.style.position = 'absolute';
+  this.topElement.style.width = `${this.width}px`;
+  this.topElement.style.height = `${this.topHeight}px`;
+  this.topElement.style.left = `${this.x}px`;
+  this.topElement.style.top = '-10px';
+  
+  this.topElement.style.backgroundImage = 'url("/assets/bird/tuberia.png")';
+  this.topElement.style.backgroundSize = 'cover';
+  this.topElement.style.backgroundRepeat = 'repeat-y';
+  this.topElement.style.backgroundPosition = 'bottom center';
+  this.topElement.style.imageRendering = 'pixelated';
+  this.topElement.style.zIndex = '100';
+  
+  // ---------- TUBERÍA INFERIOR ----------
+  const bottomHeight = this.game.gameArea.offsetHeight - this.topHeight - this.gap;
+  
+  this.bottomElement = document.createElement('div');
+  this.bottomElement.style.position = 'absolute';
+  this.bottomElement.style.width = `${this.width}px`;
+  this.bottomElement.style.height = `${bottomHeight}px`;
+  this.bottomElement.style.left = `${this.x}px`;
+  this.bottomElement.style.bottom = '-10px';
+  
+  this.bottomElement.style.backgroundImage = 'url("/assets/bird/tuberia.png")';
+  this.bottomElement.style.backgroundSize = 'cover';
+  this.bottomElement.style.backgroundRepeat = 'repeat-y';
+  this.bottomElement.style.backgroundPosition = 'top center';
+  this.bottomElement.style.imageRendering = 'pixelated';
+  this.bottomElement.style.zIndex = '100';
+  
+  // Insertar elementos
+  this.game.gameElements.appendChild(this.topElement);
+  this.game.gameElements.appendChild(this.bottomElement);
+}
   
   update() {
     this.x -= this.game.config.pipeSpeed;
@@ -59,17 +67,25 @@ class Pipe {
   
   checkCollision(bird) {
     const birdBounds = bird.getBounds();
+    const pipeMargin = 10;
     
-    if (birdBounds.right > this.x && 
-        birdBounds.left < this.x + this.width &&
-        birdBounds.top < this.topHeight) {
+    // ─── Colisión con la tubería superior ───
+    if (
+      birdBounds.right > this.x + pipeMargin &&
+      birdBounds.left < this.x + this.width - pipeMargin &&
+      birdBounds.top < this.topHeight - 20 // Ajuste por el offset
+    ) {
       return true;
     }
     
+    // ─── Colisión con la tubería inferior ───
     const bottomTop = this.topHeight + this.gap;
-    if (birdBounds.right > this.x && 
-        birdBounds.left < this.x + this.width &&
-        birdBounds.bottom > bottomTop) {
+    
+    if (
+      birdBounds.right > this.x + pipeMargin &&
+      birdBounds.left < this.x + this.width - pipeMargin &&
+      birdBounds.bottom > bottomTop + 20 // Ajuste por el offset
+    ) {
       return true;
     }
     
@@ -77,11 +93,7 @@ class Pipe {
   }
   
   remove() {
-    if (this.topElement && this.topElement.parentNode) {
-      this.topElement.remove();
-    }
-    if (this.bottomElement && this.bottomElement.parentNode) {
-      this.bottomElement.remove();
-    }
+    this.topElement?.remove();
+    this.bottomElement?.remove();
   }
 }

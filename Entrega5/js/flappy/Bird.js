@@ -6,25 +6,29 @@ class Bird {
     this.x = 100;
     this.y = 200;
     this.velocityY = 0;
-
     this.currentAnimation = "flap";
-    
-    // Establecer posición inicial
+
+    this.el.classList.add("anim-flap");
     this.el.style.left = `${this.x}px`;
     this.el.style.top = `${this.y}px`;
   }
 
   setAnimation(name) {
-    console.log("setAnimation llamado:", name); // Debug
-    
+    console.log("setAnimation llamado:", name);
+
     if (this.currentAnimation === name) return;
 
-    // Remover clase anterior
-    this.el.classList.remove("anim-dead");
+    // Remover todas las animaciones
+    this.el.classList.remove("anim-flap", "anim-dead");
 
-    // Aplicar nueva animación
+    // Forzar reflow
+    void this.el.offsetWidth;
+
+    // Aplicar la animación correcta
     if (name === "dead") {
       this.el.classList.add("anim-dead");
+    } else if (name === "flap") {
+      this.el.classList.add("anim-flap");
     }
 
     this.currentAnimation = name;
@@ -58,23 +62,9 @@ class Bird {
     }
   }
 
-explode() {
-  console.log("Explode llamado - aplicando dead");
-  
-  // Forzar el cambio incluso si ya está en dead
-  this.currentAnimation = null; // Resetear para forzar el cambio
-  
-  // Remover la animación anterior completamente
-  this.el.style.animation = 'none';
-  this.el.classList.remove('anim-dead');
-  
-  // Forzar reflow del navegador
-  void this.el.offsetWidth;
-  
-  // Aplicar la animación de muerte
-  this.el.classList.add('anim-dead');
-  this.currentAnimation = "dead";
-}
+  explode() {
+    this.setAnimation("dead"); // Usar setAnimation para consistencia
+  }
 
   reset() {
     this.x = 100;
@@ -83,20 +73,29 @@ explode() {
 
     this.el.style.left = `${this.x}px`;
     this.el.style.top = `${this.y}px`;
-    
-    // Asegurarse de remover la clase dead
-    this.el.classList.remove("anim-dead");
-    this.setAnimation("flap");
+
+    this.setAnimation("flap"); // Usar setAnimation
   }
 
   getBounds() {
     const padding = 8;
+    const width = 16 * 5; // 16px × scaleX(5) = 80px
+    const height = 64 * 1.3; // 64px × scaleY(1.4) = 89.6px
+
+    const x = this.x + padding;
+    const y = this.y + padding;
+    const w = width - padding * 2;
+    const h = height - padding * 2;
 
     return {
-      x: this.x + padding,
-      y: this.y + padding,
-      width: 16 * 5 - padding * 2,
-      height: 64 * 1.4 - padding * 2,
+      x: x,
+      y: y,
+      width: w,
+      height: h,
+      left: x,
+      right: x + w,
+      top: y,
+      bottom: y + h,
     };
   }
 }

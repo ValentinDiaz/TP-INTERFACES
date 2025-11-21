@@ -310,6 +310,19 @@
   margin: 0 auto;
   background: black;
 }
+
+/* Game Over Screen - simple, solo encima */
+#gameOverScreen {
+  position: fixed !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000 !important;
+}
+
+#gameOverScreen.hidden {
+  display: none !important;
+}
 /* -------------------------------------------------------
    CAPAS PARALLAX BASE
 ------------------------------------------------------- */
@@ -421,8 +434,7 @@
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
   transition: transform 0.1s ease-out;
   z-index: 20;
-  animation: birdFlap 0.4s steps(4) infinite;
-  transform: scaleX(5) scaleY(1.4); /* Más ANCHO (5) que ALTO (4) */
+  transform: scaleX(5) scaleY(1.3); /* Más ANCHO (5) que ALTO (4) */
   transform-origin: top left;
 }
 
@@ -435,19 +447,25 @@
   }
 }
 
-/* Animación de muerte - 7 frames */
-.anim-dead {
-  background: url("/assets/bird/DEATH.png") left center !important;
-  background-size: 112px 64px !important; 
-  background-repeat: no-repeat !important;
-  animation: birdDead 0.4s steps(7) infinite !important; /* Punto, no coma */
+.anim-flap {
+  animation: birdFlap 0.4s steps(4) infinite;
 }
 
-@keyframes birdDead {
+/* Animación de muerte - 7 frames */
+.anim-dead {
+  background-image: url("/assets/bird/DEATH.png") !important;
+  background-size: 112px 64px !important;
+  animation: demonDead 0.4s steps(7) forwards !important; /* forwards en vez de infinite */
+  transform: scaleX(5) scaleY(1.4) !important; /* Agregar rotate */
+  transform-origin: center !important; /* Cambiar el origen para que rote desde el centro */
+}
+
+@keyframes demonDead {
   0% {
     background-position: 0px;
   }
   100% {
-    background-position: -112px; /* 6 frames × 16px */
+    background-position: -112px;
   }
 }
+
