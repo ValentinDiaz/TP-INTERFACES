@@ -409,3 +409,45 @@
   animation-duration: 6s; /* más rápida = efecto de nieve */
   z-index: 8;
 }
+
+#bird {
+  position: absolute;
+  width: 16px; /* Ancho de UN frame */
+  height: 64px; /* Alto del sprite */
+  background: url("/assets/bird/FLYING.png") left center;
+  background-repeat: no-repeat;
+  background-size: 64px 64px; /* Tamaño TOTAL del spritesheet */
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+  transition: transform 0.1s ease-out;
+  z-index: 20;
+  animation: birdFlap 0.4s steps(4) infinite;
+  transform: scaleX(5) scaleY(1.4); /* Más ANCHO (5) que ALTO (4) */
+  transform-origin: top left;
+}
+
+@keyframes birdFlap {
+  0% {
+    background-position: 0px;
+  }
+  100% {
+    background-position: -64px; /* Mover TODO el ancho del spritesheet */
+  }
+}
+
+/* Animación de muerte - 7 frames */
+.anim-dead {
+  background: url("/assets/bird/DEATH.png") left center !important;
+  background-size: 112px 64px !important; 
+  background-repeat: no-repeat !important;
+  animation: birdDead 0.4s steps(7) infinite !important; /* Punto, no coma */
+}
+
+@keyframes birdDead {
+  0% {
+    background-position: 0px;
+  }
+  100% {
+    background-position: -112px; /* 6 frames × 16px */
+  }
+}
