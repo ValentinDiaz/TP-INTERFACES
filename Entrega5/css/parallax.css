@@ -456,8 +456,14 @@
   background-image: url("/assets/bird/DEATH.png") !important;
   background-size: 112px 64px !important;
   animation: demonDead 0.4s steps(7) forwards !important; /* forwards en vez de infinite */
-  transform: scaleX(5) scaleY(1.4) !important; /* Agregar rotate */
-  transform-origin: center !important; /* Cambiar el origen para que rote desde el centro */
+  transform-origin: center center !important; /* Cambiar el origen para que rote desde el centro */
+}
+
+.anim-atack {
+  background-image: url("/assets/bird/ATTACK.png") !important;
+  background-size: 128px 64px !important;
+  animation: attack 0.8s steps(8) forwards !important; /* forwards en vez de infinite */
+  transform-origin: center center !important; /* Cambiar el origen para que rote desde el centro */
 }
 
 @keyframes demonDead {
@@ -468,4 +474,31 @@
     background-position: -112px;
   }
 }
+
+@keyframes attack{
+  0% {
+    background-position: 0px;
+  }
+  100% {
+    background-position: -128px;
+  }
+}
+
+.coin {
+  background-image: url('/assets/bird/coin.png');
+  background-size: 240px 40px; /* Ajusta según tu sprite */
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  animation: coinAanim 0.8s steps(6) infinite;
+}
+
+@keyframes coinAanim {
+  0% {
+    background-position: 0px;
+  }
+  100% {
+    background-position: -240px;
+  }
+}
+
 

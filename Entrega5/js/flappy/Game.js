@@ -26,6 +26,10 @@ class Game {
     this.lastPipeSpawn = 0;
     this.gameLoopId = null;
     this.isInvincible = false;
+
+    this.collectibles = []; // Array para los coleccionables
+    this.collectibleSpawnTimer = 0;
+    this.collectibleSpawnInterval = 1000; // Cada 3 segundos intenta spawnear
   }
 
   init() {
@@ -55,11 +59,13 @@ class Game {
 
     this.bird.update();
 
+    // Spawner de tuberías
     if (currentTime - this.lastPipeSpawn > this.config.pipeSpawnInterval) {
       this.spawnPipe();
       this.lastPipeSpawn = currentTime;
     }
 
+    // Actualizar tuberías
     this.pipes.forEach((pipe, index) => {
       pipe.update();
 
@@ -80,6 +86,12 @@ class Game {
       }
     });
 
+    // Actualizar coleccionables
+    this.updateCollectibles();
+
+    // Spawner de coleccionables
+    this.spawnCollectibles();
+
     this.animatedElements.forEach((element) => element.update());
 
     this.checkBoundaries();
@@ -91,6 +103,49 @@ class Game {
   spawnPipe() {
     const pipe = new Pipe(this);
     this.pipes.push(pipe);
+  }
+
+  updateCollectibles() {
+    this.collectibles.forEach((item, index) => {
+      item.update();
+
+      // Verificar colisión con el pájaro
+      if (item.checkCollision(this.bird)) {
+        item.collect(this.bird);
+      }
+
+      // Eliminar si salió de pantalla
+      if (item.isOffScreen()) {
+        item.remove();
+        this.collectibles.splice(index, 1);
+      }
+    });
+  }
+
+  spawnCollectibles() {
+    this.collectibleSpawnTimer += 16;
+
+    if (this.collectibleSpawnTimer >= this.collectibleSpawnInterval) {
+      this.collectibleSpawnTimer = 0;
+
+      // Cambiar la probabilidad a 100% para testing
+      if (Math.random() < 1.0) {
+        // ← Cambiar de 0.3 a 1.0
+        // Cambiar el ratio para que salgan más power-ups
+        const type = Math.random() < 0.2 ? "coin" : "powerup"; // ← Cambiar de 0.7 a 0.2 (80% power-ups)
+
+        const minY = 100;
+        const maxY = this.gameArea.offsetHeight - 100;
+        const y = Math.random() * (maxY - minY) + minY;
+
+        const x = this.gameArea.offsetWidth;
+
+        const collectible = new Collectible(this, type, x, y);
+        this.collectibles.push(collectible);
+
+        console.log(`✨ Spawned ${type} at (${x}, ${y})`);
+      }
+    }
   }
 
   setupControls() {
@@ -182,6 +237,11 @@ class Game {
     this.pipes.forEach((pipe) => pipe.remove());
     this.pipes = [];
 
+    // Limpiar coleccionables
+    this.collectibles.forEach((item) => item.remove());
+    this.collectibles = [];
+    this.collectibleSpawnTimer = 0;
+
     this.score = 0;
     this.lives = 1;
     this.moves = 0;
@@ -190,6 +250,7 @@ class Game {
     if (this.bird) {
       this.bird.reset();
     }
+
     // Reactivar animaciones del parallax
     document.querySelectorAll(".parallax-layer").forEach((layer) => {
       layer.style.animationPlayState = "running";
