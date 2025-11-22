@@ -15,21 +15,16 @@ class Collectible {
   createElement() {
     this.element = document.createElement("div");
     this.element.style.position = "absolute";
-    this.element.style.width = `${this.width}px`;
-    this.element.style.height = `${this.height}px`;
+
     this.element.style.left = `${this.x}px`;
     this.element.style.top = `${this.y}px`;
     this.element.style.zIndex = "15";
     if (this.type === "coin") {
       // Moneda con tu animación CSS
       this.element.className = "coin";
-      this.element.style.width = "40px"; // ← Tamaño de un frame individual
-      this.element.style.height = "40px"; // ← Tamaño de un frame individual
-      this.element.style.position = "absolute";
-      this.element.style.left = `${this.x}px`;
-      this.element.style.top = `${this.y}px`;
-      this.element.style.zIndex = "15";
     } else if (this.type === "powerup") {
+      this.element.style.width = `${this.width}px`;
+      this.element.style.height = `${this.height}px`;
       // Power-up estilo pixel art
       this.element.style.background = `
         linear-gradient(135deg, 

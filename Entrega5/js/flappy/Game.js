@@ -29,7 +29,7 @@ class Game {
 
     this.collectibles = []; // Array para los coleccionables
     this.collectibleSpawnTimer = 0;
-    this.collectibleSpawnInterval = 1000; // Cada 3 segundos intenta spawnear
+    this.collectibleSpawnInterval = 3000; // Cada 3 segundos intenta spawnear
   }
 
   init() {
@@ -128,23 +128,52 @@ class Game {
     if (this.collectibleSpawnTimer >= this.collectibleSpawnInterval) {
       this.collectibleSpawnTimer = 0;
 
-      // Cambiar la probabilidad a 100% para testing
-      if (Math.random() < 1.0) {
-        // ← Cambiar de 0.3 a 1.0
-        // Cambiar el ratio para que salgan más power-ups
-        const type = Math.random() < 0.2 ? "coin" : "powerup"; // ← Cambiar de 0.7 a 0.2 (80% power-ups)
+      // Probabilidad de spawn
+      if (Math.random() < 0.2) return; // ← 50% de chance, menos spawns
 
-        const minY = 100;
-        const maxY = this.gameArea.offsetHeight - 100;
-        const y = Math.random() * (maxY - minY) + minY;
+      // Tipo de coleccionable
+      const type = Math.random() < 0.6 ? "coin" : "powerup";
 
-        const x = this.gameArea.offsetWidth;
+      const x = this.gameArea.offsetWidth;
 
-        const collectible = new Collectible(this, type, x, y);
-        this.collectibles.push(collectible);
+      // ===========================
+      //   GENERAR Y SEGURO
+      // ===========================
+      let y;
+      let safe = false;
+      let attempts = 0;
 
-        console.log(`✨ Spawned ${type} at (${x}, ${y})`);
+      while (!safe && attempts < 10) {
+        attempts++;
+
+        const minY = 80;
+        const maxY = this.gameArea.offsetHeight - 80;
+        y = Math.random() * (maxY - minY) + minY;
+
+        safe = true; // lo asumimos seguro hasta probar
+
+        // Comprobar contra cada tubería
+        this.pipes.forEach((pipe) => {
+          // Zona de la pipe superior
+          const topPipeBottom = pipe.topHeight;
+
+          // Zona de la pipe inferior
+          const bottomPipeTop = pipe.topHeight + pipe.gap;
+
+          // Chequear si y está dentro de una pipe
+          if (y < topPipeBottom + 40 && y + 40 > 0) safe = false;
+          if (y > bottomPipeTop - 40 && y < this.gameArea.offsetHeight)
+            safe = false;
+        });
       }
+
+      if (!safe) return; // si no encontró lugar libre, no spawnea
+
+      // Crear colectable
+      const collectible = new Collectible(this, type, x, y);
+      this.collectibles.push(collectible);
+
+      console.log(`✨ Spawned ${type} at (${x}, ${y})`);
     }
   }
 
