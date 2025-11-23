@@ -7,6 +7,8 @@ class Bird {
     this.y = 200;
     this.velocityY = 0;
     this.currentAnimation = "flap";
+     this.width = 80; // 16px × scaleX(5)  ← AGREGAR ESTA LÍNEA
+    this.height = 89.6; // 64px × scaleY(1.4)  ← AGREGAR ESTA LÍNEA
 
     this.el.classList.add("anim-flap");
     this.el.style.left = `${this.x}px`;
@@ -53,13 +55,6 @@ class Bird {
       this.velocityY = 0;
     }
 
-    const gameAreaHeight = this.game.gameArea.offsetHeight;
-    const birdHeight = 64 * 1.4;
-
-    if (this.y + birdHeight > gameAreaHeight) {
-      this.y = gameAreaHeight - birdHeight;
-      this.velocityY = 0;
-    }
   }
 
   explode() {

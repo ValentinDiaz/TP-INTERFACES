@@ -29,7 +29,7 @@ class Game {
 
     this.collectibles = []; // Array para los coleccionables
     this.collectibleSpawnTimer = 0;
-    this.collectibleSpawnInterval = 3000; // Cada 3 segundos intenta spawnear
+    this.collectibleSpawnInterval = 2000; // Cada 3 segundos intenta spawnear
   }
 
   init() {
@@ -122,6 +122,33 @@ class Game {
     });
   }
 
+  showFloatingText(x, y, text, color = "#4ade80") {
+    const floatingText = document.createElement("div");
+    floatingText.textContent = text;
+    floatingText.style.cssText = `
+    position: absolute;
+    left: ${x}px;
+    top: ${y}px;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    color: ${color};
+    text-shadow: 
+      2px 2px 0px #000,
+      -1px -1px 0px #000,
+      1px -1px 0px #000,
+      -1px 1px 0px #000;
+    pointer-events: none;
+    z-index: 999;
+    animation: floatUp 1.5s ease-out forwards;
+  `;
+
+    this.gameElements.appendChild(floatingText);
+
+    setTimeout(() => {
+      floatingText.remove();
+    }, 1500);
+  }
   spawnCollectibles() {
     this.collectibleSpawnTimer += 16;
 
@@ -195,10 +222,17 @@ class Game {
   }
 
   checkBoundaries() {
-    if (
-      this.bird.y <= 0 ||
-      this.bird.y >= this.gameArea.offsetHeight - this.bird.height
-    ) {
+    const gameHeight = this.gameArea.offsetHeight;
+
+    // Tocar el fondo siempre es game over
+    if (this.bird.y + this.bird.height >= gameHeight) {
+      console.log("💥 Tocó el suelo!");
+      this.handleCollision();
+      return;
+    }
+
+    // Tocar el techo solo pierde si no es invencible
+    if (this.bird.y <= 0) {
       if (!this.isInvincible) {
         this.handleCollision();
       } else {

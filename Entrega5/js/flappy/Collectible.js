@@ -112,9 +112,13 @@ class Collectible {
     }, 300);
 
     if (this.type === "coin") {
-      // Sumar puntos usando addScore en lugar de updateScore
-      this.game.addScore(5); // ← CAMBIO AQUÍ: de updateScore() a addScore(5)
+      // Sumar puntos y mostrar texto flotante
+      this.game.addScore(5);
+      this.game.showFloatingText(this.x, this.y, "+5", "#fbbf24"); // Amarillo para monedas
     } else if (this.type === "powerup") {
+      // Mostrar texto de power-up
+      this.game.showFloatingText(this.x, this.y, "POWER UP!", "#a78bfa"); // Morado para powerup
+
       // Activar power-up con animación de ataque
       this.activatePowerUp(bird);
     }
