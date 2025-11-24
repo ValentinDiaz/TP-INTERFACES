@@ -439,7 +439,7 @@
   position: absolute;
   width: 16px; /* Ancho de UN frame */
   height: 64px; /* Alto del sprite */
-  background: url("assets/bird/FLYING.png") left center;
+  background-image: url("../assets/bird/FLYING.png") left center;
   background-repeat: no-repeat;
   background-size: 64px 64px; /* Tamaño TOTAL del spritesheet */
   image-rendering: pixelated;
@@ -465,14 +465,14 @@
 
 /* Animación de muerte - 7 frames */
 .anim-dead {
-  background-image: url("assets/bird/DEATH.png") !important;
+  background-image: url("../assets/bird/DEATH.png") !important;
   background-size: 112px 64px !important;
   animation: demonDead 0.4s steps(7) forwards !important; /* forwards en vez de infinite */
   transform-origin: top left !important; /* Cambiar el origen para que rote desde el centro */
 }
 
 .anim-atack {
-  background-image: url("assets/bird/ATTACK.png") !important;
+  background-image: url("../assets/bird/ATTACK.png") !important;
   background-size: 128px 64px !important;
   animation: attack 0.8s steps(8) forwards !important; /* forwards en vez de infinite */
   transform-origin: top left !important; /* Cambiar el origen para que rote desde el centro */
@@ -498,7 +498,7 @@
 .coin {
   width: 16px;
   height: 16px;
-  background-image: url("assets/bird/gold.png");
+  background-image: url("../assets/bird/gold.png");
   background-repeat: no-repeat;
   background-size: 128px 16px; /* 8 frames de 16px → 128px */
   transform: scale(2);
@@ -511,7 +511,7 @@
 .power-up {
   width: 64px;
   height: 64px;
-  background-image: url("assets/bird/IdleLoop-Sheet.png");
+  background-image: url("../assets/bird/IdleLoop-Sheet.png");
   background-repeat: no-repeat;
   background-size: 256px 64px; /* 4 frames de 64px → 256px de ancho */
   transform: scale(1);

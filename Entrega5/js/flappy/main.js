@@ -80,7 +80,7 @@ function showCountdown(callback) {
     // Iniciar cuenta regresiva
     countdownEl.style.fontSize = "120px";
     countdownEl.style.color = "#fff";
-    
+
     let count = 3;
     countdownEl.textContent = count;
 
@@ -152,20 +152,67 @@ function startGame() {
 // INICIALIZACIÓN
 // ============================================
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🎮 Flappy Bird RPG cargado");
+  console.log("🎮 Cargando imágenes...");
 
   const btnJugar = document.getElementById("btnJugar");
-
-  if (btnJugar) {
-    btnJugar.addEventListener("click", startGame);
-  } else {
-    console.error('❌ No se encontró el botón "Jugar"');
-  }
-
   const instructions = document.getElementById("instructions");
-  if (instructions) {
-    instructions.style.display = "none";
+
+  // Desactivar botón hasta que cargue todo
+  btnJugar.disabled = true;
+  btnJugar.textContent = "Cargando...";
+
+  if (instructions) instructions.style.display = "none";
+
+  // LISTA DE IMÁGENES DEL JUEGO
+  const gameImages = [
+    "assets/bird/FLYING.png",
+    "assets/bird/DEATH.png",
+    "assets/bird/ATTACK.png",
+    "assets/bird/gold.png",
+    "assets/bird/IdleLoop-Sheet.png",
+    "assets/images/sky.png",
+    "assets/images/snow.png",
+    "assets/images/4_BG_mts.png",
+    "assets/images/3_ice_castle.png",
+    "assets/images/fog.png",
+    "assets/images/2_foreground_mts.png",
+    "assets/images/1_foreground_mts.png",
+    "assets/images/snow_2.png",
+  ];
+
+  // Función para cargar imágenes
+  function preloadImages(images, onComplete) {
+    let loaded = 0;
+
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+
+      img.onload = () => {
+        loaded++;
+        btnJugar.textContent = `Cargando...`;
+
+        if (loaded === images.length) {
+          onComplete();
+        }
+      };
+
+      img.onerror = () => {
+        console.warn("⚠️ No se pudo cargar:", src);
+        loaded++;
+      };
+    });
   }
+
+  // Cargar todas las imágenes antes de habilitar el juego
+  preloadImages(gameImages, () => {
+    console.log("✅ Todas las imágenes cargadas");
+
+    btnJugar.disabled = false;
+    btnJugar.textContent = "Jugar";
+
+    btnJugar.addEventListener("click", startGame);
+  });
 });
 
 document.addEventListener("keydown", (e) => {
@@ -173,6 +220,59 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
   }
 });
+
+const gameImages = [
+  // -------- BIRD SPRITES --------
+  "assets/bird/FLYING.png",
+  "assets/bird/DEATH.png",
+  "assets/bird/ATTACK.png",
+  "assets/bird/gold.png",
+  "assets/bird/IdleLoop-Sheet.png",
+
+  // -------- PARALLAX BACKGROUNDS --------
+  "assets/images/sky.png",
+  "assets/images/snow.png",
+  "assets/images/4_BG_mts.png",
+  "assets/images/3_ice_castle.png",
+  "assets/images/fog.png",
+  "assets/images/2_foreground_mts.png",
+  "assets/images/1_foreground_mts.png",
+  "assets/images/snow_2.png",
+];
+
+async function preloadImages(imageList) {
+  return new Promise((resolve) => {
+    let loaded = 0;
+    const total = imageList.length;
+
+    const updateLoading = () => {
+      const pct = Math.floor((loaded / total) * 100);
+      const loadingText = document.getElementById("loadingText");
+      if (loadingText) loadingText.textContent = `Cargando ${pct}%`;
+    };
+
+    updateLoading(); // mostrar 0%
+
+    imageList.forEach((src) => {
+      const img = new Image();
+      img.onload = () => {
+        loaded++;
+        updateLoading();
+
+        if (loaded === total) {
+          resolve();
+        }
+      };
+      img.onerror = () => {
+        console.warn("No se pudo cargar:", src);
+        loaded++;
+        updateLoading();
+        if (loaded === total) resolve();
+      };
+      img.src = src;
+    });
+  });
+}
 
 // Debug
 window.debugGame = () => {
