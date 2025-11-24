@@ -29,7 +29,7 @@ class Game {
 
     this.collectibles = []; // Array para los coleccionables
     this.collectibleSpawnTimer = 0;
-    this.collectibleSpawnInterval = 2000; // Cada 3 segundos intenta spawnear
+    this.collectibleSpawnInterval = 1000; // Cada 3 segundos intenta spawnear
   }
 
   init() {
@@ -156,7 +156,7 @@ class Game {
       this.collectibleSpawnTimer = 0;
 
       // Probabilidad de spawn
-      if (Math.random() < 0.2) return; // ← 50% de chance, menos spawns
+      if (Math.random() < 0.5) return; // ← 50% de chance, menos spawns
 
       // Tipo de coleccionable
       const type = Math.random() < 0.6 ? "coin" : "powerup";
