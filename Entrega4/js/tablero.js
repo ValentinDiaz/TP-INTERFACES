@@ -111,50 +111,72 @@ class Tablero {
     return null;
   }
 
-  obtenerMovimientosValidos(casillaOrigen) {
-    const movimientos = [];
-    const fila = casillaOrigen.fila;
-    const col = casillaOrigen.col;
+ obtenerMovimientosValidos(casillaOrigen, piezasComidas = [], esLlamadaInicial = true) {
+  const movimientos = [];
+  const fila = casillaOrigen.fila;
+  const col = casillaOrigen.col;
 
-    // Direcciones: arriba, abajo, izquierda, derecha
-    const direcciones = [
-      { df: -2, dc: 0, mf: -1, mc: 0 }, // Arriba (salta 2, medio en 1)
-      { df: 2, dc: 0, mf: 1, mc: 0 }, // Abajo
-      { df: 0, dc: -2, mf: 0, mc: -1 }, // Izquierda
-      { df: 0, dc: 2, mf: 0, mc: 1 }, // Derecha
-    ];
+  const direcciones = [
+    { df: -2, dc: 0, mf: -1, mc: 0 }, // Arriba
+    { df: 2, dc: 0, mf: 1, mc: 0 },   // Abajo
+    { df: 0, dc: -2, mf: 0, mc: -1 }, // Izquierda
+    { df: 0, dc: 2, mf: 0, mc: 1 },   // Derecha
+  ];
 
-    direcciones.forEach((dir) => {
-      const filaDestino = fila + dir.df;
-      const colDestino = col + dir.dc;
-      const filaSaltada = fila + dir.mf;
-      const colSaltada = col + dir.mc;
+  direcciones.forEach((dir) => {
+    const filaDestino = fila + dir.df;
+    const colDestino = col + dir.dc;
+    const filaSaltada = fila + dir.mf;
+    const colSaltada = col + dir.mc;
 
-      // Verificar límites
+    if (
+      this.esPosicionValida(filaDestino, colDestino) &&
+      this.esPosicionValida(filaSaltada, colSaltada)
+    ) {
+      const casillaDestino = this.casillas[filaDestino][colDestino];
+      const casillaSaltada = this.casillas[filaSaltada][colSaltada];
+
       if (
-        this.esPosicionValida(filaDestino, colDestino) &&
-        this.esPosicionValida(filaSaltada, colSaltada)
+        casillaDestino &&
+        !casillaDestino.tienePieza() &&
+        casillaSaltada &&
+        casillaSaltada.tienePieza() &&
+        !piezasComidas.includes(casillaSaltada)
       ) {
-        const casillaDestino = this.casillas[filaDestino][colDestino];
-        const casillaSaltada = this.casillas[filaSaltada][colSaltada];
+        const nuevasPiezasComidas = [...piezasComidas, casillaSaltada];
 
-        // Verificar: destino vacío y casilla saltada con pieza
-        if (
-          casillaDestino &&
-          !casillaDestino.tienePieza() &&
-          casillaSaltada &&
-          casillaSaltada.tienePieza()
-        ) {
-          movimientos.push({
+         movimientos.push({
             destino: casillaDestino,
-            saltada: casillaSaltada,
+            saltadas: [casillaSaltada],
+            camino: [casillaDestino],
           });
-        }
-      }
-    });
 
-    return movimientos;
-  }
+        // Buscar saltos adicionales (recursión sin flag inicial)
+        const saltosAdicionales = this.obtenerMovimientosValidos(
+          casillaDestino,
+          nuevasPiezasComidas,
+          false // No es llamada inicial
+        );
+
+       
+
+        if (saltosAdicionales.length > 0) {
+          saltosAdicionales.forEach((saltoAdicional) => {
+            movimientos.push({
+              destino: saltoAdicional.destino,
+              saltadas: [casillaSaltada, ...saltoAdicional.saltadas],
+              camino: [casillaDestino, ...saltoAdicional.camino],
+            });
+          });
+        } 
+      }
+    }
+  });
+
+ 
+
+  return movimientos;
+}
 
   // Verificar si una posición es válida
   esPosicionValida(fila, col) {
@@ -169,26 +191,37 @@ class Tablero {
 
   // Ejecutar un movimiento
   moverPieza(casillaOrigen, casillaDestino, casillaSaltada) {
-    if (!casillaOrigen.tienePieza()) return false;
+  if (!casillaOrigen.tienePieza()) return false;
 
-    // Obtener la pieza
-    const pieza = casillaOrigen.obtenerPieza();
+  // Obtener la pieza
+  const pieza = casillaOrigen.obtenerPieza();
 
-    // Actualizar posición de la pieza
-    pieza.x = casillaDestino.x;
-    pieza.y = casillaDestino.y;
+  // Actualizar posición de la pieza
+  pieza.x = casillaDestino.x;
+  pieza.y = casillaDestino.y;
 
-    // Mover pieza al destino
-    casillaDestino.colocarPieza(pieza);
+  // Mover pieza al destino
+  casillaDestino.colocarPieza(pieza);
 
-    // Quitar pieza del origen
-    casillaOrigen.quitarPieza();
+  // Quitar pieza del origen
+  casillaOrigen.quitarPieza();
 
-    // Quitar pieza saltada
-    casillaSaltada.quitarPieza();
-
-    return true;
-  }
+  // si es un arreglo 
+  if (casillaSaltada.length>0) {
+    // Si es un array (saltos múltiples)
+    casillaSaltada.forEach((casilla, index) => {
+      if (casilla && casilla.tienePieza()) {
+        casilla.quitarPieza();
+      }
+    });
+  } else if (casillaSaltada) {
+    // Si es una sola casilla (salto simple)
+    if (casillaSaltada.tienePieza()) {
+      casillaSaltada.quitarPieza();
+    }
+  } 
+  return true;
+}
 
   // Verificar si hay movimientos disponibles en todo el tablero
   hayMovimientosDisponibles() {

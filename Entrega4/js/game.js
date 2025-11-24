@@ -205,27 +205,30 @@ class Game {
     this.movimientosValidos = [];
   }
 
-  realizarMovimiento(movimiento) {
-    // Ejecutar movimiento en el tablero
-    const exito = this.tablero.moverPieza(
-      this.fichaSeleccionada,
-      movimiento.destino,
-      movimiento.saltada
-    );
+ realizarMovimiento(movimiento) {
+  // Extraer las casillas saltadas (puede ser array o singular)
+  const casillaSaltada = movimiento.saltadas || movimiento.saltada;
+  
+  // Ejecutar movimiento en el tablero
+  const exito = this.tablero.moverPieza(
+    this.fichaSeleccionada,
+    movimiento.destino,
+    casillaSaltada  // <-- Pasar el valor correcto
+  );
 
-    if (exito) {
-      // Actualizar estadísticas
-      this.movimientos++;
-      this.piezasRestantes = this.tablero.contarPiezas();
-      this.actualizarStats();
+  if (exito) {
+    // Actualizar estadísticas
+    this.movimientos++;
+    this.piezasRestantes = this.tablero.contarPiezas();
+    this.actualizarStats();
 
-      // Deseleccionar
-      this.deseleccionarFicha();
+    // Deseleccionar
+    this.deseleccionarFicha();
 
-      // Verificar fin del juego
-      setTimeout(() => this.verificarFinJuego(), 100);
-    }
+    // Verificar fin del juego
+    setTimeout(() => this.verificarFinJuego(), 100);
   }
+}
 
   verificarFinJuego() {
     this.piezasRestantes = this.tablero.contarPiezas();
@@ -574,7 +577,7 @@ class Game {
   }
 
   iniciarTimer() {
-    this.tiempoRestante = 60;
+    this.tiempoRestante = 4000000000000000;
     this.actualizarStats();
 
     this.timerInterval = setInterval(() => {
