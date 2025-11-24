@@ -474,10 +474,10 @@
 .anim-atack {
   background-image: url("../assets/bird/ATTACK.png") !important;
   background-size: 128px 64px !important;
-  animation: attack 2s steps(8) forwards !important; /* forwards en vez de infinite */
-  transform-origin: top left !important; /* Cambiar el origen para que rote desde el centro */
+  animation: attack 0.45s steps(8, end) forwards !important;
+  transform-origin: top left !important;
+  image-rendering: pixelated;
 }
-
 @keyframes demonDead {
   0% {
     background-position: 0px;
