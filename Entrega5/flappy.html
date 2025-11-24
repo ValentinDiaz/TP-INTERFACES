@@ -68,7 +68,7 @@
     <div class="cont-all">
       <div class="cont-texto-pegSolitaire">
         <img
-          src="assets/images/Captura de pantalla 2025-09-15 140458.png"
+          src="assets/images/demon_ice.png"
           alt=""
         />
 
@@ -81,7 +81,7 @@
             <li>
               <a href="">Juegos de ingenio <span>></span></a>
             </li>
-            <li><a href="">Peg Solitaire</a></li>
+            <li><a href="">Flappy Demon Ice</a></li>
           </ul>
         </div>
       </div>
@@ -90,7 +90,7 @@
         <div class="game__flappy-bird">
           <div id="menuInicio" class="popup-menu">
             <div class="popup-content-juego">
-              <h1 class="game__h1-game">🐦 Flappy Bird RPG</h1>
+              <h1 class="game__h1-game">Flappy Demon Ice</h1>
 
               <div class="contenedor_play">
                 <button id="btnJugar" class="button button__orange">
@@ -175,7 +175,7 @@
               <h2
                 style="color: #7c4dff; margin-bottom: 15px; text-align: center"
               >
-                📚 Cómo Jugar Flappy Bird Espacial
+                📚 Cómo Jugar Flappy Demon Ice
               </h2>
               <ul style="line-height: 1.8; list-style-position: inside">
                 <li>
@@ -208,6 +208,22 @@
                 ¡Juego Terminado!
               </h2>
               <p>Tu puntaje final es: <span id="finalScore">0</span></p>
+              <button class="button button__orange" onclick="volverMenu()">
+                Volver al Menú
+              </button>
+              <button class="button button__orange" onclick="resetGame()">
+                Reiniciar
+              </button>
+            </div>
+          </div>
+
+          <div id="winScreen" class="popup-menu hidden">
+            <div class="popup-content-juego">
+              <h2 class="game__h1-game" style="color: #4ade80">
+                🎉 ¡Victoria!
+              </h2>
+              <p>Tu puntaje final es: <span id="winScore">0</span></p>
+              <p>Movimientos realizados: <span id="winMoves">0</span></p>
               <button class="button button__orange" onclick="volverMenu()">
                 Volver al Menú
               </button>

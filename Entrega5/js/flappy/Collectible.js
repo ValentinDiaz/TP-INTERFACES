@@ -23,44 +23,7 @@ class Collectible {
       // Moneda con tu animación CSS
       this.element.className = "coin";
     } else if (this.type === "powerup") {
-      this.element.style.width = `${this.width}px`;
-      this.element.style.height = `${this.height}px`;
-      // Power-up estilo pixel art
-      this.element.style.background = `
-        linear-gradient(135deg, 
-          #ff00ff 0%, 
-          #ff00ff 25%,
-          #ff66ff 25%,
-          #ff66ff 50%,
-          #ff00ff 50%,
-          #ff00ff 75%,
-          #ff66ff 75%,
-          #ff66ff 100%
-        )
-      `;
-      this.element.style.backgroundSize = "8px 8px";
-      this.element.style.boxShadow = `
-        inset 3px 3px 0 #ff66ff,
-        inset -3px -3px 0 #cc00cc,
-        0 0 20px rgba(255, 0, 255, 0.8)
-      `;
-      this.element.style.border = "3px solid #ff00ff";
-      this.element.style.borderRadius = "8px";
-      this.element.style.imageRendering = "pixelated";
-
-      // Símbolo de rayo
-      this.element.innerHTML = `
-        <div style="
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 28px;
-          font-weight: bold;
-          color: #ffff00;
-          text-shadow: 2px 2px 0 #cc00cc;
-        ">⚡</div>
-      `;
+      this.element.className = "power-up";
     }
 
     this.game.gameElements.appendChild(this.element);
@@ -117,6 +80,7 @@ class Collectible {
       this.game.showFloatingText(this.x, this.y, "+5", "#fbbf24"); // Amarillo para monedas
     } else if (this.type === "powerup") {
       // Mostrar texto de power-up
+      this.game.addScore(2);
       this.game.showFloatingText(this.x, this.y, "POWER UP!", "#a78bfa"); // Morado para powerup
 
       // Activar power-up con animación de ataque

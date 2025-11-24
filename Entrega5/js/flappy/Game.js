@@ -275,6 +275,24 @@ class Game {
     this.score += points;
     this.updateUI();
     console.log(`⭐ Puntaje: ${this.score}`);
+
+    // Verificar victoria al llegar a 50 puntos
+    if (this.score >= 50) {
+      this.gameWin();
+    }
+  }
+
+ gameWin() {
+    console.log("🎉 ¡Victoria!");
+    this.isRunning = false;
+    cancelAnimationFrame(this.gameLoopId);
+
+    document.querySelectorAll(".parallax-layer").forEach((layer) => {
+      layer.style.animationPlayState = "paused";
+    });
+
+    document.getElementById("finalScore").textContent = this.score;
+    document.getElementById("winScreen").classList.remove("hidden");
   }
 
   updateUI() {
@@ -320,6 +338,8 @@ class Game {
     });
 
     document.getElementById("gameOverScreen").classList.add("hidden");
+    document.getElementById("winScreen").classList.add("hidden");
+
     this.updateUI();
   }
 }

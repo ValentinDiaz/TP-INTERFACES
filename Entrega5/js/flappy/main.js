@@ -71,31 +71,42 @@ function showCountdown(callback) {
 
   document.getElementById("gameArea").appendChild(countdownEl);
 
-  let count = 3;
-  countdownEl.textContent = count;
+  // Mostrar objetivo primero
+  countdownEl.style.fontSize = "48px";
+  countdownEl.style.color = "#fbbf24";
+  countdownEl.textContent = "Objetivo: 50 puntos";
 
-  const countInterval = setInterval(() => {
-    count--;
+  setTimeout(() => {
+    // Iniciar cuenta regresiva
+    countdownEl.style.fontSize = "120px";
+    countdownEl.style.color = "#fff";
+    
+    let count = 3;
+    countdownEl.textContent = count;
 
-    if (count > 0) {
-      countdownEl.textContent = count;
-      // Reiniciar animación
-      countdownEl.style.animation = "none";
-      setTimeout(() => {
-        countdownEl.style.animation = "countdownPulse 1s ease-in-out";
-      }, 10);
-    } else {
-      countdownEl.textContent = "¡GO!";
-      countdownEl.style.color = "#4ade80";
+    const countInterval = setInterval(() => {
+      count--;
 
-      setTimeout(() => {
-        countdownEl.remove();
-        if (callback) callback();
-      }, 500);
+      if (count > 0) {
+        countdownEl.textContent = count;
+        // Reiniciar animación
+        countdownEl.style.animation = "none";
+        setTimeout(() => {
+          countdownEl.style.animation = "countdownPulse 1s ease-in-out";
+        }, 10);
+      } else {
+        countdownEl.textContent = "¡GO!";
+        countdownEl.style.color = "#4ade80";
 
-      clearInterval(countInterval);
-    }
-  }, 1000);
+        setTimeout(() => {
+          countdownEl.remove();
+          if (callback) callback();
+        }, 500);
+
+        clearInterval(countInterval);
+      }
+    }, 1000);
+  }, 2000); // Espera 2 segundos antes de empezar la cuenta
 }
 
 // ============================================

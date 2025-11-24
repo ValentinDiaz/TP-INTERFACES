@@ -313,8 +313,8 @@
 
 /* Game Over Screen - simple, solo encima */
 #gameOverScreen {
-  position: fixed !important;
-  top: 50%;
+  position: absolute !important;
+  top: 66%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 10000 !important;
@@ -323,6 +323,18 @@
 #gameOverScreen.hidden {
   display: none !important;
 }
+
+#winScreen {
+  position: absolute !important;
+  top: 66%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000 !important;
+}
+#winScreen.hidden {
+  display: none !important;
+}
+
 /* -------------------------------------------------------
    CAPAS PARALLAX BASE
 ------------------------------------------------------- */
@@ -493,6 +505,28 @@
   image-rendering: pixelated;
 
   animation: coinAnim 0.6s steps(8) infinite;
+}
+
+
+.power-up {
+  width: 64px;
+  height: 64px;
+  background-image: url("/assets/bird/IdleLoop-Sheet.png");
+  background-repeat: no-repeat;
+  background-size: 256px 64px; /* 4 frames de 64px → 256px de ancho */
+  transform: scale(1);
+  image-rendering: pixelated;
+  transform: scale(3);
+  animation: powerUp 0.6s steps(4) infinite;
+}
+
+@keyframes powerUp {
+  from {
+    background-position: 0px;
+  }
+  to {
+    background-position: -256px;
+  }
 }
 
 @keyframes coinAnim {
