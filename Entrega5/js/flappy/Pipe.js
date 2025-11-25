@@ -1,89 +1,63 @@
 class Pipe {
-  constructor(game) {
-    this.game = game;
-    this.width = 100; // ancho fijo
-    this.gap = game.config.pipeGap;
-    this.x = game.gameArea.offsetWidth;
-    this.scored = false;
+    constructor(game) {
+      this.game = game;
+      this.pipeWidth = 300; // ✅ ancho real de la imagen
+      this.pipeHeight = 320; // ✅ alto real de la imagen
+      this.gap = game.config.pipeGap;
+      this.x = game.gameArea.offsetWidth;
+      this.scored = false;
 
-    const minHeight = 100;
-    const maxHeight = game.gameArea.offsetHeight - this.gap - 100;
-    this.topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+      const minHeight = 150;
+      const maxHeight = game.gameArea.offsetHeight - this.gap - 150;
+      this.topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
 
-    this.createElement();
-  }
+      this.createElement();
+    }
+
   createElement() {
-    // █████ TUBERÍA SUPERIOR PIXEL ART DE HIELO █████
-    this.topElement = document.createElement("div");
+    // █████ TUBERÍA SUPERIOR (VOLTEADA) █████
+    this.topElement = document.createElement("img");
+    this.topElement.src = "assets/bird/pipe.png";
     this.topElement.style.position = "absolute";
-    this.topElement.style.width = `${this.width}px`;
-    this.topElement.style.height = `${this.topHeight}px`;
+    this.topElement.style.width = `${this.pipeWidth}px`;
+    this.topElement.style.height = `${this.pipeHeight}px`;
     this.topElement.style.left = `${this.x}px`;
-    this.topElement.style.top = "0";
-
-    // Patrón hielo pixel-art: bloques irregulares SIN rayas
-    this.topElement.style.background = `
-    repeating-linear-gradient(
-      to bottom,
-      #b9ecff 0px, #b9ecff 4px,
-      #d4f5ff 4px, #d4f5ff 8px,
-      #a0def9 8px, #a0def9 12px,
-      #c2f0ff 12px, #c2f0ff 16px
-    )
-  `;
-
-    // Bordes y brillos como bloque congelado
-    this.topElement.style.boxShadow = `
-    inset 0 0 0 4px #e9fcff,   /* borde claro hielo */
-    inset 4px 4px 0 #ffffff,   /* brillo superior izquierdo */
-    inset -4px -4px 0 #91d7ff, /* sombra inferior derecha */
-    0 6px 0 #76b7e8             /* borde extra abajo para efecto bloque */
-  `;
-
-    this.topElement.style.border = "4px solid #8ad9ff";
-    this.topElement.style.borderBottom = "8px solid #6ab7d8";
-    this.topElement.style.borderRadius = "0 0 10px 10px";
+    this.topElement.style.top = `${this.topHeight - this.pipeHeight}px`;
+    this.topElement.style.transform = "scaleY(-1)";
     this.topElement.style.imageRendering = "pixelated";
     this.topElement.style.zIndex = "10";
+    this.topElement.draggable = false;
 
-    // █████ TUBERÍA INFERIOR PIXEL ART DE HIELO █████
-    const bottomHeight =
-      this.game.gameArea.offsetHeight - this.topHeight - this.gap;
-
-    this.bottomElement = document.createElement("div");
+    // █████ TUBERÍA INFERIOR █████
+    this.bottomElement = document.createElement("img");
+    this.bottomElement.src = "assets/bird/pipe.png";
     this.bottomElement.style.position = "absolute";
-    this.bottomElement.style.width = `${this.width}px`;
-    this.bottomElement.style.height = `${bottomHeight}px`;
+    this.bottomElement.style.width = `${this.pipeWidth}px`;
+    this.bottomElement.style.height = `${this.pipeHeight}px`;
     this.bottomElement.style.left = `${this.x}px`;
-    this.bottomElement.style.bottom = "0";
-
-    // Misma textura de hielo
-    this.bottomElement.style.background = `
-    repeating-linear-gradient(
-      to bottom,
-      #b9ecff 0px, #b9ecff 4px,
-      #d4f5ff 4px, #d4f5ff 8px,
-      #a0def9 8px, #a0def9 12px,
-      #c2f0ff 12px, #c2f0ff 16px
-    )
-  `;
-
-    this.bottomElement.style.boxShadow = `
-    inset 0 0 0 4px #e9fcff,
-    inset 4px 4px 0 #ffffff,
-    inset -4px -4px 0 #91d7ff,
-    0 -6px 0 #76b7e8
-  `;
-
-    this.bottomElement.style.border = "4px solid #8ad9ff";
-    this.bottomElement.style.borderTop = "8px solid #6ab7d8";
-    this.bottomElement.style.borderRadius = "10px 10px 0 0";
+    this.bottomElement.style.top = `${this.topHeight + this.gap}px`;
     this.bottomElement.style.imageRendering = "pixelated";
     this.bottomElement.style.zIndex = "10";
+    this.bottomElement.draggable = false;
 
-    // Insertar
     this.game.gameElements.appendChild(this.topElement);
     this.game.gameElements.appendChild(this.bottomElement);
+
+
+     this.debugTopBox = document.createElement("div");
+  this.debugTopBox.style.position = "absolute";
+  this.debugTopBox.style.border = "2px solid red";
+  this.debugTopBox.style.pointerEvents = "none";
+  this.debugTopBox.style.zIndex = "100";
+  
+  this.debugBottomBox = document.createElement("div");
+  this.debugBottomBox.style.position = "absolute";
+  this.debugBottomBox.style.border = "2px solid red";
+  this.debugBottomBox.style.pointerEvents = "none";
+  this.debugBottomBox.style.zIndex = "100";
+
+  this.game.gameElements.appendChild(this.debugTopBox);
+  this.game.gameElements.appendChild(this.debugBottomBox);
   }
 
   update() {
@@ -93,33 +67,50 @@ class Pipe {
   }
 
   isOffScreen() {
-    return this.x + this.width < 0;
+    return this.x + this.pipeWidth < 0; // ✅ Usar pipeWidth
   }
 
   isPassed(bird) {
-    return this.x + this.width < bird.x && !this.scored;
+    return this.x + this.pipeWidth < bird.x && !this.scored; // ✅ Usar pipeWidth
   }
 
   checkCollision(bird) {
     const birdBounds = bird.getBounds();
-    const pipeMargin = 10;
+
+    // ✅ MÁRGENES PARA IGNORAR PARTES TRANSPARENTES DE LA IMAGEN
+    // Ajusta estos valores según tu imagen real
+    const horizontalMargin = 80; // ignora los bordes laterales transparentes
+    const verticalMargin = 40; // ignora partes superior/inferior transparentes
+
+    // Tubo superior - área sólida real
+    const topPipeTop = this.topHeight - this.pipeHeight + verticalMargin;
+    const topPipeBottom = this.topHeight - verticalMargin;
+    const topPipeLeft = this.x + horizontalMargin;
+    const topPipeRight = this.x + this.pipeWidth - horizontalMargin;
+
+    // Tubo inferior - área sólida real
+    const bottomPipeTop = this.topHeight + this.gap + verticalMargin;
+    const bottomPipeBottom =
+      this.topHeight + this.gap + this.pipeHeight - verticalMargin;
+    const bottomPipeLeft = this.x + horizontalMargin;
+    const bottomPipeRight = this.x + this.pipeWidth - horizontalMargin;
 
     // Colisión con tubo superior
     if (
-      birdBounds.right > this.x + pipeMargin &&
-      birdBounds.left < this.x + this.width - pipeMargin &&
-      birdBounds.top < this.topHeight
+      birdBounds.right > topPipeLeft &&
+      birdBounds.left < topPipeRight &&
+      birdBounds.top < topPipeBottom &&
+      birdBounds.bottom > topPipeTop
     ) {
       return true;
     }
 
     // Colisión con tubo inferior
-    const bottomTop = this.topHeight + this.gap;
-
     if (
-      birdBounds.right > this.x + pipeMargin &&
-      birdBounds.left < this.x + this.width - pipeMargin &&
-      birdBounds.bottom > bottomTop
+      birdBounds.right > bottomPipeLeft &&
+      birdBounds.left < bottomPipeRight &&
+      birdBounds.top < bottomPipeBottom &&
+      birdBounds.bottom > bottomPipeTop
     ) {
       return true;
     }

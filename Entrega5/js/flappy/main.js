@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "assets/bird/ATTACK.png",
     "assets/bird/gold.png",
     "assets/bird/IdleLoop-Sheet.png",
+    "assets/bird/pipe.png",
     "assets/images/sky.png",
     "assets/images/snow.png",
     "assets/images/4_BG_mts.png",
@@ -178,6 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "assets/images/2_foreground_mts.png",
     "assets/images/1_foreground_mts.png",
     "assets/images/snow_2.png",
+
   ];
 
   // Función para cargar imágenes

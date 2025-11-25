@@ -19,7 +19,7 @@ class Game {
       jumpStrength: -10,
       birdSpeed: 3,
       pipeSpeed: 3,
-      pipeGap: 200,
+      pipeGap: 150,
       pipeSpawnInterval: 2000,
     };
 
@@ -156,7 +156,7 @@ class Game {
       this.collectibleSpawnTimer = 0;
 
       // Probabilidad de spawn
-      if (Math.random() < 0.5) return; // ← 50% de chance, menos spawns
+      if (Math.random() < 0.5) return;
 
       // Tipo de coleccionable
       const type = Math.random() < 0.6 ? "coin" : "powerup";
@@ -164,20 +164,21 @@ class Game {
       const x = this.gameArea.offsetWidth;
 
       // ===========================
-      //   GENERAR Y SEGURO
+      //   GENERAR Y SEGURO - AJUSTADO
       // ===========================
       let y;
       let safe = false;
       let attempts = 0;
 
-      while (!safe && attempts < 10) {
+      while (!safe && attempts < 20) {
+        // ✅ Más intentos (era 10)
         attempts++;
 
-        const minY = 80;
-        const maxY = this.gameArea.offsetHeight - 80;
+        const minY = 60; // ✅ Reducido de 80 a 60
+        const maxY = this.gameArea.offsetHeight - 60; // ✅ Reducido margen
         y = Math.random() * (maxY - minY) + minY;
 
-        safe = true; // lo asumimos seguro hasta probar
+        safe = true;
 
         // Comprobar contra cada tubería
         this.pipes.forEach((pipe) => {
@@ -187,14 +188,19 @@ class Game {
           // Zona de la pipe inferior
           const bottomPipeTop = pipe.topHeight + pipe.gap;
 
+          // ✅ MARGEN REDUCIDO para coleccionables (era 40)
+          const collectibleMargin = 20; // Más cerca de las tuberías
+
           // Chequear si y está dentro de una pipe
-          if (y < topPipeBottom + 40 && y + 40 > 0) safe = false;
-          if (y > bottomPipeTop - 40 && y < this.gameArea.offsetHeight)
-            safe = false;
+          if (y < topPipeBottom + collectibleMargin) safe = false;
+          if (y > bottomPipeTop - collectibleMargin) safe = false;
         });
       }
 
-      if (!safe) return; // si no encontró lugar libre, no spawnea
+      if (!safe) {
+        console.log("⚠️ No se encontró espacio seguro para coleccionable");
+        return;
+      }
 
       // Crear colectable
       const collectible = new Collectible(this, type, x, y);
@@ -282,7 +288,7 @@ class Game {
     }
   }
 
- gameWin() {
+  gameWin() {
     console.log("🎉 ¡Victoria!");
     this.isRunning = false;
     cancelAnimationFrame(this.gameLoopId);
