@@ -42,22 +42,6 @@ class Pipe {
 
     this.game.gameElements.appendChild(this.topElement);
     this.game.gameElements.appendChild(this.bottomElement);
-
-
-     this.debugTopBox = document.createElement("div");
-  this.debugTopBox.style.position = "absolute";
-  this.debugTopBox.style.border = "2px solid red";
-  this.debugTopBox.style.pointerEvents = "none";
-  this.debugTopBox.style.zIndex = "100";
-  
-  this.debugBottomBox = document.createElement("div");
-  this.debugBottomBox.style.position = "absolute";
-  this.debugBottomBox.style.border = "2px solid red";
-  this.debugBottomBox.style.pointerEvents = "none";
-  this.debugBottomBox.style.zIndex = "100";
-
-  this.game.gameElements.appendChild(this.debugTopBox);
-  this.game.gameElements.appendChild(this.debugBottomBox);
   }
 
   update() {

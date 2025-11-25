@@ -435,6 +435,29 @@
   z-index: 8;
 }
 
+.layer-knight {
+  position: absolute;
+  width: 32px;      
+  height: 32px;
+  background-image: url("../assets/bird/RUN.png");
+  background-size: 256px 32px;
+  image-rendering: pixelated;
+  transform: scale(4);
+  z-index: 8; /* DETRÁS de tuberías, DELANTE del fondo */
+  top: 500px; /* Altura del piso */
+  animation: knightRun 0.6s steps(8) infinite;
+
+  left: -200px; /* Posición horizontal inicial */
+}
+
+@keyframes knightRun {
+  from { background-position: 0px; }
+  to   { background-position: -256px; }
+}
+
+/* 1. Definición del contenedor del sprite de Spiderman */
+
+
 #bird {
   position: absolute;
   width: 16px; /* Ancho de UN frame */

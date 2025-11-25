@@ -48,6 +48,15 @@ class Game {
     this.gameUI.classList.remove("hidden");
     this.gameState = "playing";
 
+    if (!this.knightInterval) {
+      this.knightInterval = setInterval(() => {
+        if (!this.isRunning) return;
+
+        this.triggerKnight();
+        console.log("� knight triggered");
+      }, 8000);
+    }
+
     this.lastPipeSpawn = Date.now();
     this.gameLoop();
   }
@@ -320,6 +329,26 @@ class Game {
     document.getElementById("gameOverScreen").classList.remove("hidden");
   }
 
+  triggerKnight() {
+    const knight = document.querySelector(".layer-knight");
+
+    knight.style.transition = "none";
+    knight.style.left = "-200px"; // inicia fuera de la pantalla izquierda
+
+    // Esperar un frame antes de moverlo
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        knight.style.transition = "left 12s linear";
+        knight.style.left = "300vw";
+      });
+    });
+
+    // Luego de 3s, resetear
+    setTimeout(() => {
+      knight.style.left = "-200px";
+      knight.style.transition = "none";
+    }, 12000);
+  }
   reset() {
     this.pipes.forEach((pipe) => pipe.remove());
     this.pipes = [];

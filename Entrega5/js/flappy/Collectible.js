@@ -83,6 +83,7 @@ class Collectible {
       this.game.addScore(2);
       this.game.showFloatingText(this.x, this.y, "POWER UP!", "#a78bfa"); // Morado para powerup
 
+
       // Activar power-up con animación de ataque
       this.activatePowerUp(bird);
     }

@@ -276,6 +276,10 @@ async function preloadImages(imageList) {
   });
 }
 
+
+
+
+
 // Debug
 window.debugGame = () => {
   if (game) {
